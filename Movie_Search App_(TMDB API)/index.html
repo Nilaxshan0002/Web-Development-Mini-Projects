@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movie Search | TMDB</title>
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <!-- External CSS -->
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <div class="movie-app" id="app">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="brand">
+                <i class="fas fa-film"></i>
+                <h1>MovieSearch <span>TMDB</span></h1>
+            </div>
+        </div>
+
+        <!-- SEARCH -->
+        <div class="search-section">
+            <div class="search-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search for any movie..." autocomplete="off" />
+                <button id="searchBtn"><i class="fas fa-arrow-right"></i> Search</button>
+            </div>
+        </div>
+
+        <!-- Example Movies -->
+        <div class="example-section">
+            <span class="label"><i class="fas fa-lightbulb"></i> Popular searches:</span>
+            <button class="example-btn" data-movie="Shrek">Shrek</button>
+            <button class="example-btn" data-movie="Avatar">Avatar</button>
+            <button class="example-btn" data-movie="Avengers">Avengers</button>
+            <button class="example-btn" data-movie="Batman">Batman</button>
+            <button class="example-btn" data-movie="Inception">Inception</button>
+            <button class="example-btn" data-movie="The Dark Knight">The Dark Knight</button>
+            <button class="example-btn" data-movie="Interstellar">Interstellar</button>
+            <button class="example-btn" data-movie="Titanic">Titanic</button>
+            <button class="example-btn" data-movie="Harry Potter">Harry Potter</button>
+            <button class="example-btn" data-movie="Lord of the Rings">Lord of the Rings</button>
+        </div>
+
+        <!-- FILTERS -->
+        <div class="filters">
+            <select id="yearFilter">
+                <option value="">All Years</option>
+                <option value="2026">2026</option>
+                <option value="2025">2025</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+                <option value="2022">2022</option>
+                <option value="2021">2021</option>
+                <option value="2020">2020</option>
+                <option value="2019">2019</option>
+                <option value="2018">2018</option>
+                <option value="2017">2017</option>
+                <option value="2016">2016</option>
+                <option value="2015">2015</option>
+                <option value="2010">2010</option>
+                <option value="2000">2000</option>
+            </select>
+
+            <select id="sortFilter">
+                <option value="popularity.desc">Most Popular</option>
+                <option value="vote_average.desc">Highest Rated</option>
+                <option value="release_date.desc">Newest First</option>
+                <option value="release_date.asc">Oldest First</option>
+            </select>
+
+            <span class="results-count" id="resultsCount"><strong>0</strong> movies found</span>
+        </div>
+
+        <!-- MOVIE GRID -->
+        <div class="movie-grid" id="movieGrid">
+            <div class="empty-state">
+                <i class="fas fa-film"></i>
+                <h3>Search for any movie</h3>
+                <p>Type any movie name or click a popular search above</p>
+            </div>
+        </div>
+
+        <!-- API STATUS -->
+        <div class="api-status" id="apiStatus">
+            <div class="icon">🔑</div>
+            <div class="text" id="apiStatusText">
+                <strong>✅ API Key Configured:</strong> Your API key is set up. 
+                <span id="apiStatusDetail">If you're seeing errors, try waiting 5-10 minutes for the API key to activate.</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content" id="modalContent">
+            <button class="modal-close" id="modalClose"><i class="fas fa-times"></i></button>
+            <img class="modal-poster" id="modalPoster" src="" alt="Movie poster" />
+            <h2 class="modal-title" id="modalTitle">Movie Title</h2>
+            <div class="modal-meta" id="modalMeta"></div>
+            <p class="modal-overview" id="modalOverview">Overview</p>
+            <div class="modal-details" id="modalDetails"></div>
+        </div>
+    </div>
+
+    <!-- External JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>

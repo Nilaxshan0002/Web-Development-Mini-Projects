@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>LearnHub · Community</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Inter',sans-serif; background:#f0f4fe; color:#131d2e; display:flex; justify-content:center; padding:1.8rem 1rem; min-height:100vh; line-height:1.5; }
+        .lms-wrapper { max-width:1360px; width:100%; }
+        .top-nav { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem 2rem; background:#fff; padding:0.8rem 2rem; border-radius:60px; box-shadow:0 8px 24px rgba(0,20,60,0.06); margin-bottom:2rem; position:relative; }
+        .logo { display:flex; align-items:center; gap:0.5rem; font-size:1.5rem; font-weight:800; letter-spacing:-0.5px; color:#1a2b4a; }
+        .logo i { color:#3b6eff; font-size:1.8rem; }
+        .logo a { text-decoration:none; color:#1a2b4a; display:flex; align-items:center; gap:0.5rem; }
+        .nav-search { display:flex; align-items:center; background:#f2f6fe; border-radius:40px; padding:0.2rem 0.2rem 0.2rem 1.2rem; flex:1 1 280px; max-width:420px; }
+        .nav-search input { border:none; background:transparent; padding:0.6rem 0.4rem; font-size:0.9rem; outline:none; width:100%; font-family:'Inter',sans-serif; color:#1a2b4a; }
+        .nav-search input::placeholder { color:#8a9bb8; }
+        .nav-search button { background:#3b6eff; border:none; color:#fff; padding:0.55rem 1.2rem; border-radius:40px; font-weight:600; cursor:pointer; transition:0.2s; font-size:0.9rem; display:flex; align-items:center; gap:0.4rem; font-family:'Inter',sans-serif; white-space:nowrap; }
+        .nav-search button:hover { background:#2a56d9; }
+        .nav-right { display:flex; align-items:center; gap:0.8rem 1.4rem; position:relative; }
+        .nav-right .icon-btn { background:transparent; border:none; font-size:1.2rem; color:#4a5f7e; cursor:pointer; transition:0.2s; padding:0.3rem; border-radius:40px; position:relative; }
+        .nav-right .icon-btn:hover { color:#1a2b4a; background:#eef3fd; }
+        .avatar { width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,#3b6eff,#7a9eff); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:1rem; cursor:pointer; transition:0.2s; user-select:none; }
+        .avatar:hover { transform:scale(1.05); box-shadow:0 4px 12px rgba(59,110,255,0.3); }
+        .dropdown { position:absolute; top:calc(100% + 10px); right:0; background:#fff; border-radius:20px; box-shadow:0 20px 50px rgba(0,20,60,0.15); padding:0.6rem 0; min-width:220px; opacity:0; visibility:hidden; transform:translateY(-8px); transition:0.2s ease; z-index:100; border:1px solid rgba(0,0,0,0.04); }
+        .dropdown.open { opacity:1; visibility:visible; transform:translateY(0); }
+        .dropdown-item { display:flex; align-items:center; gap:0.8rem; padding:0.6rem 1.2rem; font-size:0.85rem; color:#1a2b4a; text-decoration:none; transition:0.15s; cursor:pointer; border:none; background:transparent; width:100%; text-align:left; font-family:'Inter',sans-serif; }
+        .dropdown-item:hover { background:#f0f6ff; }
+        .dropdown-item i { width:1.2rem; color:#6b7f9e; }
+        .dropdown-divider { height:1px; background:#eef2f8; margin:0.3rem 0.8rem; }
+        .dropdown .dropdown-title { padding:0.3rem 1.2rem 0.1rem; font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:#8a9bb8; }
+        .notification-item { display:flex; align-items:flex-start; gap:0.8rem; padding:0.6rem 1.2rem; border-bottom:1px solid #f0f4fc; font-size:0.82rem; color:#1a2b4a; }
+        .notification-item:last-child { border-bottom:none; }
+        .notification-item .notif-icon { width:28px; height:28px; background:#eef4fe; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#3b6eff; font-size:0.7rem; flex-shrink:0; margin-top:0.1rem; }
+        .notification-item .notif-text { flex:1; }
+        .notification-item .notif-time { font-size:0.65rem; color:#8a9bb8; white-space:nowrap; margin-top:0.1rem; }
+        .badge-dot { display:inline-block; width:8px; height:8px; background:#f44336; border-radius:50%; position:absolute; top:2px; right:2px; border:2px solid #fff; }
+        .modal-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,20,60,0.4); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; z-index:999; opacity:0; visibility:hidden; transition:0.25s ease; }
+        .modal-overlay.open { opacity:1; visibility:visible; }
+        .modal-box { background:#fff; border-radius:32px; max-width:480px; width:92%; padding:2rem 2rem 1.8rem; box-shadow:0 40px 80px rgba(0,20,60,0.2); transform:scale(0.95) translateY(20px); transition:0.25s ease; }
+        .modal-overlay.open .modal-box { transform:scale(1) translateY(0); }
+        .modal-box h3 { font-size:1.3rem; font-weight:700; margin-bottom:0.3rem; display:flex; align-items:center; gap:0.6rem; }
+        .modal-box h3 i { color:#3b6eff; }
+        .modal-box p { color:#4a5f7e; font-size:0.9rem; margin:0.5rem 0 1.2rem; line-height:1.6; }
+        .modal-box .close-modal { background:#eef4fe; border:none; padding:0.5rem 1.6rem; border-radius:40px; font-weight:600; font-size:0.85rem; color:#1a2b4a; cursor:pointer; transition:0.2s; font-family:'Inter',sans-serif; }
+        .modal-box .close-modal:hover { background:#dce7fd; }
+        .dashboard-grid { display:grid; grid-template-columns:240px 1fr; gap:2rem; }
+        @media (max-width:880px) { .dashboard-grid { grid-template-columns:1fr; gap:1.8rem; } }
+        .sidebar { background:#fff; border-radius:32px; padding:1.8rem 1.2rem; box-shadow:0 8px 28px rgba(0,20,60,0.05); height:fit-content; }
+        .sidebar .greeting { font-size:0.8rem; color:#6b7f9e; font-weight:500; letter-spacing:0.3px; margin-bottom:0.1rem; }
+        .sidebar .user-name { font-size:1.3rem; font-weight:700; margin-bottom:1.8rem; color:#131d2e; }
+        .sidebar .user-name i { color:#3b6eff; font-size:0.8rem; margin-left:6px; }
+        .nav-menu { display:flex; flex-direction:column; gap:0.3rem; }
+        .nav-menu a { display:flex; align-items:center; gap:0.8rem; padding:0.7rem 1rem; border-radius:40px; color:#4a5f7e; text-decoration:none; font-weight:500; font-size:0.95rem; transition:0.2s; }
+        .nav-menu a i { width:1.4rem; font-size:1.1rem; color:#7a8fa8; }
+        .nav-menu a:hover { background:#eef4fe; color:#1a2b4a; }
+        .nav-menu a.active { background:#eef4fe; color:#1a2b4a; font-weight:600; }
+        .nav-menu a.active i { color:#3b6eff; }
+        .sidebar-progress { margin-top:2.2rem; background:#f4f8ff; border-radius:28px; padding:1.2rem 1.2rem 1.4rem; }
+        .sidebar-progress p { font-size:0.85rem; font-weight:600; color:#1a2b4a; display:flex; justify-content:space-between; }
+        .progress-bar-bg { height:8px; background:#dce5f5; border-radius:20px; margin:0.5rem 0 0.2rem; overflow:hidden; }
+        .progress-bar-fill { height:100%; background:linear-gradient(90deg,#3b6eff,#7a9eff); border-radius:20px; width:68%; }
+        .main-content { display:flex; flex-direction:column; gap:2rem; }
+        .page-content { background:#fff; border-radius:28px; padding:1.8rem 2rem; box-shadow:0 6px 20px rgba(0,20,60,0.04); border:1px solid rgba(0,0,0,0.02); min-height:400px; }
+        .page-content h2 { font-size:1.4rem; font-weight:700; margin-bottom:0.5rem; display:flex; align-items:center; gap:0.6rem; }
+        .page-content h2 i { color:#3b6eff; }
+        .page-content .subtitle { color:#6b7f9e; font-size:0.9rem; margin-bottom:1.5rem; }
+        .community-post { padding:1rem 0; border-bottom:1px solid #f0f4fc; display:flex; gap:1rem; }
+        .community-post:last-child { border-bottom:none; }
+        .community-post .post-avatar { width:44px; height:44px; border-radius:50%; background:#eef4fe; display:flex; align-items:center; justify-content:center; color:#3b6eff; font-weight:700; flex-shrink:0; }
+        .community-post .post-content { flex:1; }
+        .community-post .post-content .post-author { font-weight:600; font-size:0.9rem; }
+        .community-post .post-content .post-author span { font-weight:400; color:#6b7f9e; font-size:0.75rem; }
+        .community-post .post-content .post-text { font-size:0.9rem; color:#1a2b4a; margin:0.2rem 0; }
+        .community-post .post-content .post-meta { font-size:0.75rem; color:#6b7f9e; display:flex; gap:1rem; }
+        .community-post .post-content .post-meta i { margin-right:0.2rem; }
+        .footer { margin-top:2.8rem; padding-top:1.2rem; border-top:1px solid rgba(0,0,0,0.04); display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:1rem; font-size:0.8rem; color:#6b7f9e; }
+        .footer a { color:#4a5f7e; text-decoration:none; transition:0.2s; cursor:pointer; }
+        .footer a:hover { color:#1a2b4a; }
+        .footer-links { display:flex; gap:1.6rem; }
+        @media (max-width:480px) { .top-nav { padding:0.6rem 1.2rem; border-radius:32px; } .nav-search { flex:1 1 100%; max-width:100%; } .modal-box { padding:1.5rem; } .page-content { padding:1.2rem; } }
+    </style>
+</head>
+<body>
+    <div class="lms-wrapper">
+        <header class="top-nav">
+            <div class="logo"><a href="index.html"><i class="fas fa-graduation-cap"></i> LearnHub</a></div>
+            <div class="nav-search"><input type="text" id="searchInput" placeholder="Search community posts..." /><button id="searchBtn"><i class="fas fa-search"></i> Search</button></div>
+            <div class="nav-right">
+                <div style="position:relative;"><button class="icon-btn" id="bellBtn"><i class="far fa-bell"></i><span class="badge-dot"></span></button>
+                    <div class="dropdown" id="bellDropdown"><div class="dropdown-title">Notifications</div><div class="notification-item"><div class="notif-icon"><i class="fas fa-check"></i></div><div class="notif-text">Your UX project was reviewed</div><div class="notif-time">2h ago</div></div><div class="dropdown-divider"></div><button class="dropdown-item" onclick="alert('📬 View all')"><i class="fas fa-arrow-right"></i> View all</button></div></div>
+                <div style="position:relative;"><button class="icon-btn" id="helpBtn"><i class="far fa-question-circle"></i></button>
+                    <div class="dropdown" id="helpDropdown"><div class="dropdown-title">Help</div><button class="dropdown-item" onclick="openModal('help')"><i class="fas fa-life-ring"></i> Help Center</button><button class="dropdown-item" onclick="openModal('faq')"><i class="fas fa-question"></i> FAQ</button></div></div>
+                <div style="position:relative;"><div class="avatar" id="avatarBtn">JD</div>
+                    <div class="dropdown" id="profileDropdown"><div style="padding:0.6rem 1.2rem 0.3rem;"><div style="font-weight:700;font-size:0.95rem;">James Davis</div><div style="font-size:0.75rem;color:#8a9bb8;">james.d@learnhub.com</div></div><div class="dropdown-divider"></div><button class="dropdown-item" onclick="alert('👤 Profile')"><i class="fas fa-user"></i> My Profile</button><button class="dropdown-item" onclick="alert('⚙️ Settings')"><i class="fas fa-cog"></i> Settings</button><div class="dropdown-divider"></div><button class="dropdown-item" onclick="alert('👋 Logout')" style="color:#e74c3c;"><i class="fas fa-sign-out-alt"></i> Log out</button></div></div>
+            </div>
+        </header>
+        <div class="dashboard-grid">
+            <aside class="sidebar">
+                <div class="greeting">👋 Welcome back</div><div class="user-name">James Davis <i class="fas fa-check-circle"></i></div>
+                <nav class="nav-menu">
+                    <a href="index.html"><i class="fas fa-th-large"></i> Dashboard</a>
+                    <a href="my-courses.html"><i class="fas fa-book-open"></i> My Courses</a>
+                    <a href="assignments.html"><i class="fas fa-tasks"></i> Assignments</a>
+                    <a href="schedule.html"><i class="fas fa-calendar-alt"></i> Schedule</a>
+                    <a href="community.html" class="active"><i class="fas fa-users"></i> Community</a>
+                    <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+                </nav>
+                <div class="sidebar-progress"><p><span>Overall progress</span><span>68%</span></p><div class="progress-bar-bg"><div class="progress-bar-fill"></div></div><div style="font-size:0.75rem;color:#6b7f9e;margin-top:0.3rem;">4 of 6 courses completed</div></div>
+            </aside>
+            <main class="main-content">
+                <div class="page-content">
+                    <h2><i class="fas fa-users"></i> Community</h2>
+                    <div class="subtitle">Connect with fellow learners</div>
+                    <div id="communityContainer"></div>
+                </div>
+            </main>
+        </div>
+        <footer class="footer"><span>© 2026 LearnHub</span><div class="footer-links"><a id="footerHelp">Help</a><a id="footerPrivacy">Privacy</a><a id="footerTerms">Terms</a></div></footer>
+    </div>
+    <div class="modal-overlay" id="modalOverlay"><div class="modal-box"><h3><i class="fas fa-info-circle"></i> <span id="modalTitleText">Help</span></h3><p id="modalBody"></p><button class="close-modal" id="modalCloseBtn">Close</button></div></div>
+    <script>
+        (function() {
+            const posts = [
+                { author: "Sarah Lin", avatar: "SL", text: "Just finished the UX Design module! Loved the hands-on project. 😍", time: "2h ago", likes: 12, replies: 4 },
+                { author: "Mark Chen", avatar: "MC", text: "Anyone else working on the Python assignment? Let's form a study group!", time: "5h ago", likes: 8,
+                    replies: 6 },
+                { author: "Emma Wong", avatar: "EW", text: "Marketing case study due next week. I've found some great resources, happy to share!", time: "1d ago",
+                    likes: 15, replies: 9 },
+                { author: "James Carter", avatar: "JC", text: "Leadership reflection paper – don't forget to include real-world examples.", time: "2d ago",
+                    likes: 5, replies: 2 },
+            ];
+            const container = document.getElementById('communityContainer');
+            const searchInput = document.getElementById('searchInput');
+            const searchBtn = document.getElementById('searchBtn');
+
+            function renderPosts(filter = '') {
+                const q = filter.toLowerCase().trim();
+                const filtered = posts.filter(p => p.text.toLowerCase().includes(q) || p.author.toLowerCase().includes(q));
+                container.innerHTML = '';
+                if (filtered.length === 0) {
+                    container.innerHTML =
+                        `<div style="text-align:center;padding:2rem;color:#8a9bb8;"><i class="fas fa-search" style="font-size:2rem;display:block;margin-bottom:0.5rem;"></i>No posts match “${filter}”</div>`;
+                    return;
+                }
+                filtered.forEach(p => {
+                    const div = document.createElement('div');
+                    div.className = 'community-post';
+                    div.innerHTML = `
+                        <div class="post-avatar">${p.avatar}</div>
+                        <div class="post-content">
+                            <div class="post-author">${p.author} <span>${p.time}</span></div>
+                            <div class="post-text">${p.text}</div>
+                            <div class="post-meta">
+                                <span><i class="far fa-heart"></i> ${p.likes}</span>
+                                <span><i class="far fa-comment"></i> ${p.replies}</span>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+            }
+
+            function performSearch() { renderPosts(searchInput.value); }
+            searchBtn.addEventListener('click', performSearch);
+            searchInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') performSearch(); });
+            let debounce;
+            searchInput.addEventListener('input', () => { clearTimeout(debounce);
+                debounce = setTimeout(performSearch, 250); });
+            renderPosts();
+
+            // ─── dropdowns & modal (same as index) ────────────────
+            function closeAllDropdowns() {
+                document.getElementById('bellDropdown').classList.remove('open');
+                document.getElementById('helpDropdown').classList.remove('open');
+                document.getElementById('profileDropdown').classList.remove('open');
+            }
+
+            function toggleDropdown(dropdown, e) { e.stopPropagation(); const isOpen = dropdown.classList.contains('open');
+                closeAllDropdowns(); if (!isOpen) dropdown.classList.add('open'); }
+            document.addEventListener('click', (e) => { if (!e.target.closest('.dropdown') && !e.target.closest('.icon-btn') && !e
+                    .target.closest('.avatar')) closeAllDropdowns(); });
+            document.getElementById('bellBtn').addEventListener('click', (e) => toggleDropdown(document.getElementById(
+            'bellDropdown'), e));
+            document.getElementById('helpBtn').addEventListener('click', (e) => toggleDropdown(document.getElementById(
+            'helpDropdown'), e));
+            document.getElementById('avatarBtn').addEventListener('click', (e) => toggleDropdown(document.getElementById(
+                'profileDropdown'), e));
+
+            function openModal(type) {
+                closeAllDropdowns();
+                const map = {
+                    help: { title: 'Help Center', body: '📖 Need help? Visit our Help Center.' },
+                    faq: { title: 'FAQ', body: '❓ How to post in community? Click the "New Post" button (coming soon).' },
+                    privacy: { title: 'Privacy Policy', body: '🔒 We respect your privacy.' },
+                    terms: { title: 'Terms of Service', body: '📜 By using LearnHub, you agree to our Terms.' },
+                };
+                const data = map[type] || map.help;
+                document.getElementById('modalTitleText').textContent = data.title;
+                document.getElementById('modalBody').innerHTML = data.body;
+                document.getElementById('modalOverlay').classList.add('open');
+            }
+
+            function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+            document.getElementById('footerHelp').addEventListener('click', (e) => { e.preventDefault();
+                openModal('help'); });
+            document.getElementById('footerPrivacy').addEventListener('click', (e) => { e.preventDefault();
+                openModal('privacy'); });
+            document.getElementById('footerTerms').addEventListener('click', (e) => { e.preventDefault();
+                openModal('terms'); });
+            document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
+            document.getElementById('modalOverlay').addEventListener('click', (e) => { if (e.target === document.getElementById(
+                    'modalOverlay')) closeModal(); });
+            window.openModal = openModal;
+        })();
+    </script>
+</body>
+</html>

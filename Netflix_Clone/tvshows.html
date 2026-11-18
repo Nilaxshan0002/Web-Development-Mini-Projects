@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Netflix Clone · TV Shows</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===== TOAST NOTIFICATION ===== -->
+  <div id="toast" class="toast"><i class="fas fa-check-circle"></i> <span id="toastMessage">Welcome!</span></div>
+
+  <!-- ===== SIGN IN MODAL ===== -->
+  <div id="signinModal" class="modal-overlay">
+    <div class="modal">
+      <button class="modal-close" id="modalClose">&times;</button>
+      <h2><i class="fas fa-sign-in-alt" style="color:#e50914; margin-right:10px;"></i>Sign In</h2>
+      <p>Enter your credentials to continue.</p>
+      <input type="email" id="modalEmail" placeholder="Email address" />
+      <input type="password" id="modalPassword" placeholder="Password" />
+      <button class="modal-signin-btn" id="modalSignInBtn">Sign In</button>
+      <div class="modal-footer">New to Netflix? <a href="#">Sign up now</a></div>
+    </div>
+  </div>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar">
+    <div class="nav-left">
+      <a href="index.html" class="logo"><i class="fab fa-netflix"></i>NETFLIX</a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="tvshows.html" class="active">TV Shows</a>
+        <a href="movies.html">Movies</a>
+        <a href="newpopular.html">New & Popular</a>
+        <a href="mylist.html">My List</a>
+      </div>
+    </div>
+    <div class="nav-right">
+      <i class="fas fa-search"></i>
+      <i class="fas fa-bell"></i>
+      <button class="signin-btn" id="signinBtn">Sign In</button>
+    </div>
+  </nav>
+
+  <!-- ===== TV SHOWS CONTENT ===== -->
+  <div class="page-container">
+    <h1>📺 TV Shows</h1>
+    <p>Explore the best TV series, from drama to comedy, sci-fi, and more. Stay tuned for new episodes.</p>
+    <div class="movie-grid">
+      <div class="movie-card">
+        <img src="images/Stranger Things.jpg" alt="Stranger Things" />
+        <div class="movie-info"><h4>Stranger Things</h4><div class="meta"><span><i class="fas fa-star"></i> 8.7</span><span>2016</span></div></div>
+      </div>
+      <div class="movie-card">
+        <img src="images/Money Heist.jpg" alt="Money Heist" />
+        <div class="movie-info"><h4>Money Heist</h4><div class="meta"><span><i class="fas fa-star"></i> 8.2</span><span>2017</span></div></div>
+      </div>
+      <div class="movie-card">
+        <img src="images/Gangs of Wasseypur.jpg" alt="Gangs of Wasseypur" />
+        <div class="movie-info"><h4>Gangs of Wasseypur</h4><div class="meta"><span><i class="fas fa-star"></i> 8.5</span><span>2012</span></div></div>
+      </div>
+      <div class="movie-card">
+        <img src="images/The Dark Knight.jpg" alt="The Dark Knight" />
+        <div class="movie-info"><h4>The Dark Knight</h4><div class="meta"><span><i class="fas fa-star"></i> 9.0</span><span>2008</span></div></div>
+      </div>
+      <div class="movie-card">
+        <img src="images/Inception.jpg" alt="Inception" />
+        <div class="movie-info"><h4>Inception</h4><div class="meta"><span><i class="fas fa-star"></i> 8.8</span><span>2010</span></div></div>
+      </div>
+      <div class="movie-card">
+        <img src="images/Haseen Dilruba.jpg" alt="Haseen Dilruba" />
+        <div class="movie-info"><h4>Haseen Dilruba</h4><div class="meta"><span><i class="fas fa-star"></i> 7.2</span><span>2021</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <div class="footer-note">
+    <i class="fab fa-netflix"></i> Netflix clone · crafted with <i class="fas fa-heart" style="color:#e50914;"></i> · 2026
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

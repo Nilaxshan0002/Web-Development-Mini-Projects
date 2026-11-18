@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FitTrack · Fitness Dashboard</title>
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <!-- Google Font: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, system-ui, sans-serif;
+      background: #f0f5fc;
+      color: #1a2634;
+      display: flex;
+      justify-content: center;
+      padding: 1.2rem;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    .tracker-wrapper {
+      max-width: 1360px;
+      width: 100%;
+    }
+
+    /* ===== TOP NAV ===== */
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.8rem 1.5rem;
+      background: #ffffff;
+      padding: 0.6rem 2rem;
+      border-radius: 60px;
+      box-shadow: 0 4px 20px rgba(0, 20, 40, 0.04);
+      margin-bottom: 2rem;
+      border: 1px solid rgba(0,0,0,0.02);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      color: #1a2634;
+    }
+
+    .logo i {
+      color: #4f8ef7;
+      font-size: 1.8rem;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem 1.2rem;
+    }
+
+    .nav-right .icon-btn {
+      background: transparent;
+      border: none;
+      font-size: 1.2rem;
+      color: #5a6e8a;
+      cursor: pointer;
+      transition: 0.2s;
+      padding: 0.3rem;
+      border-radius: 40px;
+      position: relative;
+    }
+
+    .nav-right .icon-btn:hover {
+      color: #1a2634;
+      background: #f0f5fc;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4f8ef7, #7aaffa);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      border: 2px solid #fff;
+      box-shadow: 0 2px 8px rgba(79, 142, 247, 0.2);
+    }
+
+    /* ===== DASHBOARD GRID ===== */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 1.8rem;
+    }
+
+    @media (max-width: 920px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 1.8rem;
+      }
+    }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar {
+      background: #ffffff;
+      border-radius: 32px;
+      padding: 1.8rem 1.2rem;
+      box-shadow: 0 4px 24px rgba(0, 20, 40, 0.04);
+      border: 1px solid rgba(0,0,0,0.02);
+      height: fit-content;
+    }
+
+    .sidebar .greeting {
+      font-size: 0.8rem;
+      color: #6b7f9e;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      margin-bottom: 0.1rem;
+    }
+
+    .sidebar .user-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 1.8rem;
+      color: #1a2634;
+    }
+
+    .sidebar .user-name i {
+      color: #4f8ef7;
+      font-size: 0.8rem;
+      margin-left: 6px;
+    }
+
+    .nav-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .nav-menu a {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.7rem 1rem;
+      border-radius: 40px;
+      color: #5a6e8a;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+
+    .nav-menu a i {
+      width: 1.4rem;
+      font-size: 1.1rem;
+      color: #8a9bb8;
+    }
+
+    .nav-menu a:hover {
+      background: #f0f5fc;
+      color: #1a2634;
+    }
+
+    .nav-menu a.active {
+      background: #f0f5fc;
+      color: #1a2634;
+      font-weight: 600;
+    }
+
+    .nav-menu a.active i {
+      color: #4f8ef7;
+    }
+
+    .sidebar-goal {
+      margin-top: 2rem;
+      background: linear-gradient(135deg, #4f8ef7, #7aaffa);
+      border-radius: 24px;
+      padding: 1.2rem 1.2rem 1.4rem;
+      color: #fff;
+    }
+
+    .sidebar-goal p {
+      font-size: 0.8rem;
+      opacity: 0.9;
+      margin-bottom: 0.2rem;
+    }
+
+    .sidebar-goal h4 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .goal-progress {
+      height: 6px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 20px;
+      overflow: hidden;
+      margin: 0.5rem 0 0.2rem;
+    }
+
+    .goal-progress .fill {
+      height: 100%;
+      background: #fff;
+      border-radius: 20px;
+      width: 74%;
+    }
+
+    .sidebar-goal .goal-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      opacity: 0.85;
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      gap: 1.8rem;
+    }
+
+    /* All sections are hidden by default */
+    .page-section {
+      display: none;
+    }
+    .page-section.active {
+      display: block;
+    }
+
+    /* stats row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .stat-card {
+      background: #ffffff;
+      border-radius: 28px;
+      padding: 1.2rem 1.4rem;
+      box-shadow: 0 4px 16px rgba(0, 20, 40, 0.04);
+      border: 1px solid rgba(0,0,0,0.02);
+      transition: 0.2s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(0, 20, 40, 0.06);
+    }
+
+    .stat-card .stat-icon {
+      font-size: 1.6rem;
+      color: #4f8ef7;
+      margin-bottom: 0.2rem;
+    }
+
+    .stat-card .stat-number {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #1a2634;
+      line-height: 1.2;
+    }
+
+    .stat-card .stat-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: #6b7f9e;
+    }
+
+    .stat-card .stat-change {
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+    }
+
+    .stat-card .stat-change.positive {
+      color: #22a65e;
+    }
+
+    .stat-card .stat-change.negative {
+      color: #f25a6a;
+    }
+
+    /* charts row */
+    .charts-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.2rem;
+    }
+
+    @media (max-width: 760px) {
+      .charts-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .chart-card {
+      background: #ffffff;
+      border-radius: 28px;
+      padding: 1.4rem 1.4rem 1rem;
+      box-shadow: 0 4px 16px rgba(0, 20, 40, 0.04);
+      border: 1px solid rgba(0,0,0,0.02);
+    }
+
+    .chart-card .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.8rem;
+    }
+
+    .chart-card .card-header h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #1a2634;
+    }
+
+    .chart-card .card-header span {
+      font-size: 0.75rem;
+      color: #6b7f9e;
+      background: #f0f5fc;
+      padding: 0.2rem 0.8rem;
+      border-radius: 30px;
+    }
+
+    .chart-container {
+      position: relative;
+      height: 200px;
+    }
+
+    /* workout & meals (reused in sections) */
+    .workout-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid #f0f5fc;
+    }
+
+    .workout-item:last-child {
+      border-bottom: none;
+    }
+
+    .workout-item .workout-info {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .workout-item .workout-icon {
+      width: 36px;
+      height: 36px;
+      background: #e6edfc;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #4f8ef7;
+      font-size: 1rem;
+    }
+
+    .workout-item .workout-details {
+      font-size: 0.85rem;
+    }
+
+    .workout-item .workout-details strong {
+      color: #1a2634;
+    }
+
+    .workout-item .workout-details .meta {
+      font-size: 0.75rem;
+      color: #6b7f9e;
+    }
+
+    .workout-item .workout-cal {
+      font-weight: 600;
+      color: #4f8ef7;
+      font-size: 0.85rem;
+    }
+
+    .meal-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #f0f5fc;
+      font-size: 0.85rem;
+    }
+
+    .meal-item:last-child {
+      border-bottom: none;
+    }
+
+    .meal-item .meal-info {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .meal-item .meal-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .meal-item .meal-cal {
+      font-weight: 600;
+      color: #1a2634;
+    }
+
+    /* Panel for sections */
+    .panel {
+      background: #ffffff;
+      border-radius: 28px;
+      padding: 1.4rem 1.6rem;
+      box-shadow: 0 4px 16px rgba(0, 20, 40, 0.04);
+      border: 1px solid rgba(0,0,0,0.02);
+    }
+
+    .panel h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #1a2634;
+    }
+
+    .panel h4 i {
+      color: #4f8ef7;
+    }
+
+    /* Progress & achievements specific */
+    .stat-row {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .stat-block {
+      background: #f0f5fc;
+      border-radius: 16px;
+      padding: 1rem 1.5rem;
+      flex: 1;
+      min-width: 120px;
+    }
+    .stat-block .number {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #1a2634;
+    }
+    .stat-block .label {
+      font-size: 0.75rem;
+      color: #6b7f9e;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .badge-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+    .badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #f0f5fc;
+      border-radius: 20px;
+      padding: 1rem 1.2rem;
+      min-width: 100px;
+    }
+    .badge i {
+      font-size: 2.2rem;
+      color: #f5a623;
+    }
+    .badge .label {
+      font-size: 0.75rem;
+      margin-top: 0.3rem;
+      color: #6b7f9e;
+    }
+
+    .setting-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid #f0f5fc;
+    }
+    .setting-item:last-child {
+      border-bottom: none;
+    }
+    .setting-item .label {
+      font-weight: 500;
+    }
+    .setting-item .value {
+      color: #4f8ef7;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      margin-top: 2rem;
+      padding-top: 1.2rem;
+      border-top: 1px solid rgba(0,0,0,0.04);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.8rem;
+      color: #6b7f9e;
+    }
+
+    .footer a {
+      color: #5a6e8a;
+      text-decoration: none;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+
+    .footer a:hover {
+      color: #1a2634;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.6rem;
+    }
+
+    @media (max-width: 480px) {
+      .top-nav {
+        padding: 0.6rem 1rem;
+        border-radius: 32px;
+      }
+      .stat-card {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="tracker-wrapper">
+
+  <!-- ===== TOP NAV ===== -->
+  <header class="top-nav">
+    <div class="logo"><i class="fas fa-heartbeat"></i> FitTrack</div>
+    <div class="nav-right">
+      <button class="icon-btn" id="bellBtn" aria-label="notifications"><i class="far fa-bell"></i></button>
+      <button class="icon-btn" id="calendarBtn" aria-label="calendar"><i class="far fa-calendar-alt"></i></button>
+      <div class="avatar" id="avatarBtn">JD</div>
+    </div>
+  </header>
+
+  <!-- ===== DASHBOARD GRID ===== -->
+  <div class="dashboard-grid">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="greeting">👋 Good morning</div>
+      <div class="user-name">James Davis <i class="fas fa-check-circle"></i></div>
+      <nav class="nav-menu">
+        <a data-section="dashboard" class="active"><i class="fas fa-th-large"></i> Dashboard</a>
+        <a data-section="workouts"><i class="fas fa-running"></i> Workouts</a>
+        <a data-section="nutrition"><i class="fas fa-apple-alt"></i> Nutrition</a>
+        <a data-section="progress"><i class="fas fa-chart-line"></i> Progress</a>
+        <a data-section="achievements"><i class="fas fa-medal"></i> Achievements</a>
+        <a data-section="settings"><i class="fas fa-cog"></i> Settings</a>
+      </nav>
+      <div class="sidebar-goal">
+        <p>🎯 Weekly goal</p>
+        <h4>2,400 cal · 85%</h4>
+        <div class="goal-progress"><div class="fill"></div></div>
+        <div class="goal-label">
+          <span>1,820 cal burned</span>
+          <span>580 remaining</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+      <!-- ========== DASHBOARD SECTION ========== -->
+      <div id="section-dashboard" class="page-section active">
+        <!-- stats -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-fire"></i></div>
+            <div class="stat-number">2,847</div>
+            <div class="stat-label">Calories Burned</div>
+            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> 12%</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-heart"></i></div>
+            <div class="stat-number">72</div>
+            <div class="stat-label">Heart Rate (avg)</div>
+            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> 3 bpm</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-walking"></i></div>
+            <div class="stat-number">8,492</div>
+            <div class="stat-label">Steps Today</div>
+            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> 7%</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-clock"></i></div>
+            <div class="stat-number">64</div>
+            <div class="stat-label">Active Minutes</div>
+            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> 15%</div>
+          </div>
+        </div>
+
+        <!-- charts -->
+        <div class="charts-row">
+          <div class="chart-card">
+            <div class="card-header">
+              <h4><i class="fas fa-chart-bar" style="color:#4f8ef7;"></i> Weekly Activity</h4>
+              <span>Last 7 days</span>
+            </div>
+            <div class="chart-container">
+              <canvas id="activityChart"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="card-header">
+              <h4><i class="fas fa-pie-chart" style="color:#4f8ef7;"></i> Calorie Breakdown</h4>
+              <span>Today</span>
+            </div>
+            <div class="chart-container">
+              <canvas id="calorieChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- workouts + meals -->
+        <div class="activity-row">
+          <div class="panel">
+            <h4><i class="fas fa-dumbbell"></i> Today's Workouts</h4>
+            <div id="workoutList"></div>
+          </div>
+          <div class="panel">
+            <h4><i class="fas fa-utensils"></i> Meals Log</h4>
+            <div id="mealList"></div>
+          </div>
+        </div>
+      </div>
+      <!-- ========== END DASHBOARD ========== -->
+
+      <!-- ========== WORKOUTS SECTION ========== -->
+      <div id="section-workouts" class="page-section">
+        <div class="panel">
+          <h4><i class="fas fa-dumbbell"></i> Your Workouts</h4>
+          <div id="workoutsFullList"></div>
+        </div>
+      </div>
+
+      <!-- ========== NUTRITION SECTION ========== -->
+      <div id="section-nutrition" class="page-section">
+        <div class="panel">
+          <h4><i class="fas fa-utensils"></i> Meal Log</h4>
+          <div id="mealsFullList"></div>
+        </div>
+      </div>
+
+      <!-- ========== PROGRESS SECTION ========== -->
+      <div id="section-progress" class="page-section">
+        <div class="panel">
+          <h4><i class="fas fa-chart-simple"></i> Your Progress</h4>
+          <div class="stat-row">
+            <div class="stat-block"><div class="number">12.5 kg</div><div class="label">Weight Lost</div></div>
+            <div class="stat-block"><div class="number">8%</div><div class="label">Body Fat</div></div>
+            <div class="stat-block"><div class="number">5.2 km</div><div class="label">Avg. Run</div></div>
+          </div>
+          <p style="margin-top:1rem; color:#6b7f9e; font-size:0.9rem;">Keep up the great work! You're 78% towards your goal.</p>
+        </div>
+      </div>
+
+      <!-- ========== ACHIEVEMENTS SECTION ========== -->
+      <div id="section-achievements" class="page-section">
+        <div class="panel">
+          <h4><i class="fas fa-trophy"></i> Your Badges</h4>
+          <div class="badge-grid">
+            <div class="badge"><i class="fas fa-medal"></i><span class="label">10K Steps</span></div>
+            <div class="badge"><i class="fas fa-fire"></i><span class="label">500 cal burned</span></div>
+            <div class="badge"><i class="fas fa-dumbbell"></i><span class="label">Workout Streak</span></div>
+            <div class="badge"><i class="fas fa-apple-alt"></i><span class="label">Clean Eating</span></div>
+          </div>
+          <p style="margin-top:1rem; color:#6b7f9e; font-size:0.9rem;">Earn more badges by completing daily challenges!</p>
+        </div>
+      </div>
+
+      <!-- ========== SETTINGS SECTION ========== -->
+      <div id="section-settings" class="page-section">
+        <div class="panel">
+          <h4><i class="fas fa-sliders-h"></i> Settings</h4>
+          <div class="setting-item"><span class="label">Weight Unit</span><span class="value">kg</span></div>
+          <div class="setting-item"><span class="label">Distance Unit</span><span class="value">km</span></div>
+          <div class="setting-item"><span class="label">Daily Goal</span><span class="value">2,400 cal</span></div>
+          <div class="setting-item"><span class="label">Notifications</span><span class="value">On</span></div>
+          <div class="setting-item"><span class="label">Privacy</span><span class="value">Friends only</span></div>
+        </div>
+      </div>
+
+      <!-- ========== PRIVACY SECTION ========== -->
+      <div id="section-privacy" class="page-section">
+        <div class="panel">
+          <h4><i class="fas fa-lock"></i> Privacy Policy</h4>
+          <p style="color:#6b7f9e; line-height:1.7;">Your data is encrypted and never shared with third parties. We collect only the information you provide to track your fitness progress. You can request data deletion at any time.</p>
+        </div>
+      </div>
+
+      <!-- ========== TERMS SECTION ========== -->
+      <div id="section-terms" class="page-section">
+        <div class="panel">
+          <h4><i class="fas fa-file-contract"></i> Terms of Service</h4>
+          <p style="color:#6b7f9e; line-height:1.7;">By using FitTrack, you agree to our terms. You are responsible for your own health and safety. We provide fitness tracking as a tool and are not liable for any injuries. The service is provided "as is".</p>
+        </div>
+      </div>
+
+      <!-- ========== SUPPORT SECTION ========== -->
+      <div id="section-support" class="page-section">
+        <div class="panel">
+          <h4><i class="fas fa-headset"></i> Support</h4>
+          <p style="color:#6b7f9e; line-height:1.7;">For any issues, please email <strong>support@fittrack.com</strong> or call <strong>+1-800-555-FIT</strong>. We're available 24/7 to help you reach your fitness goals.</p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <span>© 2026 FitTrack · Stay healthy</span>
+    <div class="footer-links">
+      <a data-section="privacy">Privacy</a>
+      <a data-section="terms">Terms</a>
+      <a data-section="support">Support</a>
+    </div>
+  </footer>
+</div>
+
+<script>
+  (function() {
+    "use strict";
+
+    // ----- Data -----
+    const workouts = [
+      { name: "Morning Run", type: "Cardio", duration: "32 min", calories: 420, icon: "fa-running" },
+      { name: "Upper Body", type: "Strength", duration: "45 min", calories: 380, icon: "fa-dumbbell" },
+      { name: "Yoga Flow", type: "Flexibility", duration: "28 min", calories: 210, icon: "fa-pray" },
+      { name: "HIIT Session", type: "Cardio", duration: "25 min", calories: 350, icon: "fa-bolt" },
+      { name: "Evening Walk", type: "Cardio", duration: "20 min", calories: 180, icon: "fa-walking" }
+    ];
+
+    const meals = [
+      { name: "Breakfast", items: "Oatmeal, berries, nuts", calories: 420, color: "#f5a623" },
+      { name: "Lunch", items: "Grilled chicken salad", calories: 580, color: "#22a65e" },
+      { name: "Snack", items: "Protein shake, banana", calories: 240, color: "#4f8ef7" },
+      { name: "Dinner", items: "Salmon, quinoa, veggies", calories: 620, color: "#7aaffa" },
+      { name: "Evening snack", items: "Almonds, dark chocolate", calories: 180, color: "#e67e22" }
+    ];
+
+    // ----- Render helpers -----
+    function renderWorkouts(containerId, data) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = '';
+      data.forEach(w => {
+        const div = document.createElement('div');
+        div.className = 'workout-item';
+        div.innerHTML = `
+          <div class="workout-info">
+            <div class="workout-icon"><i class="fas ${w.icon}"></i></div>
+            <div class="workout-details">
+              <strong>${w.name}</strong>
+              <div class="meta">${w.type} · ${w.duration}</div>
+            </div>
+          </div>
+          <div class="workout-cal">${w.calories} cal</div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function renderMeals(containerId, data) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = '';
+      data.forEach(m => {
+        const div = document.createElement('div');
+        div.className = 'meal-item';
+        div.innerHTML = `
+          <div class="meal-info">
+            <span class="meal-dot" style="background:${m.color};"></span>
+            <div>
+              <strong>${m.name}</strong>
+              <div style="font-size:0.75rem; color:#6b7f9e;">${m.items}</div>
+            </div>
+          </div>
+          <div class="meal-cal">${m.calories} cal</div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    // ----- Initialize dashboard lists -----
+    renderWorkouts('workoutList', workouts.slice(0, 4));
+    renderMeals('mealList', meals.slice(0, 4));
+    renderWorkouts('workoutsFullList', workouts);
+    renderMeals('mealsFullList', meals);
+
+    // ----- Charts (only for dashboard) -----
+    const activityCtx = document.getElementById('activityChart').getContext('2d');
+    new Chart(activityCtx, {
+      type: 'line',
+      data: {
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        datasets: [{
+          label: 'Calories',
+          data: [320, 450, 380, 520, 490, 610, 540],
+          borderColor: '#4f8ef7',
+          backgroundColor: 'rgba(79, 142, 247, 0.08)',
+          fill: true,
+          tension: 0.3,
+          pointBackgroundColor: '#4f8ef7',
+          pointRadius: 4,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { font: { size: 10 } } },
+          x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+        }
+      }
+    });
+
+    const calorieCtx = document.getElementById('calorieChart').getContext('2d');
+    new Chart(calorieCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Breakfast', 'Lunch', 'Snack', 'Dinner'],
+        datasets: [{
+          data: [420, 580, 240, 620],
+          backgroundColor: ['#f5a623', '#22a65e', '#4f8ef7', '#7aaffa'],
+          borderWidth: 0,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              boxWidth: 10,
+              padding: 8,
+              font: { size: 10, weight: '500' },
+              usePointStyle: true
+            }
+          }
+        },
+        cutout: '70%',
+      }
+    });
+
+    // ----- Navigation: show/hide sections -----
+    const sections = {
+      dashboard: document.getElementById('section-dashboard'),
+      workouts: document.getElementById('section-workouts'),
+      nutrition: document.getElementById('section-nutrition'),
+      progress: document.getElementById('section-progress'),
+      achievements: document.getElementById('section-achievements'),
+      settings: document.getElementById('section-settings'),
+      privacy: document.getElementById('section-privacy'),
+      terms: document.getElementById('section-terms'),
+      support: document.getElementById('section-support')
+    };
+
+    // Hide all, then show the target
+    function showSection(sectionId) {
+      Object.values(sections).forEach(el => el.classList.remove('active'));
+      if (sections[sectionId]) {
+        sections[sectionId].classList.add('active');
+      }
+      // Update sidebar active class
+      document.querySelectorAll('.nav-menu a').forEach(link => {
+        link.classList.toggle('active', link.dataset.section === sectionId);
+      });
+    }
+
+    // Sidebar clicks
+    document.querySelectorAll('.nav-menu a[data-section]').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const section = this.dataset.section;
+        if (section) showSection(section);
+      });
+    });
+
+    // Footer links (Privacy, Terms, Support)
+    document.querySelectorAll('.footer-links a[data-section]').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const section = this.dataset.section;
+        if (section) showSection(section);
+      });
+    });
+
+    // ----- Top-right interactions (alerts) -----
+    document.getElementById('bellBtn').addEventListener('click', function(e) {
+      e.stopPropagation();
+      alert('🔔 You have 3 new notifications!');
+    });
+
+    document.getElementById('calendarBtn').addEventListener('click', function(e) {
+      e.stopPropagation();
+      alert('📅 Today\'s events:\n- 10:00 AM Yoga\n- 2:00 PM HIIT\n- 6:00 PM Protein shake');
+    });
+
+    document.getElementById('avatarBtn').addEventListener('click', function(e) {
+      e.stopPropagation();
+      alert('👤 Profile: James Davis\nMember since 2024\nFitness Level: Advanced');
+    });
+
+    // Ensure dashboard is shown by default (already active)
+  })();
+</script>
+</body>
+</html>

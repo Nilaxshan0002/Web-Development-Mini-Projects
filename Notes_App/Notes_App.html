@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Notes App · Colorful</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet" />
+  <style>
+    /* ----- reset & base ----- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+      background: linear-gradient(145deg, #0b1a2e 0%, #1d3b5c 40%, #2a4f77 100%);
+      background-attachment: fixed;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* ----- floating orbs (background animation) ----- */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.5;
+      z-index: 0;
+      animation: floatOrb 16s infinite alternate ease-in-out;
+      pointer-events: none;
+    }
+    .orb1 {
+      width: 350px;
+      height: 350px;
+      background: #ff6b8a;
+      top: -80px;
+      left: -100px;
+      animation-duration: 18s;
+    }
+    .orb2 {
+      width: 400px;
+      height: 400px;
+      background: #6bcbff;
+      bottom: -120px;
+      right: -120px;
+      animation-duration: 22s;
+      animation-delay: -3s;
+    }
+    .orb3 {
+      width: 280px;
+      height: 280px;
+      background: #b47aff;
+      top: 40%;
+      left: 60%;
+      animation-duration: 20s;
+      animation-delay: -7s;
+    }
+
+    @keyframes floatOrb {
+      0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+      33% { transform: translate(60px, -40px) scale(1.1) rotate(5deg); }
+      66% { transform: translate(-30px, 60px) scale(0.9) rotate(-5deg); }
+      100% { transform: translate(40px, 20px) scale(1.05) rotate(3deg); }
+    }
+
+    /* ----- main glass container ----- */
+    .app-wrapper {
+      max-width: 1000px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 2.8rem;
+      padding: 2rem 2rem 2.5rem;
+      box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      position: relative;
+      z-index: 2;
+      transition: all 0.3s ease;
+    }
+
+    /* ----- header ----- */
+    header h1 {
+      font-size: 2.6rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #f9e0a0 0%, #f5b8d0 50%, #b7d9ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: inline-block;
+      text-shadow: 0 2px 20px rgba(255, 200, 150, 0.15);
+      animation: shimmer 6s infinite alternate;
+    }
+
+    @keyframes shimmer {
+      0% { filter: brightness(0.9); }
+      100% { filter: brightness(1.2); }
+    }
+
+    .subhead {
+      color: rgba(255, 255, 255, 0.65);
+      font-size: 0.95rem;
+      margin-top: 0.2rem;
+      border-left: 3px solid rgba(255, 215, 150, 0.4);
+      padding-left: 0.9rem;
+      font-weight: 300;
+      letter-spacing: 0.3px;
+    }
+
+    /* ----- form (glassmorphism) ----- */
+    .note-form {
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      padding: 1.5rem 1.8rem;
+      border-radius: 1.8rem;
+      margin: 1.8rem 0 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+    .note-form:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .form-group {
+      margin-bottom: 0.9rem;
+    }
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .note-form input,
+    .note-form textarea {
+      width: 100%;
+      padding: 0.9rem 1.2rem;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 1.2rem;
+      font-size: 0.95rem;
+      font-family: 'Inter', sans-serif;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      color: #f0f4fc;
+      transition: 0.25s ease;
+      outline: none;
+    }
+    .note-form input::placeholder,
+    .note-form textarea::placeholder {
+      color: rgba(255, 255, 255, 0.35);
+      font-weight: 300;
+    }
+    .note-form input:focus,
+    .note-form textarea:focus {
+      border-color: rgba(255, 215, 150, 0.5);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 0 4px rgba(255, 215, 150, 0.08);
+    }
+    .note-form textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+
+    .tag-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      align-items: center;
+    }
+    .tag-group input {
+      flex: 2 1 180px;
+    }
+
+    #addNoteBtn {
+      background: linear-gradient(145deg, #f5b06b, #f0906b);
+      color: #0b1a2e;
+      border: none;
+      padding: 0.8rem 2rem;
+      border-radius: 2.4rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: 0.25s ease;
+      box-shadow: 0 6px 20px rgba(240, 144, 107, 0.25);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      flex: 1 0 auto;
+      justify-content: center;
+      letter-spacing: 0.3px;
+    }
+    #addNoteBtn:hover {
+      transform: scale(0.97) translateY(-2px);
+      box-shadow: 0 12px 28px rgba(240, 144, 107, 0.35);
+      background: linear-gradient(145deg, #fcc084, #f09a6b);
+    }
+    #addNoteBtn:active {
+      transform: scale(0.94);
+    }
+
+    /* ----- notes header ----- */
+    .notes-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 1.2rem 0 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 0.7rem;
+    }
+
+    #noteCount {
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.9rem;
+      letter-spacing: 0.3px;
+    }
+
+    .clear-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 0.4rem 1.4rem;
+      border-radius: 2rem;
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: 0.2s ease;
+      backdrop-filter: blur(4px);
+    }
+    .clear-btn:hover {
+      background: rgba(255, 100, 100, 0.15);
+      border-color: rgba(255, 100, 100, 0.2);
+      color: #ffb3b3;
+    }
+
+    /* ----- notes grid ----- */
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-top: 0.5rem;
+    }
+
+    /* ----- note card (vibrant, animated) ----- */
+    .note-card {
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-radius: 1.6rem;
+      padding: 1.4rem 1.5rem 1.2rem;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      transition: all 0.35s cubic-bezier(0.15, 0.85, 0.3, 1.1);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      animation: cardAppear 0.5s ease backwards;
+      animation-delay: calc(var(--i, 0) * 0.05s);
+      position: relative;
+      overflow: hidden;
+    }
+    .note-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 30% 40%, rgba(255, 215, 150, 0.03), transparent 60%);
+      pointer-events: none;
+    }
+
+    @keyframes cardAppear {
+      0% { opacity: 0; transform: translateY(20px) scale(0.95); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .note-card:hover {
+      transform: translateY(-6px) scale(1.01);
+      border-color: rgba(255, 215, 150, 0.15);
+      box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.4);
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* colored left borders */
+    .note-card:nth-child(6n+1) { border-left: 4px solid #ffb07c; }
+    .note-card:nth-child(6n+2) { border-left: 4px solid #7cc8ff; }
+    .note-card:nth-child(6n+3) { border-left: 4px solid #b98aff; }
+    .note-card:nth-child(6n+4) { border-left: 4px solid #ff8a9b; }
+    .note-card:nth-child(6n+5) { border-left: 4px solid #7ae0b0; }
+    .note-card:nth-child(6n) { border-left: 4px solid #f5cf7a; }
+
+    .note-card h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #f5f0e8;
+      margin-bottom: 0.3rem;
+      word-break: break-word;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+
+    .note-card p {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.92rem;
+      line-height: 1.5;
+      margin: 0.3rem 0 0.8rem;
+      flex: 1;
+      word-break: break-word;
+    }
+
+    .note-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem 0.6rem;
+      margin-top: 0.2rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .tag-badge {
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      padding: 0.2rem 0.9rem;
+      border-radius: 1.2rem;
+      text-transform: lowercase;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(4px);
+    }
+
+    .note-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.6rem;
+      margin-top: 0.3rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      padding-top: 0.7rem;
+    }
+
+    .note-actions button {
+      background: rgba(255, 255, 255, 0.03);
+      border: none;
+      font-size: 0.75rem;
+      padding: 0.3rem 1rem;
+      border-radius: 2rem;
+      cursor: pointer;
+      font-weight: 500;
+      transition: 0.2s ease;
+      color: rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(4px);
+    }
+    .delete-btn:hover {
+      background: rgba(255, 80, 80, 0.2);
+      color: #ffa8a8;
+    }
+    .edit-btn:hover {
+      background: rgba(100, 180, 255, 0.15);
+      color: #b3d9ff;
+    }
+
+    /* ----- empty state ----- */
+    .empty-notes {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 3.5rem 1rem;
+      color: rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 2.4rem;
+      border: 1px dashed rgba(255, 255, 255, 0.06);
+      font-size: 0.95rem;
+      backdrop-filter: blur(4px);
+      animation: pulseEmpty 4s infinite ease-in-out;
+    }
+
+    @keyframes pulseEmpty {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 0.8; }
+    }
+
+    /* ----- responsive ----- */
+    @media (max-width: 550px) {
+      .app-wrapper { padding: 1.2rem; border-radius: 2rem; }
+      .tag-group { flex-direction: column; align-items: stretch; }
+      #addNoteBtn { width: 100%; }
+      .notes-grid { grid-template-columns: 1fr; }
+      header h1 { font-size: 1.8rem; }
+      .orb { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- animated background orbs -->
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+
+  <!-- main app -->
+  <div class="app-wrapper">
+    <header>
+      <h1>📝 Notes</h1>
+      <p class="subhead">colorful, animated, and full of life</p>
+    </header>
+
+    <section class="note-form">
+      <div class="form-group">
+        <input type="text" id="noteTitle" placeholder="Note title..." />
+      </div>
+      <div class="form-group">
+        <textarea id="noteContent" placeholder="Write your note here..." rows="4"></textarea>
+      </div>
+      <div class="form-group tag-group">
+        <input type="text" id="noteTags" placeholder="Tags (comma separated, e.g. work, idea)" />
+        <button id="addNoteBtn">➕ Save note</button>
+      </div>
+    </section>
+
+    <div class="notes-header">
+      <span id="noteCount">0 notes</span>
+      <button id="clearAllBtn" class="clear-btn">🗑️ Clear all</button>
+    </div>
+
+    <div id="notesContainer" class="notes-grid"></div>
+  </div>
+
+  <script>
+    // ----- JavaScript (full CRUD with tags, edit, local storage) -----
+
+    const notesKey = 'beautifulNotes';
+
+    // ----- helpers -----
+    function loadNotes() {
+      try {
+        return JSON.parse(localStorage.getItem(notesKey)) || [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveNotes(notes) {
+      localStorage.setItem(notesKey, JSON.stringify(notes));
+    }
+
+    // ----- escape html -----
+    function escapeHtml(text) {
+      if (!text) return '';
+      const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      };
+      return String(text).replace(/[&<>"']/g, m => map[m]);
+    }
+
+    // ----- render -----
+    function render() {
+      const notes = loadNotes();
+      const container = document.getElementById('notesContainer');
+      const countSpan = document.getElementById('noteCount');
+
+      if (!notes.length) {
+        container.innerHTML = `<div class="empty-notes">✨ no notes yet — start writing above</div>`;
+        countSpan.textContent = '0 notes';
+        return;
+      }
+
+      const reversed = [...notes].reverse();
+
+      container.innerHTML = reversed.map((note, idx) => {
+        const originalIndex = notes.length - 1 - idx;
+        const tags = note.tags || [];
+        const delay = idx * 0.04;
+        return `
+          <div class="note-card" data-index="${originalIndex}" style="--i: ${idx}; animation-delay: ${delay}s">
+            <h3>${escapeHtml(note.title) || 'untitled'}</h3>
+            <p>${escapeHtml(note.content) || '—'}</p>
+            <div class="note-tags">
+              ${tags.length ? tags.map(t => `<span class="tag-badge">#${escapeHtml(t)}</span>`).join('') : '<span style="color:rgba(255,255,255,0.2); font-size:0.7rem;">no tags</span>'}
+            </div>
+            <div class="note-actions">
+              <button class="edit-btn" onclick="editNote(${originalIndex})">✎ edit</button>
+              <button class="delete-btn" onclick="deleteNote(${originalIndex})">✕ delete</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      countSpan.textContent = `${notes.length} note${notes.length > 1 ? 's' : ''}`;
+    }
+
+    // ----- add note -----
+    function addNote() {
+      const titleInput = document.getElementById('noteTitle');
+      const contentInput = document.getElementById('noteContent');
+      const tagsInput = document.getElementById('noteTags');
+
+      const title = titleInput.value.trim();
+      const content = contentInput.value.trim();
+      const rawTags = tagsInput.value.split(',').map(t => t.trim()).filter(Boolean);
+
+      if (!title && !content) {
+        alert('Please add a title or some content.');
+        return;
+      }
+
+      const notes = loadNotes();
+      notes.push({
+        title: title || 'untitled',
+        content: content || '(empty)',
+        tags: rawTags,
+        created: Date.now()
+      });
+
+      saveNotes(notes);
+      titleInput.value = '';
+      contentInput.value = '';
+      tagsInput.value = '';
+      render();
+    }
+
+    // ----- delete note -----
+    function deleteNote(index) {
+      if (!confirm('Delete this note?')) return;
+      const notes = loadNotes();
+      notes.splice(index, 1);
+      saveNotes(notes);
+      render();
+    }
+
+    // ----- edit note (inline prompt) -----
+    function editNote(index) {
+      const notes = loadNotes();
+      const note = notes[index];
+      if (!note) return;
+
+      const newTitle = prompt('Edit title:', note.title);
+      if (newTitle === null) return;
+
+      const newContent = prompt('Edit content:', note.content);
+      if (newContent === null) return;
+
+      const newTagsRaw = prompt('Edit tags (comma separated):', note.tags.join(', '));
+      if (newTagsRaw === null) return;
+
+      const newTags = newTagsRaw.split(',').map(t => t.trim()).filter(Boolean);
+
+      notes[index] = {
+        ...note,
+        title: newTitle.trim() || 'untitled',
+        content: newContent.trim() || '(empty)',
+        tags: newTags
+      };
+
+      saveNotes(notes);
+      render();
+    }
+
+    // ----- clear all -----
+    function clearAllNotes() {
+      if (!confirm('Delete ALL notes? This cannot be undone.')) return;
+      saveNotes([]);
+      render();
+    }
+
+    // ----- wire up buttons & init -----
+    document.addEventListener('DOMContentLoaded', () => {
+      // attach event listeners
+      document.getElementById('addNoteBtn').addEventListener('click', addNote);
+      document.getElementById('clearAllBtn').addEventListener('click', clearAllNotes);
+
+      // keyboard shortcuts
+      document.getElementById('noteTitle').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          addNote();
+        }
+      });
+
+      document.getElementById('noteContent').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault();
+          addNote();
+        }
+      });
+
+      render();
+    });
+  </script>
+
+</body>
+</html>

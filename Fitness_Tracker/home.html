@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FitTrack · Fitness Dashboard</title>
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <!-- Google Font: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="tracker-wrapper">
+
+  <!-- ===== TOP NAV ===== -->
+  <header class="top-nav">
+    <div class="logo"><i class="fas fa-heartbeat"></i> FitTrack</div>
+    <div class="nav-right">
+      <button class="icon-btn" id="bellBtn" aria-label="notifications"><i class="far fa-bell"></i></button>
+      <button class="icon-btn" id="calendarBtn" aria-label="calendar"><i class="far fa-calendar-alt"></i></button>
+      <div class="avatar" id="avatarBtn">JD</div>
+    </div>
+  </header>
+
+  <!-- ===== DASHBOARD GRID ===== -->
+  <div class="dashboard-grid">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="greeting">👋 Good morning</div>
+      <div class="user-name">James Davis <i class="fas fa-check-circle"></i></div>
+      <nav class="nav-menu">
+        <a data-section="dashboard" class="active"><i class="fas fa-th-large"></i> Dashboard</a>
+        <a data-section="workouts"><i class="fas fa-running"></i> Workouts</a>
+        <a data-section="nutrition"><i class="fas fa-apple-alt"></i> Nutrition</a>
+        <a data-section="progress"><i class="fas fa-chart-line"></i> Progress</a>
+        <a data-section="achievements"><i class="fas fa-medal"></i> Achievements</a>
+        <a data-section="settings"><i class="fas fa-cog"></i> Settings</a>
+      </nav>
+      <div class="sidebar-goal">
+        <p>🎯 Weekly goal</p>
+        <h4>2,400 cal · 85%</h4>
+        <div class="goal-progress"><div class="fill"></div></div>
+        <div class="goal-label">
+          <span>1,820 cal burned</span>
+          <span>580 remaining</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+      <!-- ========== DASHBOARD SECTION ========== -->
+      <div id="section-dashboard" class="page-section active">
+        <!-- stats -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-fire"></i></div>
+            <div class="stat-number">2,847</div>
+            <div class="stat-label">Calories Burned</div>
+            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> 12%</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-heart"></i></div>
+            <div class="stat-number">72</div>
+            <div class="stat-label">Heart Rate (avg)</div>
+            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> 3 bpm</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-walking"></i></div>
+            <div class="stat-number">8,492</div>
+            <div class="stat-label">Steps Today</div>
+            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> 7%</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-clock"></i></div>
+            <div class="stat-number">64</div>
+            <div class="stat-label">Active Minutes</div>
+            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> 15%</div>
+          </div>
+        </div>
+
+        <!-- charts -->
+        <div class="charts-row">
+          <div class="chart-card">
+            <div class="card-header">
+              <h4><i class="fas fa-chart-bar" style="color:#4f8ef7;"></i> Weekly Activity</h4>
+              <span>Last 7 days</span>
+            </div>
+            <div class="chart-container">
+              <canvas id="activityChart"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="card-header">
+              <h4><i class="fas fa-pie-chart" style="color:#4f8ef7;"></i> Calorie Breakdown</h4>
+              <span>Today</span>
+            </div>
+            <div class="chart-container">
+              <canvas id="calorieChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- workouts + meals -->
+        <div class="activity-row">
+          <div class="panel">
+            <h4><i class="fas fa-dumbbell"></i> Today's Workouts</h4>
+            <div id="workoutList"></div>
+          </div>
+          <div class="panel">
+            <h4><i class="fas fa-utensils"></i> Meals Log</h4>
+            <div id="mealList"></div>
+          </div>
+        </div>
+      </div>
+      <!-- ========== END DASHBOARD ========== -->
+
+      <!-- ========== WORKOUTS SECTION ========== -->
+      <div id="section-workouts" class="page-section">
+        <div class="panel">
+          <h4><i class="fas fa-dumbbell"></i> Your Workouts</h4>
+          <div id="workoutsFullList"></div>
+        </div>
+      </div>
+
+      <!-- ========== NUTRITION SECTION ========== -->
+      <div id="section-nutrition" class="page-section">
+        <div class="panel">
+          <h4><i class="fas fa-utensils"></i> Meal Log</h4>
+          <div id="mealsFullList"></div>
+        </div>
+      </div>
+
+      <!-- ========== PROGRESS SECTION ========== -->
+      <div id="section-progress" class="page-section">
+        <div class="panel">
+          <h4><i class="fas fa-chart-simple"></i> Your Progress</h4>
+          <div class="stat-row">
+            <div class="stat-block"><div class="number">12.5 kg</div><div class="label">Weight Lost</div></div>
+            <div class="stat-block"><div class="number">8%</div><div class="label">Body Fat</div></div>
+            <div class="stat-block"><div class="number">5.2 km</div><div class="label">Avg. Run</div></div>
+          </div>
+          <p style="margin-top:1rem; color:#6b7f9e; font-size:0.9rem;">Keep up the great work! You're 78% towards your goal.</p>
+        </div>
+      </div>
+
+      <!-- ========== ACHIEVEMENTS SECTION ========== -->
+      <div id="section-achievements" class="page-section">
+        <div class="panel">
+          <h4><i class="fas fa-trophy"></i> Your Badges</h4>
+          <div class="badge-grid">
+            <div class="badge"><i class="fas fa-medal"></i><span class="label">10K Steps</span></div>
+            <div class="badge"><i class="fas fa-fire"></i><span class="label">500 cal burned</span></div>
+            <div class="badge"><i class="fas fa-dumbbell"></i><span class="label">Workout Streak</span></div>
+            <div class="badge"><i class="fas fa-apple-alt"></i><span class="label">Clean Eating</span></div>
+          </div>
+          <p style="margin-top:1rem; color:#6b7f9e; font-size:0.9rem;">Earn more badges by completing daily challenges!</p>
+        </div>
+      </div>
+
+      <!-- ========== SETTINGS SECTION ========== -->
+      <div id="section-settings" class="page-section">
+        <div class="panel">
+          <h4><i class="fas fa-sliders-h"></i> Settings</h4>
+          <div class="setting-item"><span class="label">Weight Unit</span><span class="value">kg</span></div>
+          <div class="setting-item"><span class="label">Distance Unit</span><span class="value">km</span></div>
+          <div class="setting-item"><span class="label">Daily Goal</span><span class="value">2,400 cal</span></div>
+          <div class="setting-item"><span class="label">Notifications</span><span class="value">On</span></div>
+          <div class="setting-item"><span class="label">Privacy</span><span class="value">Friends only</span></div>
+        </div>
+      </div>
+
+      <!-- ========== PRIVACY SECTION ========== -->
+      <div id="section-privacy" class="page-section">
+        <div class="panel">
+          <h4><i class="fas fa-lock"></i> Privacy Policy</h4>
+          <p style="color:#6b7f9e; line-height:1.7;">Your data is encrypted and never shared with third parties. We collect only the information you provide to track your fitness progress. You can request data deletion at any time.</p>
+        </div>
+      </div>
+
+      <!-- ========== TERMS SECTION ========== -->
+      <div id="section-terms" class="page-section">
+        <div class="panel">
+          <h4><i class="fas fa-file-contract"></i> Terms of Service</h4>
+          <p style="color:#6b7f9e; line-height:1.7;">By using FitTrack, you agree to our terms. You are responsible for your own health and safety. We provide fitness tracking as a tool and are not liable for any injuries. The service is provided "as is".</p>
+        </div>
+      </div>
+
+      <!-- ========== SUPPORT SECTION ========== -->
+      <div id="section-support" class="page-section">
+        <div class="panel">
+          <h4><i class="fas fa-headset"></i> Support</h4>
+          <p style="color:#6b7f9e; line-height:1.7;">For any issues, please email <strong>support@fittrack.com</strong> or call <strong>+1-800-555-FIT</strong>. We're available 24/7 to help you reach your fitness goals.</p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <span>© 2026 FitTrack · Stay healthy</span>
+    <div class="footer-links">
+      <a data-section="privacy">Privacy</a>
+      <a data-section="terms">Terms</a>
+      <a data-section="support">Support</a>
+    </div>
+  </footer>
+</div>
+
+<!-- Custom Script -->
+<script src="script.js"></script>
+</body>
+</html>

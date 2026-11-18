@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FitTrack · Terms</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Inter',sans-serif; background:#f0f5fc; color:#1a2634; display:flex; justify-content:center; padding:1.2rem; min-height:100vh; line-height:1.5; }
+    .tracker-wrapper { max-width:1360px; width:100%; }
+    .top-nav { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.8rem 1.5rem; background:#fff; padding:0.6rem 2rem; border-radius:60px; box-shadow:0 4px 20px rgba(0,20,40,0.04); margin-bottom:2rem; border:1px solid rgba(0,0,0,0.02); }
+    .logo { display:flex; align-items:center; gap:0.6rem; font-size:1.5rem; font-weight:800; letter-spacing:-0.3px; color:#1a2634; }
+    .logo i { color:#4f8ef7; font-size:1.8rem; }
+    .nav-right { display:flex; align-items:center; gap:0.8rem 1.2rem; }
+    .nav-right .icon-btn { background:transparent; border:none; font-size:1.2rem; color:#5a6e8a; cursor:pointer; transition:0.2s; padding:0.3rem; border-radius:40px; }
+    .nav-right .icon-btn:hover { color:#1a2634; background:#f0f5fc; }
+    .avatar { width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,#4f8ef7,#7aaffa); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:0.95rem; cursor:pointer; border:2px solid #fff; box-shadow:0 2px 8px rgba(79,142,247,0.2); }
+    .panel { background:#fff; border-radius:28px; padding:1.4rem 1.6rem; box-shadow:0 4px 16px rgba(0,20,40,0.04); border:1px solid rgba(0,0,0,0.02); }
+    .panel h4 { font-size:0.95rem; font-weight:700; margin-bottom:0.8rem; display:flex; align-items:center; gap:0.5rem; color:#1a2634; }
+    .panel h4 i { color:#4f8ef7; }
+    .footer { margin-top:2rem; padding-top:1.2rem; border-top:1px solid rgba(0,0,0,0.04); display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:1rem; font-size:0.8rem; color:#6b7f9e; }
+    .footer a { color:#5a6e8a; text-decoration:none; transition:0.2s; cursor:pointer; }
+    .footer a:hover { color:#1a2634; }
+    .footer-links { display:flex; gap:1.6rem; }
+    @media (max-width:480px) { .top-nav { padding:0.6rem 1rem; border-radius:32px; } }
+  </style>
+</head>
+<body>
+<div class="tracker-wrapper">
+  <header class="top-nav">
+    <div class="logo"><i class="fas fa-heartbeat"></i> FitTrack</div>
+    <div class="nav-right">
+      <button class="icon-btn" id="bellBtn"><i class="far fa-bell"></i></button>
+      <button class="icon-btn" id="calendarBtn"><i class="far fa-calendar-alt"></i></button>
+      <div class="avatar" id="avatarBtn">JD</div>
+    </div>
+  </header>
+  <div class="panel">
+    <h4><i class="fas fa-file-contract"></i> Terms of Service</h4>
+    <p style="color:#6b7f9e; line-height:1.7;">By using FitTrack, you agree to our terms. You are responsible for your own health and safety. We provide fitness tracking as a tool and are not liable for any injuries. The service is provided "as is".</p>
+  </div>
+  <footer class="footer">
+    <span>© 2026 FitTrack · Stay healthy</span>
+    <div class="footer-links">
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html" style="font-weight:600;">Terms</a>
+      <a href="support.html">Support</a>
+    </div>
+  </footer>
+</div>
+<script>
+  document.getElementById('bellBtn').addEventListener('click', function(e) { e.stopPropagation(); alert('🔔 You have 3 new notifications!'); });
+  document.getElementById('calendarBtn').addEventListener('click', function(e) { e.stopPropagation(); alert('📅 Today\'s events:\n- 10:00 AM Yoga\n- 2:00 PM HIIT\n- 6:00 PM Protein shake'); });
+  document.getElementById('avatarBtn').addEventListener('click', function(e) { e.stopPropagation(); alert('👤 Profile: James Davis\nMember since 2024\nFitness Level: Advanced'); });
+</script>
+</body>
+</html>

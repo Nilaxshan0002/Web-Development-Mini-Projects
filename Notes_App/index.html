@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Notes App · Colorful</title>
+  <!-- Separate CSS -->
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="app-wrapper">
+    <!-- floating orbs for background depth -->
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+
+    <header>
+      <h1>📝 Notes</h1>
+      <p class="subhead">colorful, animated, and full of life</p>
+    </header>
+
+    <section class="note-form">
+      <div class="form-group">
+        <input type="text" id="noteTitle" placeholder="Note title..." />
+      </div>
+      <div class="form-group">
+        <textarea id="noteContent" placeholder="Write your note here..." rows="4"></textarea>
+      </div>
+      <div class="form-group tag-group">
+        <input type="text" id="noteTags" placeholder="Tags (comma separated, e.g. work, idea)" />
+        <button id="addNoteBtn" onclick="addNote()">➕ Save note</button>
+      </div>
+    </section>
+
+    <div class="notes-header">
+      <span id="noteCount">0 notes</span>
+      <button id="clearAllBtn" onclick="clearAllNotes()" class="clear-btn">🗑️ Clear all</button>
+    </div>
+
+    <div id="notesContainer" class="notes-grid"></div>
+  </div>
+
+  <!-- Separate JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Netflix Clone · Home</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===== TOAST NOTIFICATION ===== -->
+  <div id="toast" class="toast"><i class="fas fa-check-circle"></i> <span id="toastMessage">Welcome!</span></div>
+
+  <!-- ===== SIGN IN MODAL ===== -->
+  <div id="signinModal" class="modal-overlay">
+    <div class="modal">
+      <button class="modal-close" id="modalClose">&times;</button>
+      <h2><i class="fas fa-sign-in-alt" style="color:#e50914; margin-right:10px;"></i>Sign In</h2>
+      <p>Enter your credentials to continue.</p>
+      <input type="email" id="modalEmail" placeholder="Email address" />
+      <input type="password" id="modalPassword" placeholder="Password" />
+      <button class="modal-signin-btn" id="modalSignInBtn">Sign In</button>
+      <div class="modal-footer">New to Netflix? <a href="#">Sign up now</a></div>
+    </div>
+  </div>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar">
+    <div class="nav-left">
+      <a href="index.html" class="logo"><i class="fab fa-netflix"></i>NETFLIX</a>
+      <div class="nav-links">
+        <a href="index.html" class="active">Home</a>
+        <a href="tvshows.html">TV Shows</a>
+        <a href="movies.html">Movies</a>
+        <a href="newpopular.html">New & Popular</a>
+        <a href="mylist.html">My List</a>
+      </div>
+    </div>
+    <div class="nav-right">
+      <i class="fas fa-search"></i>
+      <i class="fas fa-bell"></i>
+      <button class="signin-btn" id="signinBtn">Sign In</button>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1><i class="fas fa-play"></i> Unlimited</h1>
+      <div class="subtitle">Movies, TV Shows &amp; more.</div>
+      <p>Watch anywhere. Cancel anytime. Ready to watch? Enter your email to create or restart your membership.</p>
+      <div class="hero-email">
+        <input type="email" id="emailInput" placeholder="Email Address" />
+        <button id="getStartedBtn">Get Started <i class="fas fa-chevron-right"></i></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FEATURES ===== -->
+  <section class="features">
+    <h2><i class="fas fa-crown" style="color:#e50914; margin-right: 12px;"></i> Features</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <i class="fas fa-mobile-alt"></i>
+        <h3>Responsive</h3>
+        <p>Seamless on any device</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-film"></i>
+        <h3>Movie Cards</h3>
+        <p>Stunning grid layout</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-mouse-pointer"></i>
+        <h3>Hover Effects</h3>
+        <p>Interactive &amp; smooth</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-image"></i>
+        <h3>Hero Banner</h3>
+        <p>Bold cinematic feel</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-layer-group"></i>
+        <h3>Flexbox / Grid</h3>
+        <p>Modern UI architecture</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== POPULAR MOVIES ===== -->
+  <section class="movie-section">
+    <h2><i class="fas fa-fire"></i> Popular Movies</h2>
+    <div class="movie-grid">
+      <div class="movie-card">
+        <img src="images/Haseen Dilruba.jpg" alt="Haseen Dilruba" loading="lazy" />
+        <div class="movie-info"><h4>Haseen Dilruba</h4><div class="meta"><span><i class="fas fa-star"></i> 7.2</span><span>2021</span></div></div>
+      </div>
+      <div class="movie-card">
+        <img src="images/Gangs of Wasseypur.jpg" alt="Gangs of Wasseypur" loading="lazy" />
+        <div class="movie-info"><h4>Gangs of Wasseypur</h4><div class="meta"><span><i class="fas fa-star"></i> 8.5</span><span>2012</span></div></div>
+      </div>
+      <div class="movie-card">
+        <img src="images/The Dark Knight.jpg" alt="The Dark Knight" loading="lazy" />
+        <div class="movie-info"><h4>The Dark Knight</h4><div class="meta"><span><i class="fas fa-star"></i> 9.0</span><span>2008</span></div></div>
+      </div>
+      <div class="movie-card">
+        <img src="images/Inception.jpg" alt="Inception" loading="lazy" />
+        <div class="movie-info"><h4>Inception</h4><div class="meta"><span><i class="fas fa-star"></i> 8.8</span><span>2010</span></div></div>
+      </div>
+      <div class="movie-card">
+        <img src="images/Stranger Things.jpg" alt="Stranger Things" loading="lazy" />
+        <div class="movie-info"><h4>Stranger Things</h4><div class="meta"><span><i class="fas fa-star"></i> 8.7</span><span>2016</span></div></div>
+      </div>
+      <div class="movie-card">
+        <img src="images/Money Heist.jpg" alt="Money Heist" loading="lazy" />
+        <div class="movie-info"><h4>Money Heist</h4><div class="meta"><span><i class="fas fa-star"></i> 8.2</span><span>2017</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <div class="footer-note">
+    <i class="fab fa-netflix"></i> Netflix clone · crafted with <i class="fas fa-heart" style="color:#e50914;"></i> · 2026
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

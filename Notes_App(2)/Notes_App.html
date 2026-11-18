@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notes · professional</title>
+  <!-- Font Awesome (free icons) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    /* ----- reset & base ----- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #f0f4fe;
+      background-image: radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.4) 0%, #d9e2f0 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .app-container {
+      max-width: 1100px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(18px) saturate(1.4);
+      -webkit-backdrop-filter: blur(18px) saturate(1.4);
+      border-radius: 3.2rem;
+      padding: 2.4rem 2.4rem 2.8rem;
+      box-shadow: 0 40px 80px -20px rgba(0, 20, 60, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      transition: all 0.25s;
+    }
+
+    /* ----- header ----- */
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .logo-area i {
+      font-size: 2.2rem;
+      color: #1e3c72;
+      background: rgba(30, 60, 114, 0.08);
+      padding: 0.4rem;
+      border-radius: 18px;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: #0b1e3a;
+      background: linear-gradient(145deg, #0b1e3a, #2a4b7a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .note-count {
+      background: rgba(30, 60, 114, 0.08);
+      padding: 0.3rem 1rem;
+      border-radius: 60px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #1e3c72;
+      border: 1px solid rgba(30, 60, 114, 0.1);
+    }
+
+    /* ----- search & add bar ----- */
+    .search-add {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-bottom: 2.2rem;
+      background: rgba(255, 255, 255, 0.5);
+      padding: 0.4rem 0.4rem 0.4rem 1.4rem;
+      border-radius: 80px;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(4px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    }
+
+    .search-add i {
+      color: #3d5f8a;
+      font-size: 1rem;
+      align-self: center;
+    }
+
+    .search-add input {
+      flex: 1;
+      min-width: 140px;
+      background: transparent;
+      border: none;
+      padding: 0.7rem 0.2rem;
+      font-size: 0.95rem;
+      color: #11223b;
+      outline: none;
+    }
+
+    .search-add input::placeholder {
+      color: #6c83a8;
+      font-weight: 400;
+    }
+
+    .btn-primary {
+      background: #1e3c72;
+      border: none;
+      padding: 0.6rem 1.8rem;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      box-shadow: 0 6px 16px rgba(30, 60, 114, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      letter-spacing: 0.3px;
+    }
+
+    .btn-primary:hover {
+      background: #264d88;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(30, 60, 114, 0.3);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.96);
+    }
+
+    /* ----- notes grid ----- */
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.4rem;
+      margin-top: 0.8rem;
+    }
+
+    .note-card {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border-radius: 2rem;
+      padding: 1.4rem 1.4rem 1.2rem;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 8px 24px rgba(0, 20, 40, 0.04);
+      transition: 0.2s;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .note-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 36px -8px rgba(0, 20, 60, 0.12);
+      border-color: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    .note-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #0b1e3a;
+      margin-bottom: 0.4rem;
+      word-break: break-word;
+      line-height: 1.3;
+    }
+
+    .note-content {
+      color: #1f385c;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      flex: 1;
+      word-break: break-word;
+      opacity: 0.85;
+      margin-bottom: 1rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .note-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.7rem;
+      color: #4d6a92;
+      border-top: 1px solid rgba(0, 0, 0, 0.03);
+      padding-top: 0.6rem;
+      margin-top: auto;
+    }
+
+    .note-date {
+      letter-spacing: 0.3px;
+      background: rgba(0,0,0,0.02);
+      padding: 0.15rem 0.6rem;
+      border-radius: 30px;
+    }
+
+    .note-actions {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .note-actions button {
+      background: transparent;
+      border: none;
+      color: #4d6a92;
+      cursor: pointer;
+      font-size: 0.9rem;
+      padding: 0.2rem 0.4rem;
+      border-radius: 30px;
+      transition: 0.15s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .note-actions button:hover {
+      background: rgba(30, 60, 114, 0.06);
+      color: #1e3c72;
+    }
+    .note-actions .delete-btn:hover {
+      color: #b13e4b;
+      background: rgba(177, 62, 75, 0.06);
+    }
+
+    .empty-message {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #3f5a7e;
+      font-weight: 400;
+      font-size: 1rem;
+      grid-column: 1 / -1;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 3rem;
+      backdrop-filter: blur(4px);
+    }
+
+    .empty-message i {
+      font-size: 2.8rem;
+      opacity: 0.4;
+      display: block;
+      margin-bottom: 0.8rem;
+    }
+
+    /* ----- modal overlay (add / edit) ----- */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.8rem;
+      z-index: 999;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background: #ffffff;
+      max-width: 520px;
+      width: 100%;
+      border-radius: 2.8rem;
+      padding: 2.2rem 2rem 2rem;
+      box-shadow: 0 40px 80px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      animation: modalFade 0.2s ease;
+    }
+
+    @keyframes modalFade {
+      from { opacity: 0; transform: scale(0.96) translateY(12px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal-card h2 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #0b1e3a;
+      margin-bottom: 0.4rem;
+    }
+
+    .modal-card .sub {
+      color: #5b79a2;
+      margin-bottom: 1.6rem;
+      font-size: 0.9rem;
+    }
+
+    .modal-card label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #1e3c72;
+      display: block;
+      margin-top: 1rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .modal-card input,
+    .modal-card textarea {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border-radius: 40px;
+      border: 1px solid #d3deed;
+      background: #f6faff;
+      font-size: 0.95rem;
+      color: #0b1e3a;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    .modal-card input:focus,
+    .modal-card textarea:focus {
+      border-color: #1e3c72;
+      box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.08);
+      background: white;
+    }
+
+    .modal-card textarea {
+      border-radius: 24px;
+      min-height: 100px;
+      resize: vertical;
+      font-family: inherit;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.6rem;
+      margin-top: 2rem;
+    }
+
+    .btn-secondary {
+      background: rgba(0, 0, 0, 0.02);
+      border: 1px solid #d3deed;
+      padding: 0.5rem 1.6rem;
+      border-radius: 60px;
+      font-weight: 500;
+      color: #1e3c72;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(0, 0, 0, 0.04);
+      border-color: #b0c3dd;
+    }
+
+    .btn-primary-outline {
+      background: #1e3c72;
+      border: none;
+      padding: 0.5rem 2rem;
+      border-radius: 60px;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      transition: 0.15s;
+      box-shadow: 0 4px 12px rgba(30, 60, 114, 0.15);
+    }
+
+    .btn-primary-outline:hover {
+      background: #264d88;
+      transform: translateY(-1px);
+    }
+
+    /* ----- responsive ----- */
+    @media (max-width: 600px) {
+      .app-container {
+        padding: 1.6rem 1.2rem;
+        border-radius: 2.2rem;
+      }
+      .search-add {
+        border-radius: 40px;
+        padding: 0.2rem 0.2rem 0.2rem 1rem;
+      }
+      .btn-primary {
+        padding: 0.5rem 1.2rem;
+        font-size: 0.85rem;
+      }
+      .notes-grid {
+        grid-template-columns: 1fr;
+      }
+      .modal-card {
+        padding: 1.6rem;
+      }
+      h1 {
+        font-size: 1.7rem;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .app-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .logo-area i {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- header -->
+    <div class="app-header">
+      <div class="logo-area">
+        <i class="fas fa-pencil-alt"></i>
+        <h1>Notes</h1>
+      </div>
+      <span class="note-count" id="noteCounter">0 notes</span>
+    </div>
+
+    <!-- search + add -->
+    <div class="search-add">
+      <i class="fas fa-search"></i>
+      <input type="text" id="searchInput" placeholder="Search notes..." />
+      <button class="btn-primary" id="addNoteBtn"><i class="fas fa-plus"></i> Add</button>
+    </div>
+
+    <!-- notes grid -->
+    <div class="notes-grid" id="notesGrid">
+      <!-- dynamic cards will be injected here -->
+    </div>
+  </div>
+
+  <!-- modal overlay (add / edit) -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-card">
+      <h2 id="modalTitle">✏️ New Note</h2>
+      <p class="sub" id="modalSub">Add a title and some content.</p>
+      <label for="noteTitleInput">Title</label>
+      <input type="text" id="noteTitleInput" placeholder="Note title..." />
+      <label for="noteContentInput">Content</label>
+      <textarea id="noteContentInput" placeholder="Write something..."></textarea>
+      <div class="modal-actions">
+        <button class="btn-secondary" id="modalCancelBtn">Cancel</button>
+        <button class="btn-primary-outline" id="modalSaveBtn">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      "use strict";
+
+      // ----- DOM refs -----
+      const notesGrid = document.getElementById('notesGrid');
+      const searchInput = document.getElementById('searchInput');
+      const addBtn = document.getElementById('addNoteBtn');
+      const noteCounter = document.getElementById('noteCounter');
+
+      // modal
+      const modalOverlay = document.getElementById('modalOverlay');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalSub = document.getElementById('modalSub');
+      const noteTitleInput = document.getElementById('noteTitleInput');
+      const noteContentInput = document.getElementById('noteContentInput');
+      const modalCancelBtn = document.getElementById('modalCancelBtn');
+      const modalSaveBtn = document.getElementById('modalSaveBtn');
+
+      // ----- state -----
+      let notes = [];
+      let editingId = null;          // if null → add mode
+      let searchTerm = '';
+
+      // ----- load from localStorage -----
+      function loadNotes() {
+        try {
+          const stored = localStorage.getItem('notes_professional');
+          if (stored) {
+            notes = JSON.parse(stored);
+          } else {
+            // seed with a couple examples
+            notes = [
+              { id: Date.now() + 1, title: 'Welcome 👋', content: 'This is your new Notes App. Add, edit, or delete notes. Everything is saved locally.', createdAt: new Date().toISOString() },
+              { id: Date.now() + 2, title: 'Ideas', content: 'Write down your thoughts and they will persist in your browser.', createdAt: new Date().toISOString() }
+            ];
+          }
+        } catch (_) {
+          notes = [];
+        }
+        // ensure each note has an id
+        notes = notes.filter(n => n && typeof n === 'object').map(n => ({
+          ...n,
+          id: n.id || Date.now() + Math.random()
+        }));
+        render();
+      }
+
+      // ----- save to localStorage -----
+      function saveNotes() {
+        localStorage.setItem('notes_professional', JSON.stringify(notes));
+      }
+
+      // ----- render grid -----
+      function render() {
+        const filtered = notes.filter(n => {
+          const term = searchTerm.trim().toLowerCase();
+          if (!term) return true;
+          return (n.title || '').toLowerCase().includes(term) ||
+                 (n.content || '').toLowerCase().includes(term);
+        });
+
+        if (filtered.length === 0) {
+          notesGrid.innerHTML = `
+            <div class="empty-message">
+              <i class="fas fa-journal-whills"></i>
+              ${searchTerm.trim() ? 'No notes match your search.' : 'Your notes will appear here. Click "Add" to start.'}
+            </div>
+          `;
+        } else {
+          notesGrid.innerHTML = filtered.map(note => {
+            const date = new Date(note.createdAt);
+            const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            return `
+              <div class="note-card" data-id="${note.id}">
+                <div class="note-title">${escapeHtml(note.title || 'Untitled')}</div>
+                <div class="note-content">${escapeHtml(note.content || '')}</div>
+                <div class="note-meta">
+                  <span class="note-date"><i class="far fa-calendar-alt" style="margin-right:4px;"></i>${dateStr}</span>
+                  <div class="note-actions">
+                    <button class="edit-btn" data-id="${note.id}" title="Edit"><i class="fas fa-edit"></i></button>
+                    <button class="delete-btn" data-id="${note.id}" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+
+        // update counter
+        noteCounter.textContent = `${notes.length} note${notes.length !== 1 ? 's' : ''}`;
+
+        // attach event listeners to edit/delete buttons
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const id = Number(btn.dataset.id);
+            openEditModal(id);
+          });
+        });
+
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const id = Number(btn.dataset.id);
+            deleteNote(id);
+          });
+        });
+
+        // card click to edit (optional)
+        document.querySelectorAll('.note-card').forEach(card => {
+          card.addEventListener('click', (e) => {
+            // if clicked on a button, ignore
+            if (e.target.closest('button')) return;
+            const id = Number(card.dataset.id);
+            openEditModal(id);
+          });
+        });
+      }
+
+      // ----- simple escape (prevent XSS) -----
+      function escapeHtml(str) {
+        if (!str) return '';
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+      }
+
+      // ----- CRUD -----
+      function addNote(title, content) {
+        const note = {
+          id: Date.now() + Math.random(),
+          title: title.trim() || 'Untitled',
+          content: content.trim() || '',
+          createdAt: new Date().toISOString()
+        };
+        notes.unshift(note);
+        saveNotes();
+        render();
+      }
+
+      function editNote(id, title, content) {
+        const note = notes.find(n => n.id === id);
+        if (!note) return;
+        note.title = title.trim() || 'Untitled';
+        note.content = content.trim() || '';
+        saveNotes();
+        render();
+      }
+
+      function deleteNote(id) {
+        if (!confirm('Delete this note?')) return;
+        notes = notes.filter(n => n.id !== id);
+        saveNotes();
+        render();
+        if (editingId === id) closeModal();
+      }
+
+      // ----- modal logic -----
+      function openModal(mode, id = null) {
+        if (mode === 'add') {
+          modalTitle.textContent = '✏️ New Note';
+          modalSub.textContent = 'Add a title and some content.';
+          noteTitleInput.value = '';
+          noteContentInput.value = '';
+          editingId = null;
+        } else if (mode === 'edit' && id !== null) {
+          const note = notes.find(n => n.id === id);
+          if (!note) return;
+          modalTitle.textContent = '📝 Edit Note';
+          modalSub.textContent = 'Update your note.';
+          noteTitleInput.value = note.title || '';
+          noteContentInput.value = note.content || '';
+          editingId = id;
+        }
+        modalOverlay.classList.add('active');
+        setTimeout(() => noteTitleInput.focus(), 80);
+      }
+
+      function closeModal() {
+        modalOverlay.classList.remove('active');
+        editingId = null;
+      }
+
+      function saveModal() {
+        const title = noteTitleInput.value.trim();
+        const content = noteContentInput.value.trim();
+        if (!title && !content) {
+          alert('Please add a title or some content.');
+          return;
+        }
+        if (editingId === null) {
+          addNote(title, content);
+        } else {
+          editNote(editingId, title, content);
+        }
+        closeModal();
+      }
+
+      function openEditModal(id) {
+        openModal('edit', id);
+      }
+
+      // ----- search -----
+      searchInput.addEventListener('input', (e) => {
+        searchTerm = e.target.value;
+        render();
+      });
+
+      // ----- event listeners -----
+      addBtn.addEventListener('click', () => openModal('add'));
+
+      modalCancelBtn.addEventListener('click', closeModal);
+      modalSaveBtn.addEventListener('click', saveModal);
+
+      // close modal on overlay click
+      modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) closeModal();
+      });
+
+      // keyboard: Enter on search to add? (optional)
+      searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && e.target === searchInput) {
+          e.preventDefault();
+          // if search has text, maybe we want to add? but we'll keep it search.
+          // optional: if search input has text, we can clear it? no.
+        }
+      });
+
+      // keyboard shortcut: Escape closes modal
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
+        // Ctrl+Shift+N -> new note
+        if (e.ctrlKey && e.shiftKey && (e.key === 'N' || e.key === 'n')) {
+          e.preventDefault();
+          openModal('add');
+        }
+      });
+
+      // ----- init -----
+      loadNotes();
+
+      // expose for debugging (optional)
+      window.__notesApp = { notes, addNote, editNote, deleteNote, render };
+
+      console.log('✅ Notes App · professional edition (single file)');
+    })();
+  </script>
+</body>
+</html>

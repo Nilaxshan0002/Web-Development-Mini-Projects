@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Job Board · Professional</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="job-board">
+
+    <!-- header -->
+    <div class="board-header">
+        <div class="brand">
+            <h1><i class="fas fa-briefcase" style="margin-right: 10px; color: #3b82f6; -webkit-text-fill-color: #3b82f6;"></i>JobBoard</h1>
+            <p>Discover your next career move</p>
+        </div>
+        <div class="header-actions">
+            <button id="savedBtn"><i class="fas fa-bookmark"></i> Saved</button>
+            <button id="alertsBtn"><i class="fas fa-bell"></i> Alerts</button>
+            <button class="btn-primary" id="postJobBtn"><i class="fas fa-plus-circle"></i> Post a job</button>
+        </div>
+    </div>
+
+    <!-- filters -->
+    <div class="filters-section">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Search jobs, companies, keywords..." />
+            <button id="searchBtn"><i class="fas fa-arrow-right"></i> Search</button>
+        </div>
+        <div class="filter-tags">
+            <span class="active" data-filter="all">All <i class="fas fa-times-circle" style="opacity:0.3; margin-left:4px;"></i></span>
+            <span data-filter="fulltime">Full-time</span>
+            <span data-filter="remote">Remote</span>
+            <span data-filter="design">Design</span>
+            <span data-filter="engineering">Engineering</span>
+            <span data-filter="marketing">Marketing</span>
+        </div>
+    </div>
+
+    <!-- job list header -->
+    <div class="job-list-header">
+        <h2><i class="fas fa-list-ul" style="color: #64748b; margin-right: 10px;"></i>Open positions</h2>
+        <span class="job-count" id="jobCount">12 jobs</span>
+    </div>
+
+    <!-- job grid -->
+    <div class="job-grid" id="jobGrid">
+        <!-- cards will be injected by JS -->
+    </div>
+
+    <!-- toast -->
+    <div class="toast" id="toast"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

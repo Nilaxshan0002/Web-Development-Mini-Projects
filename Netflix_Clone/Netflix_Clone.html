@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Netflix Clone · All in One</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    /* ===== RESET & BASE ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+    }
+    body {
+      background-color: #0b0b0b;
+      color: #fff;
+    }
+    ::-webkit-scrollbar {
+      width: 8px;
+      background: #141414;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #e50914;
+      border-radius: 12px;
+    }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 4%;
+      background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, transparent 100%);
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 999;
+      backdrop-filter: blur(4px);
+    }
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 2.2rem;
+    }
+    .logo {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #e50914;
+      text-shadow: 0 0 12px rgba(229, 9, 20, 0.3);
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.2s;
+    }
+    .logo i { margin-right: 4px; }
+    .logo:hover { transform: scale(1.02); }
+
+    .nav-links {
+      display: flex;
+      gap: 1.8rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+    .nav-links a {
+      color: #e5e5e5;
+      text-decoration: none;
+      transition: color 0.2s;
+      position: relative;
+      cursor: pointer;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 0%;
+      height: 2px;
+      background: #e50914;
+      transition: width 0.25s ease;
+    }
+    .nav-links a:hover { color: #fff; }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links a.active {
+      color: #fff;
+    }
+    .nav-links a.active::after {
+      width: 100%;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .nav-right i {
+      font-size: 1.2rem;
+      color: #e5e5e5;
+      cursor: pointer;
+      transition: color 0.2s, transform 0.2s;
+    }
+    .nav-right i:hover {
+      color: #fff;
+      transform: scale(1.05);
+    }
+    .signin-btn {
+      background: #e50914;
+      border: none;
+      padding: 0.45rem 1.2rem;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: white;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      box-shadow: 0 4px 12px rgba(229, 9, 20, 0.3);
+    }
+    .signin-btn:hover {
+      background: #f40612;
+      transform: scale(1.02);
+    }
+
+    /* ===== HERO BANNER ===== */
+    .hero {
+      height: 90vh;
+      min-height: 600px;
+      background: linear-gradient(135deg, rgba(0,0,0,0.70) 0%, rgba(0,0,0,0.40) 100%),
+                  url('https://assets.nflxext.com/ffe/siteui/vlv3/6x5e25b3-3f0d-4c81-b7c2-84b86fe2fea5/87a5381d-ec15-4026-81c5-059b84ef79c1/IN-en-20260830-popsignuptwoweeks-perspective_alpha_website_small.jpg');
+      background-size: cover;
+      background-position: center 30%;
+      display: flex;
+      align-items: center;
+      padding: 0 6%;
+      border-bottom: 6px solid #222;
+      animation: heroGlow 8s infinite alternate;
+    }
+    @keyframes heroGlow {
+      0% { filter: brightness(0.95); }
+      100% { filter: brightness(1.05); }
+    }
+    .hero-content {
+      max-width: 650px;
+      animation: floatUp 1s ease-out;
+    }
+    @keyframes floatUp {
+      0% { opacity: 0; transform: translateY(40px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .hero-content h1 {
+      font-size: 4rem;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.6);
+    }
+    .hero-content h1 i {
+      color: #e50914;
+      margin-right: 8px;
+    }
+    .hero-content .subtitle {
+      font-size: 1.6rem;
+      font-weight: 400;
+      margin-bottom: 0.8rem;
+      opacity: 0.9;
+      letter-spacing: -0.3px;
+    }
+    .hero-content p {
+      font-size: 1.1rem;
+      opacity: 0.8;
+      margin-bottom: 2rem;
+      max-width: 500px;
+      line-height: 1.5;
+    }
+    .hero-email {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      background: rgba(0,0,0,0.3);
+      backdrop-filter: blur(10px);
+      padding: 0.5rem 0.5rem 0.5rem 1.2rem;
+      border-radius: 50px;
+      border: 1px solid rgba(255,255,255,0.15);
+      max-width: 550px;
+      transition: border 0.3s;
+    }
+    .hero-email:hover {
+      border-color: #e50914;
+    }
+    .hero-email input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 0.9rem 0;
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+      min-width: 160px;
+    }
+    .hero-email input::placeholder {
+      color: #aaa;
+      font-weight: 300;
+    }
+    .hero-email button {
+      background: #e50914;
+      border: none;
+      padding: 0.9rem 2.2rem;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 1rem;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      box-shadow: 0 8px 18px rgba(229, 9, 20, 0.4);
+      letter-spacing: 0.5px;
+    }
+    .hero-email button i {
+      font-size: 1.2rem;
+    }
+    .hero-email button:hover {
+      background: #f40612;
+      transform: scale(1.02);
+    }
+
+    /* ===== FEATURES ===== */
+    .features {
+      padding: 4rem 6% 3rem;
+      background: #0b0b0b;
+    }
+    .features h2 {
+      font-size: 2.2rem;
+      font-weight: 600;
+      margin-bottom: 2.5rem;
+      border-left: 6px solid #e50914;
+      padding-left: 1.2rem;
+      letter-spacing: -0.5px;
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+    }
+    .feature-card {
+      background: #1a1a1a;
+      padding: 2rem 1.5rem;
+      border-radius: 28px;
+      text-align: center;
+      transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1);
+      border: 1px solid #2a2a2a;
+      backdrop-filter: blur(2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+    }
+    .feature-card:hover {
+      transform: translateY(-12px) scale(1.02);
+      border-color: #e50914;
+      background: #1f1f1f;
+      box-shadow: 0 20px 40px rgba(229, 9, 20, 0.15);
+    }
+    .feature-card i {
+      font-size: 2.8rem;
+      color: #e50914;
+      margin-bottom: 1rem;
+      transition: transform 0.3s;
+    }
+    .feature-card:hover i {
+      transform: rotate(4deg) scale(1.1);
+    }
+    .feature-card h3 {
+      font-size: 1.4rem;
+      margin-bottom: 0.4rem;
+    }
+    .feature-card p {
+      opacity: 0.7;
+      font-size: 0.95rem;
+    }
+
+    /* ===== MOVIE CARDS ===== */
+    .movie-section {
+      padding: 2rem 6% 4rem;
+      background: #0b0b0b;
+    }
+    .movie-section h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .movie-section h2 i {
+      color: #e50914;
+    }
+    .movie-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 1.8rem;
+    }
+    .movie-card {
+      background: #181818;
+      border-radius: 18px;
+      overflow: hidden;
+      transition: all 0.35s ease;
+      cursor: pointer;
+      border: 1px solid #2a2a2a;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.5);
+      position: relative;
+      transform: scale(1);
+    }
+    .movie-card:hover {
+      transform: scale(1.06) translateY(-8px);
+      border-color: #e50914;
+      box-shadow: 0 20px 40px rgba(229, 9, 20, 0.25);
+      z-index: 10;
+    }
+    .movie-card img {
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+      background: #222;
+    }
+    .movie-card:hover img {
+      transform: scale(1.02);
+    }
+    .movie-info {
+      padding: 1rem 0.8rem 1.2rem;
+      background: linear-gradient(0deg, #111 0%, transparent 100%);
+    }
+    .movie-info h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .movie-info .meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      opacity: 0.6;
+    }
+    .movie-info .meta i {
+      color: #e50914;
+      margin-right: 4px;
+    }
+    .movie-card::after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #e50914, #b20710);
+      opacity: 0;
+      z-index: -1;
+      transition: opacity 0.3s;
+    }
+    .movie-card:hover::after {
+      opacity: 0.6;
+    }
+
+    /* ===== PAGE CONTAINER (for sub-pages) ===== */
+    .page-container {
+      padding: 8rem 6% 4rem;
+      min-height: 70vh;
+      background: #0b0b0b;
+    }
+    .page-container h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      border-left: 6px solid #e50914;
+      padding-left: 1.2rem;
+    }
+    .page-container p {
+      font-size: 1.2rem;
+      opacity: 0.7;
+      max-width: 700px;
+      line-height: 1.6;
+    }
+    .page-container .movie-grid {
+      margin-top: 2rem;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer-note {
+      text-align: center;
+      padding: 2.5rem 2rem;
+      border-top: 1px solid #222;
+      font-size: 0.9rem;
+      color: #555;
+      letter-spacing: 0.3px;
+    }
+    .footer-note i {
+      color: #e50914;
+      margin: 0 4px;
+    }
+
+    /* ===== PAGE SWITCHING ===== */
+    .page {
+      display: none;
+    }
+    .page.active-page {
+      display: block;
+    }
+
+    /* ===== TOAST / NOTIFICATION ===== */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(229, 9, 20, 0.95);
+      color: #fff;
+      padding: 14px 32px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1rem;
+      box-shadow: 0 8px 30px rgba(229, 9, 20, 0.5);
+      z-index: 9999;
+      opacity: 0;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      pointer-events: none;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.15);
+      letter-spacing: 0.3px;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .toast i {
+      margin-right: 10px;
+    }
+
+    /* ===== SIGN IN MODAL ===== */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(8px);
+      z-index: 9998;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 0.3s ease;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .modal {
+      background: #1a1a1a;
+      padding: 2.5rem 3rem;
+      border-radius: 24px;
+      max-width: 420px;
+      width: 90%;
+      border: 1px solid #333;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+      animation: slideUp 0.3s ease;
+      position: relative;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .modal h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #fff;
+    }
+    .modal p {
+      color: #aaa;
+      font-size: 0.95rem;
+      margin-bottom: 1.8rem;
+    }
+    .modal input {
+      width: 100%;
+      padding: 0.9rem 1.2rem;
+      border-radius: 8px;
+      border: 1px solid #333;
+      background: #0b0b0b;
+      color: #fff;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      outline: none;
+      transition: border 0.3s;
+    }
+    .modal input:focus {
+      border-color: #e50914;
+    }
+    .modal .modal-signin-btn {
+      width: 100%;
+      padding: 0.9rem;
+      background: #e50914;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1rem;
+      color: white;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .modal .modal-signin-btn:hover {
+      background: #f40612;
+      transform: scale(1.02);
+    }
+    .modal .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: #888;
+      font-size: 1.6rem;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .modal .modal-close:hover {
+      color: #fff;
+    }
+    .modal .modal-footer {
+      margin-top: 1.2rem;
+      text-align: center;
+      color: #777;
+      font-size: 0.85rem;
+    }
+    .modal .modal-footer a {
+      color: #e50914;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .modal .modal-footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 700px) {
+      .nav-links { display: none; }
+      .hero-content h1 { font-size: 2.8rem; }
+      .hero-content .subtitle { font-size: 1.3rem; }
+      .hero-email { flex-direction: column; background: transparent; backdrop-filter: none; border: none; padding: 0; }
+      .hero-email input { background: rgba(0,0,0,0.6); padding: 1rem 1.2rem; border-radius: 40px; }
+      .hero-email button { justify-content: center; }
+      .feature-grid { grid-template-columns: 1fr 1fr; }
+      .modal { padding: 2rem 1.5rem; }
+    }
+    @media (max-width: 480px) {
+      .feature-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== TOAST NOTIFICATION ===== -->
+  <div id="toast" class="toast"><i class="fas fa-check-circle"></i> <span id="toastMessage">Welcome!</span></div>
+
+  <!-- ===== SIGN IN MODAL ===== -->
+  <div id="signinModal" class="modal-overlay">
+    <div class="modal">
+      <button class="modal-close" id="modalClose">&times;</button>
+      <h2><i class="fas fa-sign-in-alt" style="color:#e50914; margin-right:10px;"></i>Sign In</h2>
+      <p>Enter your credentials to continue.</p>
+      <input type="email" id="modalEmail" placeholder="Email address" />
+      <input type="password" id="modalPassword" placeholder="Password" />
+      <button class="modal-signin-btn" id="modalSignInBtn">Sign In</button>
+      <div class="modal-footer">
+        New to Netflix? <a href="#">Sign up now</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar">
+    <div class="nav-left">
+      <a href="#" class="logo" id="logoLink"><i class="fab fa-netflix"></i>NETFLIX</a>
+      <div class="nav-links" id="navLinks">
+        <a href="#" class="active" data-page="home">Home</a>
+        <a href="#" data-page="tvshows">TV Shows</a>
+        <a href="#" data-page="movies">Movies</a>
+        <a href="#" data-page="newpopular">New & Popular</a>
+        <a href="#" data-page="mylist">My List</a>
+      </div>
+    </div>
+    <div class="nav-right">
+      <i class="fas fa-search"></i>
+      <i class="fas fa-bell"></i>
+      <button class="signin-btn" id="signinBtn">Sign In</button>
+    </div>
+  </nav>
+
+  <!-- ===== PAGE: HOME ===== -->
+  <div id="page-home" class="page active-page">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-content">
+        <h1><i class="fas fa-play"></i> Unlimited</h1>
+        <div class="subtitle">Movies, TV Shows &amp; more.</div>
+        <p>Watch anywhere. Cancel anytime. Ready to watch? Enter your email to create or restart your membership.</p>
+        <div class="hero-email">
+          <input type="email" id="emailInput" placeholder="Email Address" />
+          <button id="getStartedBtn">Get Started <i class="fas fa-chevron-right"></i></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="features">
+      <h2><i class="fas fa-crown" style="color:#e50914; margin-right: 12px;"></i> Features</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <i class="fas fa-mobile-alt"></i>
+          <h3>Responsive</h3>
+          <p>Seamless on any device</p>
+        </div>
+        <div class="feature-card">
+          <i class="fas fa-film"></i>
+          <h3>Movie Cards</h3>
+          <p>Stunning grid layout</p>
+        </div>
+        <div class="feature-card">
+          <i class="fas fa-mouse-pointer"></i>
+          <h3>Hover Effects</h3>
+          <p>Interactive &amp; smooth</p>
+        </div>
+        <div class="feature-card">
+          <i class="fas fa-image"></i>
+          <h3>Hero Banner</h3>
+          <p>Bold cinematic feel</p>
+        </div>
+        <div class="feature-card">
+          <i class="fas fa-layer-group"></i>
+          <h3>Flexbox / Grid</h3>
+          <p>Modern UI architecture</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- POPULAR MOVIES -->
+    <section class="movie-section">
+      <h2><i class="fas fa-fire"></i> Popular Movies</h2>
+      <div class="movie-grid">
+        <div class="movie-card">
+          <img src="images/Haseen Dilruba.jpg" alt="Haseen Dilruba" loading="lazy" />
+          <div class="movie-info"><h4>Haseen Dilruba</h4><div class="meta"><span><i class="fas fa-star"></i> 7.2</span><span>2021</span></div></div>
+        </div>
+        <div class="movie-card">
+          <img src="images/Gangs of Wasseypur.jpg" alt="Gangs of Wasseypur" loading="lazy" />
+          <div class="movie-info"><h4>Gangs of Wasseypur</h4><div class="meta"><span><i class="fas fa-star"></i> 8.5</span><span>2012</span></div></div>
+        </div>
+        <div class="movie-card">
+          <img src="images/The Dark Knight.jpg" alt="The Dark Knight" loading="lazy" />
+          <div class="movie-info"><h4>The Dark Knight</h4><div class="meta"><span><i class="fas fa-star"></i> 9.0</span><span>2008</span></div></div>
+        </div>
+        <div class="movie-card">
+          <img src="images/Inception.jpg" alt="Inception" loading="lazy" />
+          <div class="movie-info"><h4>Inception</h4><div class="meta"><span><i class="fas fa-star"></i> 8.8</span><span>2010</span></div></div>
+        </div>
+        <div class="movie-card">
+          <img src="images/Stranger Things.jpg" alt="Stranger Things" loading="lazy" />
+          <div class="movie-info"><h4>Stranger Things</h4><div class="meta"><span><i class="fas fa-star"></i> 8.7</span><span>2016</span></div></div>
+        </div>
+        <div class="movie-card">
+          <img src="images/Money Heist.jpg" alt="Money Heist" loading="lazy" />
+          <div class="movie-info"><h4>Money Heist</h4><div class="meta"><span><i class="fas fa-star"></i> 8.2</span><span>2017</span></div></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ===== PAGE: TV SHOWS ===== -->
+  <div id="page-tvshows" class="page">
+    <div class="page-container">
+      <h1>📺 TV Shows</h1>
+      <p>Explore the best TV series, from drama to comedy, sci-fi, and more. Stay tuned for new episodes.</p>
+      <div class="movie-grid">
+        <div class="movie-card">
+          <img src="images/Stranger Things.jpg" alt="Stranger Things" />
+          <div class="movie-info"><h4>Stranger Things</h4><div class="meta"><span><i class="fas fa-star"></i> 8.7</span><span>2016</span></div></div>
+        </div>
+        <div class="movie-card">
+          <img src="images/Money Heist.jpg" alt="Money Heist" />
+          <div class="movie-info"><h4>Money Heist</h4><div class="meta"><span><i class="fas fa-star"></i> 8.2</span><span>2017</span></div></div>
+        </div>
+        <div class="movie-card">
+          <img src="images/Gangs of Wasseypur.jpg" alt="Gangs of Wasseypur" />
+          <div class="movie-info"><h4>Gangs of Wasseypur</h4><div class="meta"><span><i class="fas fa-star"></i> 8.5</span><span>2012</span></div></div>
+        </div>
+        <div class="movie-card">
+          <img src="images/The Dark Knight.jpg" alt="The Dark Knight" />
+          <div class="movie-info"><h4>The Dark Knight</h4><div class="meta"><span><i class="fas fa-star"></i> 9.0</span><span>2008</span></div></div>
+        </div>
+        <div class="movie-card">
+          <img src="images/Inception.jpg" alt="Inception" />
+          <div class="movie-info"><h4>Inception</h4><div class="meta"><span><i class="fas fa-star"></i> 8.8</span><span>2010</span></div></div>
+        </div>
+        <div class="movie-card">
+          <img src="images/Haseen Dilruba.jpg" alt="Haseen Dilruba" />
+          <div class="movie-info"><h4>Haseen Dilruba</h4><div class="meta"><span><i class="fas fa-star"></i> 7.2</span><span>2021</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PAGE: MOVIES ===== -->
+  <div id="page-movies" class="page">
+    <div class="page-container">
+      <h1>🎬 Movies</h1>
+      <p>All the latest and greatest movies, curated just for you. From blockbusters to indie gems.</p>
+      <div class="movie-grid">
+        <div class="movie-card">
+          <img src="images/The Dark Knight.jpg" alt="The Dark Knight" />
+          <div class="movie-info"><h4>The Dark Knight</h4><div class="meta"><span><i class="fas fa-star"></i> 9.0</span><span>2008</span></div></div>
+        </div>
+        <div class="movie-card">
+          <img src="images/Inception.jpg" alt="Inception" />
+          <div class="movie-info"><h4>Inception</h4><div class="meta"><span><i class="fas fa-star"></i> 8.8</span><span>2010</span></div></div>
+        </div>
+        <div class="movie-card">
+          <img src="images/Haseen Dilruba.jpg" alt="Haseen Dilruba" />
+          <div class="movie-info"><h4>Haseen Dilruba</h4><div class="meta"><span><i class="fas fa-star"></i> 7.2</span><span>2021</span></div></div>
+        </div>
+        <div class="movie-card">
+          <img src="images/Gangs of Wasseypur.jpg" alt="Gangs of Wasseypur" />
+          <div class="movie-info"><h4>Gangs of Wasseypur</h4><div class="meta"><span><i class="fas fa-star"></i> 8.5</span><span>2012</span></div></div>
+        </div>
+        <div class="movie-card">
+          <img src="images/Stranger Things.jpg" alt="Stranger Things" />
+          <div class="movie-info"><h4>Stranger Things</h4><div class="meta"><span><i class="fas fa-star"></i> 8.7</span><span>2016</span></div></div>
+        </div>
+        <div class="movie-card">
+          <img src="images/Money Heist.jpg" alt="Money Heist" />
+          <div class="movie-info"><h4>Money Heist</h4><div class="meta"><span><i class="fas fa-star"></i> 8.2</span><span>2017</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PAGE: NEW & POPULAR ===== -->
+  <div id="page-newpopular" class="page">
+    <div class="page-container">
+      <h1>🔥 New & Popular</h1>
+      <p>What's trending right now. New releases, popular picks, and audience favorites.</p>
+      <div class="movie-grid">
+        <div class="movie-card">
+          <img src="images/Money Heist.jpg" alt="Money Heist" />
+          <div class="movie-info"><h4>Money Heist</h4><div class="meta"><span><i class="fas fa-star"></i> 8.2</span><span>2017</span></div></div>
+        </div>
+        <div class="movie-card">
+          <img src="images/Stranger Things.jpg" alt="Stranger Things" />
+          <div class="movie-info"><h4>Stranger Things</h4><div class="meta"><span><i class="fas fa-star"></i> 8.7</span><span>2016</span></div></div>
+        </div>
+        <div class="movie-card">
+          <img src="images/The Dark Knight.jpg" alt="The Dark Knight" />
+          <div class="movie-info"><h4>The Dark Knight</h4><div class="meta"><span><i class="fas fa-star"></i> 9.0</span><span>2008</span></div></div>
+        </div>
+        <div class="movie-card">
+          <img src="images/Inception.jpg" alt="Inception" />
+          <div class="movie-info"><h4>Inception</h4><div class="meta"><span><i class="fas fa-star"></i> 8.8</span><span>2010</span></div></div>
+        </div>
+        <div class="movie-card">
+          <img src="images/Haseen Dilruba.jpg" alt="Haseen Dilruba" />
+          <div class="movie-info"><h4>Haseen Dilruba</h4><div class="meta"><span><i class="fas fa-star"></i> 7.2</span><span>2021</span></div></div>
+        </div>
+        <div class="movie-card">
+          <img src="images/Gangs of Wasseypur.jpg" alt="Gangs of Wasseypur" />
+          <div class="movie-info"><h4>Gangs of Wasseypur</h4><div class="meta"><span><i class="fas fa-star"></i> 8.5</span><span>2012</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PAGE: MY LIST ===== -->
+  <div id="page-mylist" class="page">
+    <div class="page-container">
+      <h1>📋 My List</h1>
+      <p>Your personal collection. Save your favorite movies and shows to watch later.</p>
+      <div class="movie-grid">
+        <div class="movie-card">
+          <img src="images/Inception.jpg" alt="Inception" />
+          <div class="movie-info"><h4>Inception</h4><div class="meta"><span><i class="fas fa-star"></i> 8.8</span><span>2010</span></div></div>
+        </div>
+        <div class="movie-card">
+          <img src="images/Gangs of Wasseypur.jpg" alt="Gangs of Wasseypur" />
+          <div class="movie-info"><h4>Gangs of Wasseypur</h4><div class="meta"><span><i class="fas fa-star"></i> 8.5</span><span>2012</span></div></div>
+        </div>
+        <div class="movie-card">
+          <img src="images/Haseen Dilruba.jpg" alt="Haseen Dilruba" />
+          <div class="movie-info"><h4>Haseen Dilruba</h4><div class="meta"><span><i class="fas fa-star"></i> 7.2</span><span>2021</span></div></div>
+        </div>
+        <div class="movie-card">
+          <img src="images/The Dark Knight.jpg" alt="The Dark Knight" />
+          <div class="movie-info"><h4>The Dark Knight</h4><div class="meta"><span><i class="fas fa-star"></i> 9.0</span><span>2008</span></div></div>
+        </div>
+        <div class="movie-card">
+          <img src="images/Stranger Things.jpg" alt="Stranger Things" />
+          <div class="movie-info"><h4>Stranger Things</h4><div class="meta"><span><i class="fas fa-star"></i> 8.7</span><span>2016</span></div></div>
+        </div>
+        <div class="movie-card">
+          <img src="images/Money Heist.jpg" alt="Money Heist" />
+          <div class="movie-info"><h4>Money Heist</h4><div class="meta"><span><i class="fas fa-star"></i> 8.2</span><span>2017</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <div class="footer-note">
+    <i class="fab fa-netflix"></i> Netflix clone · crafted with <i class="fas fa-heart" style="color:#e50914;"></i> · 2026
+  </div>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    (function() {
+      // ========== TOAST SYSTEM ==========
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toastMessage');
+      let toastTimer;
+
+      function showToast(message, icon = 'fa-check-circle') {
+        clearTimeout(toastTimer);
+        toastMessage.textContent = message;
+        toast.innerHTML = `<i class="fas ${icon}"></i> ${message}`;
+        toast.classList.add('show');
+        toastTimer = setTimeout(() => {
+          toast.classList.remove('show');
+        }, 3500);
+      }
+
+      // ========== PAGE NAVIGATION ==========
+      const pages = {
+        home: document.getElementById('page-home'),
+        tvshows: document.getElementById('page-tvshows'),
+        movies: document.getElementById('page-movies'),
+        newpopular: document.getElementById('page-newpopular'),
+        mylist: document.getElementById('page-mylist')
+      };
+
+      const navLinks = document.querySelectorAll('#navLinks a');
+      const logo = document.getElementById('logoLink');
+
+      function switchPage(pageId) {
+        Object.keys(pages).forEach(key => {
+          pages[key].classList.remove('active-page');
+        });
+        if (pages[pageId]) {
+          pages[pageId].classList.add('active-page');
+        }
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.dataset.page === pageId) {
+            link.classList.add('active');
+          }
+        });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const page = this.dataset.page;
+          if (page) switchPage(page);
+        });
+      });
+
+      logo.addEventListener('click', function(e) {
+        e.preventDefault();
+        switchPage('home');
+      });
+
+      // ========== GET STARTED BUTTON ==========
+      const getStartedBtn = document.getElementById('getStartedBtn');
+      const emailInput = document.getElementById('emailInput');
+
+      getStartedBtn.addEventListener('click', function() {
+        const email = emailInput.value.trim();
+        if (email === '') {
+          showToast('Please enter your email address', 'fa-exclamation-circle');
+          emailInput.focus();
+          emailInput.style.borderColor = '#e50914';
+          setTimeout(() => { emailInput.style.borderColor = ''; }, 2000);
+          return;
+        }
+        if (!email.includes('@') || !email.includes('.')) {
+          showToast('Please enter a valid email address', 'fa-exclamation-circle');
+          emailInput.focus();
+          emailInput.style.borderColor = '#e50914';
+          setTimeout(() => { emailInput.style.borderColor = ''; }, 2000);
+          return;
+        }
+        showToast(`Welcome! We'll send updates to ${email}`, 'fa-envelope');
+        emailInput.value = '';
+      });
+
+      // Enter key on email input
+      emailInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          getStartedBtn.click();
+        }
+      });
+
+      // ========== SIGN IN MODAL ==========
+      const signinBtn = document.getElementById('signinBtn');
+      const modalOverlay = document.getElementById('signinModal');
+      const modalClose = document.getElementById('modalClose');
+      const modalSignInBtn = document.getElementById('modalSignInBtn');
+      const modalEmail = document.getElementById('modalEmail');
+      const modalPassword = document.getElementById('modalPassword');
+
+      // Open modal
+      signinBtn.addEventListener('click', function() {
+        modalOverlay.classList.add('active');
+        modalEmail.value = '';
+        modalPassword.value = '';
+        modalEmail.focus();
+      });
+
+      // Close modal (X button)
+      modalClose.addEventListener('click', function() {
+        modalOverlay.classList.remove('active');
+      });
+
+      // Close modal (click overlay)
+      modalOverlay.addEventListener('click', function(e) {
+        if (e.target === modalOverlay) {
+          modalOverlay.classList.remove('active');
+        }
+      });
+
+      // Close modal (ESC key)
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+          modalOverlay.classList.remove('active');
+        }
+      });
+
+      // Sign In button inside modal
+      modalSignInBtn.addEventListener('click', function() {
+        const email = modalEmail.value.trim();
+        const password = modalPassword.value.trim();
+
+        if (email === '' || password === '') {
+          showToast('Please fill in all fields', 'fa-exclamation-circle');
+          return;
+        }
+        if (!email.includes('@') || !email.includes('.')) {
+          showToast('Please enter a valid email', 'fa-exclamation-circle');
+          return;
+        }
+        if (password.length < 4) {
+          showToast('Password must be at least 4 characters', 'fa-exclamation-circle');
+          return;
+        }
+
+        // Successful sign in
+        showToast(`Welcome back, ${email.split('@')[0]}! 🎬`, 'fa-user-check');
+        modalOverlay.classList.remove('active');
+        // Change button text to show signed in state
+        signinBtn.textContent = '👤 Account';
+        signinBtn.style.background = '#2d8a4e';
+        // Reset after 3 seconds (demo)
+        setTimeout(() => {
+          signinBtn.textContent = 'Sign In';
+          signinBtn.style.background = '';
+        }, 5000);
+      });
+
+      // Enter key on modal inputs
+      modalEmail.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') modalPassword.focus();
+      });
+      modalPassword.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') modalSignInBtn.click();
+      });
+
+      // ========== MOVIE CARD CLICK (demo) ==========
+      document.querySelectorAll('.movie-card').forEach(card => {
+        card.addEventListener('click', function() {
+          const title = this.querySelector('.movie-info h4')?.textContent || 'Movie';
+          showToast(`🎥 Playing: ${title}`, 'fa-play');
+        });
+      });
+
+      console.log('🎬 Netflix Clone · Ready to stream!');
+    })();
+  </script>
+</body>
+</html>
