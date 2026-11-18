@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StreamVibe · Library</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0b0e14;
+      color: #f0f3f8;
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem 1rem 3rem;
+    }
+    .platform-wrapper { max-width: 1360px; width: 100%; }
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.2rem 2rem;
+      padding: 0.8rem 0 1.8rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      margin-bottom: 2.2rem;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #b388ff, #7c4dff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .logo i { font-size: 2rem; color: #7c4dff; -webkit-text-fill-color: #7c4dff; filter: drop-shadow(0 0 10px rgba(124, 77, 255, 0.3)); }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.8rem;
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: #a8b2c9;
+    }
+    .nav-links a {
+      color: inherit;
+      text-decoration: none;
+      transition: 0.2s;
+      padding: 0.3rem 0;
+      border-bottom: 2px solid transparent;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      color: #ffffff;
+      border-bottom-color: #7c4dff;
+    }
+    .nav-actions { display: flex; align-items: center; gap: 1rem; }
+    .nav-actions .icon-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: none;
+      color: #b6c2db;
+      font-size: 1.2rem;
+      padding: 0.5rem 0.8rem;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .nav-actions .icon-btn:hover { background: rgba(124, 77, 255, 0.15); color: #fff; }
+    .avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: linear-gradient(135deg, #7c4dff, #b388ff);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; color: #fff; font-size: 1rem;
+      cursor: pointer; border: 2px solid rgba(255, 255, 255, 0.1);
+      transition: 0.2s;
+    }
+    .avatar:hover { transform: scale(1.05); border-color: #7c4dff; }
+    .page-banner {
+      background: linear-gradient(135deg, #1a1f2e, #131824);
+      border-radius: 32px; padding: 3rem; text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      margin-bottom: 2rem;
+    }
+    .page-banner h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .page-banner p { color: #b0bedb; font-size: 1.1rem; }
+    .page-banner i { color: #7c4dff; margin-right: 0.5rem; }
+    .library-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .library-item {
+      background: #141a26;
+      border-radius: 24px;
+      padding: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      transition: 0.25s;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .library-item:hover { transform: translateY(-4px); border-color: rgba(124, 77, 255, 0.3); background: #1a2130; }
+    .library-item i { font-size: 2.5rem; color: #7c4dff; margin-bottom: 0.8rem; }
+    .library-item h4 { font-size: 1rem; font-weight: 600; }
+    .library-item p { font-size: 0.8rem; color: #8896b0; margin-top: 0.2rem; }
+    .library-item .count { font-size: 0.7rem; color: #6b7a9a; margin-top: 0.5rem; background: rgba(255,255,255,0.05); padding: 0.2rem 0.8rem; border-radius: 20px; }
+    .footer {
+      margin-top: 3.5rem; padding-top: 1.8rem; border-top: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+      gap: 1rem; color: #6b7a9a; font-size: 0.85rem;
+    }
+    .footer-links { display: flex; gap: 1.8rem; }
+    .footer-links a { color: #8896b0; text-decoration: none; transition: 0.2s; cursor: pointer; }
+    .footer-links a:hover { color: #fff; }
+    @media (max-width: 540px) { .nav-links { gap: 1rem; font-size: 0.85rem; } }
+  </style>
+</head>
+<body>
+<div class="platform-wrapper">
+  <nav class="navbar">
+    <a href="index.html" class="logo"><i class="fas fa-play-circle"></i> StreamVibe</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="explore.html">Explore</a>
+      <a href="shorts.html">Shorts</a>
+      <a href="subscriptions.html">Subscriptions</a>
+      <a href="library.html" class="active">Library</a>
+    </div>
+    <div class="nav-actions">
+      <button class="icon-btn" id="searchBtn" aria-label="search"><i class="fas fa-search"></i></button>
+      <button class="icon-btn" id="notifBtn" aria-label="notifications"><i class="fas fa-bell"></i></button>
+      <div class="avatar" id="avatarBtn">J</div>
+    </div>
+  </nav>
+
+  <div class="page-banner">
+    <h1><i class="fas fa-folder"></i> Your Library</h1>
+    <p>All your saved content, watch history, and playlists in one place.</p>
+  </div>
+
+  <div class="library-grid">
+    <div class="library-item" onclick="alert('📚 Watch Later\n\n12 videos saved\n\n📹 The Art of Code\n📹 Deep Space Walk\n📹 Urban Symphony\n📹 Mindful Moments\n📹 Retro Wave\n📹 Wilderness Tales\n\n➕ Add more videos to watch later')">
+      <i class="fas fa-clock"></i><h4>Watch Later</h4><p>Videos you've saved</p><span class="count">12 videos</span>
+    </div>
+    <div class="library-item" onclick="alert('📜 Watch History\n\n34 videos watched\n\n🕐 Recently watched:\n• The Art of Code (2h ago)\n• Deep Space Walk (5h ago)\n• Urban Symphony (1d ago)\n• Mindful Moments (2d ago)\n\n🗑️ Clear history option available')">
+      <i class="fas fa-history"></i><h4>History</h4><p>Recently watched</p><span class="count">34 videos</span>
+    </div>
+    <div class="library-item" onclick="alert('❤️ Liked Videos\n\n28 videos you\'ve liked\n\n👍 Top liked:\n• The Art of Code\n• Urban Symphony\n• Deep Space Walk\n• Wilderness Tales\n• Retro Wave\n\n💔 Unlike videos anytime')">
+      <i class="fas fa-thumbs-up"></i><h4>Liked Videos</h4><p>Videos you've liked</p><span class="count">28 videos</span>
+    </div>
+    <div class="library-item" onclick="alert('📂 Your Playlists\n\n5 custom playlists\n\n🎵 Chill Mix (15 videos)\n💻 Coding Vibes (8 videos)\n🌿 Nature Sounds (12 videos)\n🎬 Movie Trailers (6 videos)\n🏋️ Workout Beats (10 videos)\n\n➕ Create a new playlist')">
+      <i class="fas fa-list-ul"></i><h4>Your Playlists</h4><p>Custom collections</p><span class="count">5 playlists</span>
+    </div>
+    <div class="library-item" onclick="alert('⬇️ Downloads\n\n3 videos available offline\n\n📱 Downloaded:\n• The Art of Code (12:34)\n• Deep Space Walk (8:21)\n• Urban Symphony (5:47)\n\n💾 Storage used: 245 MB\n📂 Downloads folder')">
+      <i class="fas fa-download"></i><h4>Downloads</h4><p>Offline content</p><span class="count">3 videos</span>
+    </div>
+    <div class="library-item" onclick="alert('⭐ Favorites\n\n18 favorite videos\n\n🌟 Top favorites:\n• Beyond the Horizon\n• The Art of Code\n• Urban Symphony\n• Retro Wave\n• Nature Documentary\n\n❤️ Your most cherished content')">
+      <i class="fas fa-heart"></i><h4>Favorites</h4><p>Top picks</p><span class="count">18 videos</span>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <span>© 2026 StreamVibe · all rights reserved</span>
+    <div class="footer-links">
+      <a href="#" id="privacyLink">Privacy</a>
+      <a href="#" id="termsLink">Terms</a>
+      <a href="#" id="helpLink">Help</a>
+    </div>
+  </footer>
+</div>
+
+<script>
+  (function() {
+    "use strict";
+
+    // --- NAV BUTTONS ---
+    document.getElementById('searchBtn').addEventListener('click', function() {
+      const query = prompt('🔍 Search your library:');
+      if (query && query.trim() !== '') {
+        alert(`🔍 Searching "${query.trim()}" in your library...\n\nFound 7 items matching your search.`);
+      } else if (query !== null) {
+        alert('Please enter a search term.');
+      }
+    });
+
+    document.getElementById('notifBtn').addEventListener('click', function() {
+      alert('🔔 Library Notifications\n\n📱 Updates in your library:\n1. 3 new videos added to Watch Later\n2. Your playlist "Chill Mix" has new songs\n3. 2 videos downloaded successfully\n\n💡 Tip: Organize your library today!');
+    });
+
+    document.getElementById('avatarBtn').addEventListener('click', function() {
+      alert('👤 Profile\n\nName: John Doe\n📧 Email: john.doe@email.com\n📚 Library Stats:\n• 12 Watch Later\n• 34 History\n• 28 Liked Videos\n• 5 Playlists\n• 3 Downloads\n• 18 Favorites\n\n📊 Total: 100+ videos in library');
+    });
+
+    // --- FOOTER LINKS ---
+    document.getElementById('privacyLink').addEventListener('click', function(e) {
+      e.preventDefault();
+      alert('🔒 Privacy Policy - Library\n\n' +
+            '📌 Information Stored:\n' +
+            '• Watch history and preferences\n' +
+            '• Saved videos and playlists\n' +
+            '• Downloaded content\n' +
+            '• Liked and favorited videos\n\n' +
+            '🔐 Data Protection:\n' +
+            '• Your library is private to you\n' +
+            '• No data shared with others\n' +
+            '• You can clear history anytime\n' +
+            '• Downloaded content is encrypted\n\n' +
+            '📅 Last updated: January 2026');
+    });
+
+    document.getElementById('termsLink').addEventListener('click', function(e) {
+      e.preventDefault();
+      alert('📜 Library Terms\n\n' +
+            '📋 Library Guidelines:\n' +
+            '1. Your library is for personal use only\n' +
+            '2. Downloaded content is for offline viewing\n' +
+            '3. Playlists are private by default\n' +
+            '4. You can delete content anytime\n\n' +
+            '💾 Storage Limits:\n' +
+            '• Free users: 5 GB storage\n' +
+            '• Premium users: 50 GB storage\n' +
+            '• Manage your storage in settings\n\n' +
+            '📅 Last updated: January 2026');
+    });
+
+    document.getElementById('helpLink').addEventListener('click', function(e) {
+      e.preventDefault();
+      alert('❓ Library Help Center\n\n' +
+            '📚 Library Management:\n' +
+            '• Click any library item to view details\n' +
+            '• Use search to find specific content\n' +
+            '• Create playlists to organize videos\n' +
+            '• Download videos for offline viewing\n\n' +
+            '💡 Pro Tips:\n' +
+            '• Organize videos into custom playlists\n' +
+            '• Use "Watch Later" for interesting videos\n' +
+            '• Favorite your most loved content\n' +
+            '• Clear history regularly for privacy\n\n' +
+            '📧 Support: library@streamvibe.com');
+    });
+
+  })();
+</script>
+</body>
+</html>

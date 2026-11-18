@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>User Authentication System · JWT + bcrypt</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet" />
+    <style>
+        /* ----- reset & base ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+            background: linear-gradient(145deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            background-attachment: fixed;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ----- animated background orbs ----- */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.6;
+            z-index: 0;
+            animation: floatOrb 20s infinite alternate ease-in-out;
+            pointer-events: none;
+        }
+        .orb1 {
+            width: 400px;
+            height: 400px;
+            background: #ff6bcd;
+            top: -120px;
+            left: -120px;
+            animation-duration: 22s;
+        }
+        .orb2 {
+            width: 450px;
+            height: 450px;
+            background: #00d4ff;
+            bottom: -150px;
+            right: -150px;
+            animation-duration: 25s;
+            animation-delay: -5s;
+        }
+        .orb3 {
+            width: 320px;
+            height: 320px;
+            background: #ffd93d;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-duration: 18s;
+            animation-delay: -10s;
+            opacity: 0.3;
+        }
+        .orb4 {
+            width: 280px;
+            height: 280px;
+            background: #6bcbff;
+            top: 20%;
+            left: 70%;
+            animation-duration: 16s;
+            animation-delay: -3s;
+            opacity: 0.4;
+        }
+        .orb5 {
+            width: 300px;
+            height: 300px;
+            background: #ff9a76;
+            bottom: 30%;
+            left: 10%;
+            animation-duration: 19s;
+            animation-delay: -7s;
+            opacity: 0.3;
+        }
+
+        @keyframes floatOrb {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            25% { transform: translate(80px, -50px) scale(1.2) rotate(10deg); }
+            50% { transform: translate(-60px, 70px) scale(0.9) rotate(-10deg); }
+            75% { transform: translate(50px, 30px) scale(1.1) rotate(5deg); }
+            100% { transform: translate(-30px, -40px) scale(1) rotate(-5deg); }
+        }
+
+        /* ----- main glass container ----- */
+        .app-wrapper {
+            max-width: 520px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 3rem;
+            padding: 2.5rem 2.5rem 3rem;
+            box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.8), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        /* ----- header ----- */
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        header h1 {
+            font-size: 2.6rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #f7971e 0%, #ffd200 30%, #f7971e 60%, #ff6bcd 100%);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmerGradient 8s ease infinite;
+        }
+        @keyframes shimmerGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .subhead {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.85rem;
+            margin-top: 0.2rem;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+        .tech-badges {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .tech-badge {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 0.2rem 0.8rem;
+            border-radius: 1rem;
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.4);
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+        .tech-badge.active {
+            border-color: rgba(255, 215, 150, 0.2);
+            color: #ffd93d;
+        }
+
+        /* ----- auth forms ----- */
+        .auth-container {
+            transition: all 0.5s ease;
+        }
+        .auth-container.hidden {
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+            position: relative;
+        }
+        .form-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 0.4rem;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 0.9rem 1.4rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1.4rem;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            color: #f0f4fc;
+            transition: 0.3s ease;
+            outline: none;
+        }
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.25);
+        }
+        .form-group input:focus {
+            border-color: rgba(255, 215, 150, 0.4);
+            background: rgba(255, 255, 255, 0.07);
+            box-shadow: 0 0 0 5px rgba(255, 215, 150, 0.05);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 1.2rem;
+            bottom: 0.9rem;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0.2rem 0.4rem;
+            transition: 0.2s ease;
+            z-index: 3;
+        }
+        .password-toggle:hover {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(145deg, #f7971e, #ff6bcd);
+            color: #fff;
+            border: none;
+            border-radius: 2.4rem;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s ease;
+            box-shadow: 0 8px 30px rgba(247, 151, 30, 0.25);
+            letter-spacing: 0.5px;
+            margin-top: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: 0.5s;
+        }
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(247, 151, 30, 0.35);
+        }
+        .btn-primary:active {
+            transform: scale(0.96);
+        }
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .auth-toggle {
+            text-align: center;
+            margin-top: 1.2rem;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.9rem;
+        }
+        .auth-toggle a {
+            color: #ffd93d;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .auth-toggle a:hover {
+            color: #ff6bcd;
+            text-decoration: underline;
+        }
+
+        .error-msg {
+            color: #ff6b6b;
+            font-size: 0.85rem;
+            text-align: center;
+            margin-top: 0.5rem;
+            min-height: 1.5rem;
+        }
+        .success-msg {
+            color: #51cf66;
+            font-size: 0.85rem;
+            text-align: center;
+            margin-top: 0.5rem;
+            min-height: 1.5rem;
+        }
+
+        /* ----- dashboard (hidden by default) ----- */
+        .dashboard {
+            transition: all 0.5s ease;
+        }
+        .dashboard.hidden {
+            display: none;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.8rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .dashboard-header .user-info {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.95rem;
+        }
+        .dashboard-header .username {
+            color: #ffd93d;
+            font-weight: 600;
+            background: rgba(255, 217, 61, 0.1);
+            padding: 0.2rem 0.8rem;
+            border-radius: 1rem;
+        }
+        .dashboard-header .badge {
+            background: linear-gradient(145deg, #51cf66, #2b8a3e);
+            color: #fff;
+            font-size: 0.6rem;
+            padding: 0.2rem 0.8rem;
+            border-radius: 1rem;
+            margin-left: 0.5rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 0.4rem 1.4rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+        .logout-btn:hover {
+            background: rgba(255, 80, 80, 0.12);
+            border-color: rgba(255, 80, 80, 0.15);
+            color: #ff8a8a;
+        }
+
+        .dashboard-content {
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+        .dashboard-content .welcome-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .dashboard-content h2 {
+            color: #f5f0e8;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .dashboard-content p {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            max-width: 350px;
+            margin: 0 auto;
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 1.2rem;
+            padding: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: 0.3s ease;
+        }
+        .stat-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateY(-2px);
+        }
+        .stat-card .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ffd93d;
+        }
+        .stat-card .stat-label {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 0.2rem;
+        }
+
+        .token-display {
+            margin-top: 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 1rem;
+            padding: 1rem;
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .token-display .token-label {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.3rem;
+        }
+        .token-display .token-value {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.65rem;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+        }
+
+        /* ----- responsive ----- */
+        @media (max-width: 480px) {
+            .app-wrapper { padding: 1.5rem; border-radius: 2rem; }
+            header h1 { font-size: 2rem; }
+            .dashboard-stats { grid-template-columns: 1fr; }
+            .orb { display: none; }
+            .tech-badges { gap: 0.3rem; }
+            .tech-badge { font-size: 0.5rem; padding: 0.15rem 0.6rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- animated background orbs -->
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+    <div class="orb orb4"></div>
+    <div class="orb orb5"></div>
+
+    <!-- main app -->
+    <div class="app-wrapper">
+        <header>
+            <h1>🔐 Auth System</h1>
+            <p class="subhead">secure login &amp; signup with JWT + bcrypt</p>
+            <div class="tech-badges">
+                <span class="tech-badge active">🔑 JWT</span>
+                <span class="tech-badge active">🔒 bcrypt</span>
+                <span class="tech-badge">⚡ Express.js</span>
+                <span class="tech-badge">🍃 MongoDB</span>
+            </div>
+        </header>
+
+        <!-- ===== LOGIN/SIGNUP FORM ===== -->
+        <div id="authContainer" class="auth-container">
+            <div class="form-group">
+                <label for="authUser">Username</label>
+                <input type="text" id="authUser" placeholder="Enter username" />
+            </div>
+            <div class="form-group">
+                <label for="authPass">Password</label>
+                <input type="password" id="authPass" placeholder="Enter password" />
+                <button type="button" class="password-toggle" id="togglePassword">👁️</button>
+            </div>
+            <button class="btn-primary" id="authBtn">Sign In</button>
+            <div class="auth-toggle">
+                <span id="toggleText">Don't have an account?</span>
+                <a id="toggleLink">Sign Up</a>
+            </div>
+            <div id="authError" class="error-msg"></div>
+            <div id="authSuccess" class="success-msg"></div>
+        </div>
+
+        <!-- ===== DASHBOARD (hidden until login) ===== -->
+        <div id="dashboard" class="dashboard hidden">
+            <div class="dashboard-header">
+                <div class="user-info">
+                    👋 Welcome, <span id="displayUser" class="username">User</span>
+                    <span class="badge">JWT Verified</span>
+                </div>
+                <button class="logout-btn" id="logoutBtn">🚪 Logout</button>
+            </div>
+
+            <div class="dashboard-content">
+                <span class="welcome-icon">🎉</span>
+                <h2>You're Authenticated!</h2>
+                <p>Your account is secure with JWT tokens and bcrypt password hashing.</p>
+
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="statUsers">0</div>
+                        <div class="stat-label">Total Users</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statSessions">1</div>
+                        <div class="stat-label">Active Sessions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statStatus">✅</div>
+                        <div class="stat-label">Auth Status</div>
+                    </div>
+                </div>
+
+                <!-- JWT Token Display -->
+                <div class="token-display">
+                    <div class="token-label">📜 Your JWT Token</div>
+                    <div class="token-value" id="jwtTokenDisplay">No token available</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        //  USER AUTHENTICATION SYSTEM — JWT + bcrypt (simulated)
+        //  Frontend-only demo with localStorage persistence
+        // ============================================================
+
+        // ---------- bcrypt simulation (SHA-256 based) ----------
+        class BcryptSim {
+            // Simple hash function (simulates bcrypt)
+            static async hash(password, saltRounds = 10) {
+                const encoder = new TextEncoder();
+                const data = encoder.encode(password + 'bcrypt_salt_' + saltRounds);
+                const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                return '$2b$' + saltRounds + '$' + hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            }
+
+            static async compare(password, hash) {
+                const saltRounds = parseInt(hash.substring(3, 5)) || 10;
+                const newHash = await this.hash(password, saltRounds);
+                return newHash === hash;
+            }
+        }
+
+        // ---------- JWT simulation ----------
+        class JWTSim {
+            static SECRET = 'your-super-secret-jwt-key-change-in-production';
+
+            static async sign(payload, expiresIn = '1h') {
+                const header = { alg: 'HS256', typ: 'JWT' };
+                const now = Date.now();
+                const exp = expiresIn === '1h' ? now + 3600000 : now + 86400000;
+
+                const fullPayload = {
+                    ...payload,
+                    iat: Math.floor(now / 1000),
+                    exp: Math.floor(exp / 1000)
+                };
+
+                const headerB64 = btoa(JSON.stringify(header));
+                const payloadB64 = btoa(JSON.stringify(fullPayload));
+
+                const signatureInput = `${headerB64}.${payloadB64}`;
+                const encoder = new TextEncoder();
+                const data = encoder.encode(signatureInput + this.SECRET);
+                const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                const signature = btoa(String.fromCharCode(...hashArray));
+
+                return `${headerB64}.${payloadB64}.${signature}`;
+            }
+
+            static async verify(token) {
+                try {
+                    const parts = token.split('.');
+                    if (parts.length !== 3) return null;
+
+                    const [headerB64, payloadB64, signature] = parts;
+                    const payload = JSON.parse(atob(payloadB64));
+
+                    // Check expiration
+                    if (payload.exp < Math.floor(Date.now() / 1000)) {
+                        return null;
+                    }
+
+                    // Verify signature
+                    const signatureInput = `${headerB64}.${payloadB64}`;
+                    const encoder = new TextEncoder();
+                    const data = encoder.encode(signatureInput + this.SECRET);
+                    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+                    const hashArray = Array.from(new Uint8Array(hashBuffer));
+                    const expectedSignature = btoa(String.fromCharCode(...hashArray));
+
+                    if (signature !== expectedSignature) return null;
+
+                    return payload;
+                } catch {
+                    return null;
+                }
+            }
+
+            static async decode(token) {
+                try {
+                    const parts = token.split('.');
+                    if (parts.length !== 3) return null;
+                    return JSON.parse(atob(parts[1]));
+                } catch {
+                    return null;
+                }
+            }
+        }
+
+        // ---------- state ----------
+        let currentUser = null;
+        let currentToken = null;
+        let isLoginMode = true;
+
+        // ---------- DOM refs ----------
+        const authContainer = document.getElementById('authContainer');
+        const dashboard = document.getElementById('dashboard');
+
+        const authUser = document.getElementById('authUser');
+        const authPass = document.getElementById('authPass');
+        const authBtn = document.getElementById('authBtn');
+        const authError = document.getElementById('authError');
+        const authSuccess = document.getElementById('authSuccess');
+        const toggleLink = document.getElementById('toggleLink');
+        const toggleText = document.getElementById('toggleText');
+        const togglePassword = document.getElementById('togglePassword');
+
+        const displayUser = document.getElementById('displayUser');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const statUsers = document.getElementById('statUsers');
+        const statSessions = document.getElementById('statSessions');
+        const statStatus = document.getElementById('statStatus');
+        const jwtTokenDisplay = document.getElementById('jwtTokenDisplay');
+
+        // ---------- password toggle ----------
+        let passwordVisible = false;
+        togglePassword.addEventListener('click', () => {
+            passwordVisible = !passwordVisible;
+            authPass.type = passwordVisible ? 'text' : 'password';
+            togglePassword.textContent = passwordVisible ? '🙈' : '👁️';
+        });
+
+        // ---------- database helpers (localStorage) ----------
+        function getUsers() {
+            try {
+                return JSON.parse(localStorage.getItem('auth_users_bcrypt')) || {};
+            } catch { return {}; }
+        }
+
+        function saveUsers(users) {
+            localStorage.setItem('auth_users_bcrypt', JSON.stringify(users));
+        }
+
+        function getTokens() {
+            try {
+                return JSON.parse(localStorage.getItem('auth_tokens_jwt')) || {};
+            } catch { return {}; }
+        }
+
+        function saveTokens(tokens) {
+            localStorage.setItem('auth_tokens_jwt', JSON.stringify(tokens));
+        }
+
+        // ---------- update stats ----------
+        function updateStats() {
+            const users = getUsers();
+            const totalUsers = Object.keys(users).length;
+            statUsers.textContent = totalUsers;
+            statSessions.textContent = currentUser ? '1' : '0';
+            statStatus.textContent = currentUser ? '✅ Active' : '❌ Inactive';
+        }
+
+        // ---------- update JWT display ----------
+        function updateJWTDisplay() {
+            if (currentToken) {
+                jwtTokenDisplay.textContent = currentToken;
+            } else {
+                jwtTokenDisplay.textContent = 'No token available';
+            }
+        }
+
+        // ---------- login / signup ----------
+        function toggleAuthMode() {
+            isLoginMode = !isLoginMode;
+            authBtn.textContent = isLoginMode ? 'Sign In' : 'Create Account';
+            toggleText.textContent = isLoginMode ? "Don't have an account?" : "Already have an account?";
+            toggleLink.textContent = isLoginMode ? 'Sign Up' : 'Sign In';
+            authError.textContent = '';
+            authSuccess.textContent = '';
+            updateStats();
+        }
+
+        async function handleAuth() {
+            const user = authUser.value.trim();
+            const pass = authPass.value.trim();
+
+            authError.textContent = '';
+            authSuccess.textContent = '';
+            authBtn.disabled = true;
+
+            if (!user || !pass) {
+                authError.textContent = 'Please fill in all fields.';
+                authBtn.disabled = false;
+                return;
+            }
+
+            const users = getUsers();
+
+            if (isLoginMode) {
+                // ===== LOGIN =====
+                if (users[user]) {
+                    // Verify password with bcrypt
+                    const isValid = await BcryptSim.compare(pass, users[user]);
+                    if (isValid) {
+                        // Generate JWT token
+                        const token = await JWTSim.sign({ username: user, role: 'user' });
+                        
+                        // Save token
+                        const tokens = getTokens();
+                        tokens[user] = token;
+                        saveTokens(tokens);
+
+                        currentUser = user;
+                        currentToken = token;
+                        authSuccess.textContent = '✅ Login successful! JWT token generated.';
+                        setTimeout(() => showDashboard(), 500);
+                    } else {
+                        authError.textContent = '❌ Invalid username or password.';
+                    }
+                } else {
+                    authError.textContent = '❌ Invalid username or password.';
+                }
+            } else {
+                // ===== SIGNUP =====
+                if (users[user]) {
+                    authError.textContent = '❌ Username already exists.';
+                    authBtn.disabled = false;
+                    return;
+                }
+
+                // Hash password with bcrypt
+                const hashedPassword = await BcryptSim.hash(pass);
+                users[user] = hashedPassword;
+                saveUsers(users);
+
+                authSuccess.textContent = '✅ Account created successfully! Password hashed with bcrypt.';
+                authUser.value = '';
+                authPass.value = '';
+
+                setTimeout(() => {
+                    if (!isLoginMode) toggleAuthMode();
+                }, 1500);
+                updateStats();
+            }
+
+            authBtn.disabled = false;
+        }
+
+        // ---------- dashboard ----------
+        function showDashboard() {
+            authContainer.classList.add('hidden');
+            dashboard.classList.remove('hidden');
+            displayUser.textContent = currentUser;
+            updateStats();
+            updateJWTDisplay();
+        }
+
+        function logout() {
+            if (currentUser) {
+                const tokens = getTokens();
+                delete tokens[currentUser];
+                saveTokens(tokens);
+            }
+            currentUser = null;
+            currentToken = null;
+            dashboard.classList.add('hidden');
+            authContainer.classList.remove('hidden');
+            authUser.value = '';
+            authPass.value = '';
+            authError.textContent = '';
+            authSuccess.textContent = '';
+            updateStats();
+            updateJWTDisplay();
+        }
+
+        // ---------- check auto-login ----------
+        async function checkAutoLogin() {
+            const tokens = getTokens();
+            for (const [username, token] of Object.entries(tokens)) {
+                const payload = await JWTSim.verify(token);
+                if (payload && payload.username === username) {
+                    currentUser = username;
+                    currentToken = token;
+                    showDashboard();
+                    return true;
+                } else {
+                    // Remove invalid token
+                    delete tokens[username];
+                    saveTokens(tokens);
+                }
+            }
+            return false;
+        }
+
+        // ---------- event listeners ----------
+        authBtn.addEventListener('click', handleAuth);
+
+        toggleLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            toggleAuthMode();
+        });
+
+        authUser.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleAuth(); });
+        authPass.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleAuth(); });
+
+        logoutBtn.addEventListener('click', logout);
+
+        // ---------- init ----------
+        updateStats();
+        updateJWTDisplay();
+
+        // Check if user is already logged in
+        checkAutoLogin().then(() => {
+            if (!currentUser) {
+                console.log('🔐 Auth System ready — login to start.');
+            }
+        });
+
+        // Show welcome message if no users exist
+        const users = getUsers();
+        if (Object.keys(users).length === 0) {
+            console.log('💡 No users found. Create an account to get started!');
+        }
+
+        // ---------- Expose for debugging ----------
+        window.__auth = {
+            getUsers,
+            getTokens,
+            BcryptSim,
+            JWTSim,
+            currentUser,
+            currentToken
+        };
+    </script>
+
+</body>
+</html>

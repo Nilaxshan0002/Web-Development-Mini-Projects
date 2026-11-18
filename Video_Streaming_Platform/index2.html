@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StreamVibe · All-in-One</title>
+  <!-- Font Awesome 6 (free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <!-- Google Font: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="platform-wrapper">
+
+  <!-- ====== NAVBAR ====== -->
+  <nav class="navbar">
+    <div class="logo" id="logoBtn"><i class="fas fa-play-circle"></i> StreamVibe</div>
+    <div class="nav-links">
+      <a href="#" class="active" data-page="home">Home</a>
+      <a href="#" data-page="explore">Explore</a>
+      <a href="#" data-page="shorts">Shorts</a>
+      <a href="#" data-page="subscriptions">Subscriptions</a>
+      <a href="#" data-page="library">Library</a>
+    </div>
+    <div class="nav-actions">
+      <button class="icon-btn" id="searchBtn" aria-label="search"><i class="fas fa-search"></i></button>
+      <button class="icon-btn" id="notifBtn" aria-label="notifications"><i class="fas fa-bell"></i></button>
+      <div class="avatar" id="avatarBtn">J</div>
+    </div>
+  </nav>
+
+  <!-- ====== PAGE: HOME ====== -->
+  <div class="page-container active" id="page-home">
+    <section class="hero">
+      <div class="hero-backdrop">
+        <div class="hero-content">
+          <div class="hero-badge"><i class="fas fa-fire"></i> trending now</div>
+          <h2>Beyond the <span>Horizon</span></h2>
+          <p>An epic journey through uncharted landscapes. Watch the trailer now and dive into the adventure.</p>
+          <div class="hero-actions">
+            <button class="btn-primary" id="heroWatchBtn"><i class="fas fa-play"></i> Watch now</button>
+            <button class="btn-secondary" id="heroSaveBtn"><i class="fas fa-plus"></i> Save</button>
+          </div>
+          <div class="hero-stats">
+            <span><strong>2.4M</strong> views</span>
+            <span><strong>14k</strong> likes</span>
+            <span><i class="fas fa-star" style="color: #f9a825;"></i> 4.8</span>
+          </div>
+        </div>
+        <div class="hero-thumb" id="heroThumb">
+          <img src="https://picsum.photos/seed/hero/400/300" alt="Beyond the Horizon" />
+          <div class="play-overlay" id="heroPlayOverlay"><i class="fas fa-play-circle"></i></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-header">
+      <h3><i class="fas fa-fire"></i> Trending now</h3>
+      <a id="viewAllBtn">View all <i class="fas fa-arrow-right" style="margin-left:6px;"></i></a>
+    </div>
+    <div class="video-grid" id="videoGrid"></div>
+
+    <div class="section-header">
+      <h3><i class="fas fa-list-ul"></i> Popular playlists</h3>
+      <a id="morePlaylistsBtn">More</a>
+    </div>
+    <div class="playlist-row" id="playlistRow"></div>
+  </div>
+
+  <!-- ====== PAGE: EXPLORE ====== -->
+  <div class="page-container" id="page-explore">
+    <div class="page-banner">
+      <h1><i class="fas fa-compass"></i> Explore</h1>
+      <p>Discover new content across every category. Find your next favorite video.</p>
+    </div>
+    <div class="category-grid">
+      <div class="category-card" onclick="alert('🎮 Gaming: 1.2K videos available')"><i class="fas fa-gamepad"></i><h4>Gaming</h4><p>1.2K videos</p></div>
+      <div class="category-card" onclick="alert('🎵 Music: 3.4K videos available')"><i class="fas fa-music"></i><h4>Music</h4><p>3.4K videos</p></div>
+      <div class="category-card" onclick="alert('🎬 Movies: 856 videos available')"><i class="fas fa-film"></i><h4>Movies</h4><p>856 videos</p></div>
+      <div class="category-card" onclick="alert('🎨 Art & Design: 643 videos available')"><i class="fas fa-paint-brush"></i><h4>Art & Design</h4><p>643 videos</p></div>
+      <div class="category-card" onclick="alert('🔬 Science: 421 videos available')"><i class="fas fa-microscope"></i><h4>Science</h4><p>421 videos</p></div>
+      <div class="category-card" onclick="alert('⚽ Sports: 2.1K videos available')"><i class="fas fa-futbol"></i><h4>Sports</h4><p>2.1K videos</p></div>
+      <div class="category-card" onclick="alert('🍳 Cooking: 789 videos available')"><i class="fas fa-utensils"></i><h4>Cooking</h4><p>789 videos</p></div>
+      <div class="category-card" onclick="alert('✈️ Travel: 567 videos available')"><i class="fas fa-plane"></i><h4>Travel</h4><p>567 videos</p></div>
+      <div class="category-card" onclick="alert('💻 Tech: 1.8K videos available')"><i class="fas fa-laptop-code"></i><h4>Tech</h4><p>1.8K videos</p></div>
+      <div class="category-card" onclick="alert('❤️ Lifestyle: 934 videos available')"><i class="fas fa-heart"></i><h4>Lifestyle</h4><p>934 videos</p></div>
+    </div>
+  </div>
+
+  <!-- ====== PAGE: SHORTS ====== -->
+  <div class="page-container" id="page-shorts">
+    <div class="page-banner">
+      <h1><i class="fas fa-bolt"></i> Shorts</h1>
+      <p>Quick, bite-sized videos to keep you entertained. Scroll, watch, repeat.</p>
+    </div>
+    <div class="shorts-grid" id="shortsGrid"></div>
+  </div>
+
+  <!-- ====== PAGE: SUBSCRIPTIONS ====== -->
+  <div class="page-container" id="page-subscriptions">
+    <div class="page-banner">
+      <h1><i class="fas fa-bell"></i> Subscriptions</h1>
+      <p>Stay updated with your favorite creators. New videos from channels you follow.</p>
+    </div>
+    <div class="channel-grid">
+      <div class="channel-card" onclick="alert('📺 DevCraft: 1.2M subscribers')"><div class="channel-avatar">D</div><h4>DevCraft</h4><p>1.2M subscribers</p><span class="badge"><i class="fas fa-check-circle"></i> Subscribed</span></div>
+      <div class="channel-card" onclick="alert('📺 CosmoVibes: 845K subscribers')"><div class="channel-avatar">C</div><h4>CosmoVibes</h4><p>845K subscribers</p><span class="badge"><i class="fas fa-check-circle"></i> Subscribed</span></div>
+      <div class="channel-card" onclick="alert('📺 City Beats: 2.1M subscribers')"><div class="channel-avatar">B</div><h4>City Beats</h4><p>2.1M subscribers</p><span class="badge"><i class="fas fa-check-circle"></i> Subscribed</span></div>
+      <div class="channel-card" onclick="alert('📺 ZenFlow: 623K subscribers')"><div class="channel-avatar">Z</div><h4>ZenFlow</h4><p>623K subscribers</p><span class="badge"><i class="fas fa-check-circle"></i> Subscribed</span></div>
+      <div class="channel-card" onclick="alert('📺 Synth Nation: 1.8M subscribers')"><div class="channel-avatar">S</div><h4>Synth Nation</h4><p>1.8M subscribers</p><span class="badge"><i class="fas fa-check-circle"></i> Subscribed</span></div>
+      <div class="channel-card" onclick="alert('📺 NatureLens: 976K subscribers')"><div class="channel-avatar">N</div><h4>NatureLens</h4><p>976K subscribers</p><span class="badge"><i class="fas fa-check-circle"></i> Subscribed</span></div>
+    </div>
+  </div>
+
+  <!-- ====== PAGE: LIBRARY ====== -->
+  <div class="page-container" id="page-library">
+    <div class="page-banner">
+      <h1><i class="fas fa-folder"></i> Your Library</h1>
+      <p>All your saved content, watch history, and playlists in one place.</p>
+    </div>
+    <div class="library-grid">
+      <div class="library-item" onclick="alert('📚 Watch Later: 12 videos saved')"><i class="fas fa-clock"></i><h4>Watch Later</h4><p>Videos you've saved</p><span class="count">12 videos</span></div>
+      <div class="library-item" onclick="alert('📜 Watch History: 34 videos watched')"><i class="fas fa-history"></i><h4>History</h4><p>Recently watched</p><span class="count">34 videos</span></div>
+      <div class="library-item" onclick="alert('❤️ Liked Videos: 28 videos liked')"><i class="fas fa-thumbs-up"></i><h4>Liked Videos</h4><p>Videos you've liked</p><span class="count">28 videos</span></div>
+      <div class="library-item" onclick="alert('📂 Your Playlists: 5 playlists')"><i class="fas fa-list-ul"></i><h4>Your Playlists</h4><p>Custom collections</p><span class="count">5 playlists</span></div>
+      <div class="library-item" onclick="alert('⬇️ Downloads: 3 videos available offline')"><i class="fas fa-download"></i><h4>Downloads</h4><p>Offline content</p><span class="count">3 videos</span></div>
+      <div class="library-item" onclick="alert('⭐ Favorites: 18 favorite videos')"><i class="fas fa-heart"></i><h4>Favorites</h4><p>Top picks</p><span class="count">18 videos</span></div>
+    </div>
+  </div>
+
+  <!-- ====== FOOTER ====== -->
+  <footer class="footer">
+    <span>© 2026 StreamVibe · all rights reserved</span>
+    <div class="footer-links">
+      <a id="privacyLink">Privacy</a>
+      <a id="termsLink">Terms</a>
+      <a id="helpLink">Help</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ====== VIDEO MODAL ====== -->
+<div class="video-modal" id="videoModal">
+  <div class="video-modal-content">
+    <button class="close-modal" id="closeModalBtn"><i class="fas fa-times"></i></button>
+    <video id="modalVideo" controls autoplay>
+      <source src="" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+    <div class="modal-info">
+      <h3 id="modalTitle">Video Title</h3>
+      <p id="modalChannel">Channel Name</p>
+    </div>
+  </div>
+</div>
+
+<!-- Custom JavaScript -->
+<script src="script.js"></script>
+</body>
+</html>

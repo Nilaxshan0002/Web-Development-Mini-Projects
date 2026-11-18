@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StreamVibe · Shorts</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0b0e14;
+      color: #f0f3f8;
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem 1rem 3rem;
+    }
+    .platform-wrapper { max-width: 1360px; width: 100%; }
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.2rem 2rem;
+      padding: 0.8rem 0 1.8rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      margin-bottom: 2.2rem;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #b388ff, #7c4dff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .logo i { font-size: 2rem; color: #7c4dff; -webkit-text-fill-color: #7c4dff; filter: drop-shadow(0 0 10px rgba(124, 77, 255, 0.3)); }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.8rem;
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: #a8b2c9;
+    }
+    .nav-links a {
+      color: inherit;
+      text-decoration: none;
+      transition: 0.2s;
+      padding: 0.3rem 0;
+      border-bottom: 2px solid transparent;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      color: #ffffff;
+      border-bottom-color: #7c4dff;
+    }
+    .nav-actions { display: flex; align-items: center; gap: 1rem; }
+    .nav-actions .icon-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: none;
+      color: #b6c2db;
+      font-size: 1.2rem;
+      padding: 0.5rem 0.8rem;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .nav-actions .icon-btn:hover { background: rgba(124, 77, 255, 0.15); color: #fff; }
+    .avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: linear-gradient(135deg, #7c4dff, #b388ff);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; color: #fff; font-size: 1rem;
+      cursor: pointer; border: 2px solid rgba(255, 255, 255, 0.1);
+      transition: 0.2s;
+    }
+    .avatar:hover { transform: scale(1.05); border-color: #7c4dff; }
+    .page-banner {
+      background: linear-gradient(135deg, #1a1f2e, #131824);
+      border-radius: 32px; padding: 3rem; text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      margin-bottom: 2rem;
+    }
+    .page-banner h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .page-banner p { color: #b0bedb; font-size: 1.1rem; }
+    .page-banner i { color: #7c4dff; margin-right: 0.5rem; }
+    .shorts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .short-card {
+      background: #141a26;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      transition: 0.25s;
+      cursor: pointer;
+    }
+    .short-card:hover { transform: translateY(-4px); border-color: rgba(124, 77, 255, 0.3); }
+    .short-thumb {
+      height: 280px;
+      background: #1e2435;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: #6b7a9a;
+      position: relative;
+      overflow: hidden;
+    }
+    .short-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .short-thumb .play-icon {
+      position: absolute;
+      font-size: 3.5rem;
+      color: rgba(255, 255, 255, 0.8);
+      text-shadow: 0 0 30px rgba(124, 77, 255, 0.6);
+      opacity: 0;
+      transition: 0.3s;
+      pointer-events: none;
+    }
+    .short-card:hover .play-icon { opacity: 1; }
+    .short-thumb .duration {
+      position: absolute; bottom: 8px; right: 10px;
+      background: rgba(0, 0, 0, 0.7); padding: 0.1rem 0.6rem;
+      border-radius: 12px; font-size: 0.7rem; font-weight: 600; color: #ddd;
+    }
+    .short-info { padding: 1rem; }
+    .short-info h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.2rem; }
+    .short-info .channel { font-size: 0.75rem; color: #8896b0; }
+    .footer {
+      margin-top: 3.5rem; padding-top: 1.8rem; border-top: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+      gap: 1rem; color: #6b7a9a; font-size: 0.85rem;
+    }
+    .footer-links { display: flex; gap: 1.8rem; }
+    .footer-links a { color: #8896b0; text-decoration: none; transition: 0.2s; cursor: pointer; }
+    .footer-links a:hover { color: #fff; }
+
+    .video-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.92);
+      backdrop-filter: blur(12px);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .video-modal.active { display: flex; }
+    .video-modal-content {
+      max-width: 500px;
+      width: 100%;
+      background: #0b0e14;
+      border-radius: 32px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 40px 80px rgba(0, 0, 0, 0.8);
+    }
+    .video-modal-content video {
+      width: 100%;
+      display: block;
+      background: #000;
+      max-height: 70vh;
+    }
+    .video-modal-content .modal-info {
+      padding: 1.2rem 1.5rem;
+    }
+    .video-modal-content .modal-info h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+    .video-modal-content .modal-info p {
+      color: #8896b0;
+      font-size: 0.85rem;
+    }
+    .video-modal-content .close-modal {
+      float: right;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1.6rem;
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      transition: 0.2s;
+    }
+    .video-modal-content .close-modal:hover {
+      color: #7c4dff;
+      transform: rotate(90deg);
+    }
+
+    @media (max-width: 540px) { .nav-links { gap: 1rem; font-size: 0.85rem; } }
+  </style>
+</head>
+<body>
+<div class="platform-wrapper">
+  <nav class="navbar">
+    <a href="index.html" class="logo"><i class="fas fa-play-circle"></i> StreamVibe</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="explore.html">Explore</a>
+      <a href="shorts.html" class="active">Shorts</a>
+      <a href="subscriptions.html">Subscriptions</a>
+      <a href="library.html">Library</a>
+    </div>
+    <div class="nav-actions">
+      <button class="icon-btn" id="searchBtn" aria-label="search"><i class="fas fa-search"></i></button>
+      <button class="icon-btn" id="notifBtn" aria-label="notifications"><i class="fas fa-bell"></i></button>
+      <div class="avatar" id="avatarBtn">J</div>
+    </div>
+  </nav>
+
+  <div class="page-banner">
+    <h1><i class="fas fa-bolt"></i> Shorts</h1>
+    <p>Quick, bite-sized videos to keep you entertained. Scroll, watch, repeat.</p>
+  </div>
+
+  <div class="shorts-grid" id="shortsGrid">
+    <!-- Shorts will be injected by JS -->
+  </div>
+
+  <footer class="footer">
+    <span>© 2026 StreamVibe · all rights reserved</span>
+    <div class="footer-links">
+      <a href="#" id="privacyLink">Privacy</a>
+      <a href="#" id="termsLink">Terms</a>
+      <a href="#" id="helpLink">Help</a>
+    </div>
+  </footer>
+</div>
+
+<!-- Video Modal -->
+<div class="video-modal" id="videoModal">
+  <div class="video-modal-content">
+    <button class="close-modal" id="closeModalBtn"><i class="fas fa-times"></i></button>
+    <video id="modalVideo" controls autoplay>
+      <source src="" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+    <div class="modal-info">
+      <h3 id="modalTitle">Short Title</h3>
+      <p id="modalChannel">@channel</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    "use strict";
+
+    const shortsData = [
+      { title: "Daily Vlog #1", channel: "@vloggerlife", duration: "0:45", thumb: "https://picsum.photos/seed/vlog1/400/400", src: "https://www.w3schools.com/html/mov_bbb.mp4" },
+      { title: "Quick Recipe", channel: "@chefquick", duration: "0:32", thumb: "https://picsum.photos/seed/recipe1/400/400", src: "https://www.w3schools.com/html/movie.mp4" },
+      { title: "Cat Compilation", channel: "@petsworld", duration: "0:58", thumb: "https://picsum.photos/seed/cats1/400/400", src: "https://www.w3schools.com/html/mov_bbb.mp4" },
+      { title: "Epic Fail", channel: "@failarmy", duration: "0:21", thumb: "https://picsum.photos/seed/fail1/400/400", src: "https://www.w3schools.com/html/movie.mp4" },
+      { title: "Dance Moves", channel: "@dancestudio", duration: "0:39", thumb: "https://picsum.photos/seed/dance1/400/400", src: "https://www.w3schools.com/html/mov_bbb.mp4" },
+      { title: "Life Hacks", channel: "@hackmaster", duration: "0:27", thumb: "https://picsum.photos/seed/hack1/400/400", src: "https://www.w3schools.com/html/movie.mp4" }
+    ];
+
+    const grid = document.getElementById('shortsGrid');
+    const modal = document.getElementById('videoModal');
+    const modalVideo = document.getElementById('modalVideo');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalChannel = document.getElementById('modalChannel');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+
+    // --- NAV BUTTONS ---
+    document.getElementById('searchBtn').addEventListener('click', function() {
+      const query = prompt('🔍 Search Shorts:\nEnter your search query:');
+      if (query && query.trim() !== '') {
+        alert(`🔍 Searching Shorts for: "${query.trim()}"\n\nFound 8 short videos matching your search.`);
+      } else if (query !== null) {
+        alert('Please enter a search term.');
+      }
+    });
+
+    document.getElementById('notifBtn').addEventListener('click', function() {
+      alert('🔔 Shorts Notifications\n\n📱 New shorts from creators you follow:\n1. @vloggerlife - "Morning Routine" 🔥\n2. @chefquick - "5-Minute Breakfast" 🍳\n3. @dancestudio - "New Choreography" 💃');
+    });
+
+    document.getElementById('avatarBtn').addEventListener('click', function() {
+      alert('👤 Profile\n\nName: John Doe\n📧 Email: john.doe@email.com\n📊 Shorts watched: 347\n⭐ Likes given: 1.2K\n\n📱 Switch to Creator Mode');
+    });
+
+    // --- FOOTER LINKS ---
+    document.getElementById('privacyLink').addEventListener('click', function(e) {
+      e.preventDefault();
+      alert('🔒 Privacy Policy - Shorts\n\n' +
+            '📌 Information We Collect:\n' +
+            '• Watch history for Shorts\n' +
+            '• Engagement metrics (likes, shares)\n' +
+            '• Device information\n\n' +
+            '🔐 Data Protection:\n' +
+            '• Your watch data is encrypted\n' +
+            '• No data shared with advertisers\n' +
+            '• You can clear history anytime\n\n' +
+            '📅 Last updated: January 2026');
+    });
+
+    document.getElementById('termsLink').addEventListener('click', function(e) {
+      e.preventDefault();
+      alert('📜 Shorts Terms of Service\n\n' +
+            '📋 Shorts Specific Terms:\n' +
+            '1. Shorts must be under 60 seconds\n' +
+            '2. Vertical format recommended\n' +
+            '3. Music usage must comply with copyright\n' +
+            '4. Community guidelines apply to all Shorts\n\n' +
+            '⚠️ Violations may result in content removal.\n\n' +
+            '📅 Last updated: January 2026');
+    });
+
+    document.getElementById('helpLink').addEventListener('click', function(e) {
+      e.preventDefault();
+      alert('❓ Shorts Help Center\n\n' +
+            '🎯 How to Create Shorts:\n' +
+            '1. Tap the + button\n' +
+            '2. Record or upload video (max 60s)\n' +
+            '3. Add music or audio\n' +
+            '4. Post to your channel\n\n' +
+            '💡 Pro Tips:\n' +
+            '• Use trending sounds for more views\n' +
+            '• Keep it engaging from the first second\n' +
+            '• Use hashtags for discoverability\n\n' +
+            '📧 Support: shorts@streamvibe.com');
+    });
+
+    // --- RENDER SHORTS ---
+    function renderShorts() {
+      grid.innerHTML = '';
+      shortsData.forEach((short, index) => {
+        const card = document.createElement('div');
+        card.className = 'short-card';
+        card.dataset.index = index;
+        card.innerHTML = `
+          <div class="short-thumb">
+            <img src="${short.thumb}" alt="${short.title}" loading="lazy" />
+            <div class="play-icon"><i class="fas fa-play-circle"></i></div>
+            <span class="duration">${short.duration}</span>
+          </div>
+          <div class="short-info">
+            <h4>${short.title}</h4>
+            <div class="channel">${short.channel}</div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function playVideo(title, channel, src) {
+      modalTitle.textContent = title;
+      modalChannel.textContent = channel;
+      modalVideo.src = src;
+      modalVideo.load();
+      modal.classList.add('active');
+      modalVideo.play().catch(e => console.log('Autoplay blocked:', e));
+    }
+
+    function closeModal() {
+      modal.classList.remove('active');
+      modalVideo.pause();
+      modalVideo.src = '';
+    }
+
+    document.addEventListener('click', function(e) {
+      const card = e.target.closest('.short-card');
+      if (card) {
+        const index = parseInt(card.dataset.index);
+        const short = shortsData[index];
+        if (short) playVideo(short.title, short.channel, short.src);
+      }
+    });
+
+    closeModalBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', function(e) { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && modal.classList.contains('active')) closeModal(); });
+
+    renderShorts();
+  })();
+</script>
+</body>
+</html>

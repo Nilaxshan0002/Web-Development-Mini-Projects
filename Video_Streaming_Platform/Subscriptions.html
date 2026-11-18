@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StreamVibe · Subscriptions</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0b0e14;
+      color: #f0f3f8;
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem 1rem 3rem;
+    }
+    .platform-wrapper { max-width: 1360px; width: 100%; }
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.2rem 2rem;
+      padding: 0.8rem 0 1.8rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      margin-bottom: 2.2rem;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #b388ff, #7c4dff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .logo i { font-size: 2rem; color: #7c4dff; -webkit-text-fill-color: #7c4dff; filter: drop-shadow(0 0 10px rgba(124, 77, 255, 0.3)); }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.8rem;
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: #a8b2c9;
+    }
+    .nav-links a {
+      color: inherit;
+      text-decoration: none;
+      transition: 0.2s;
+      padding: 0.3rem 0;
+      border-bottom: 2px solid transparent;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      color: #ffffff;
+      border-bottom-color: #7c4dff;
+    }
+    .nav-actions { display: flex; align-items: center; gap: 1rem; }
+    .nav-actions .icon-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: none;
+      color: #b6c2db;
+      font-size: 1.2rem;
+      padding: 0.5rem 0.8rem;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .nav-actions .icon-btn:hover { background: rgba(124, 77, 255, 0.15); color: #fff; }
+    .avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: linear-gradient(135deg, #7c4dff, #b388ff);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; color: #fff; font-size: 1rem;
+      cursor: pointer; border: 2px solid rgba(255, 255, 255, 0.1);
+      transition: 0.2s;
+    }
+    .avatar:hover { transform: scale(1.05); border-color: #7c4dff; }
+    .page-banner {
+      background: linear-gradient(135deg, #1a1f2e, #131824);
+      border-radius: 32px; padding: 3rem; text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      margin-bottom: 2rem;
+    }
+    .page-banner h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .page-banner p { color: #b0bedb; font-size: 1.1rem; }
+    .page-banner i { color: #7c4dff; margin-right: 0.5rem; }
+    .channel-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .channel-card {
+      background: #141a26;
+      border-radius: 24px;
+      padding: 1.5rem;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      transition: 0.25s;
+      cursor: pointer;
+    }
+    .channel-card:hover { transform: translateY(-4px); border-color: rgba(124, 77, 255, 0.3); background: #1a2130; }
+    .channel-avatar {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: linear-gradient(135deg, #7c4dff, #b388ff);
+      margin: 0 auto 0.8rem;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; font-weight: 700; color: #fff;
+    }
+    .channel-card h4 { font-size: 1rem; font-weight: 600; }
+    .channel-card p { font-size: 0.8rem; color: #8896b0; }
+    .channel-card .badge { display: inline-block; background: rgba(124, 77, 255, 0.2); color: #b388ff; font-size: 0.65rem; padding: 0.2rem 0.8rem; border-radius: 20px; margin-top: 0.5rem; }
+    .footer {
+      margin-top: 3.5rem; padding-top: 1.8rem; border-top: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+      gap: 1rem; color: #6b7a9a; font-size: 0.85rem;
+    }
+    .footer-links { display: flex; gap: 1.8rem; }
+    .footer-links a { color: #8896b0; text-decoration: none; transition: 0.2s; cursor: pointer; }
+    .footer-links a:hover { color: #fff; }
+    @media (max-width: 540px) { .nav-links { gap: 1rem; font-size: 0.85rem; } }
+  </style>
+</head>
+<body>
+<div class="platform-wrapper">
+  <nav class="navbar">
+    <a href="index.html" class="logo"><i class="fas fa-play-circle"></i> StreamVibe</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="explore.html">Explore</a>
+      <a href="shorts.html">Shorts</a>
+      <a href="subscriptions.html" class="active">Subscriptions</a>
+      <a href="library.html">Library</a>
+    </div>
+    <div class="nav-actions">
+      <button class="icon-btn" id="searchBtn" aria-label="search"><i class="fas fa-search"></i></button>
+      <button class="icon-btn" id="notifBtn" aria-label="notifications"><i class="fas fa-bell"></i></button>
+      <div class="avatar" id="avatarBtn">J</div>
+    </div>
+  </nav>
+
+  <div class="page-banner">
+    <h1><i class="fas fa-bell"></i> Subscriptions</h1>
+    <p>Stay updated with your favorite creators. New videos from channels you follow.</p>
+  </div>
+
+  <div class="channel-grid">
+    <div class="channel-card" onclick="alert('📺 DevCraft\n\nLatest videos:\n• The Art of Code 2 (12:34)\n• React vs Vue (8:21)\n• Python Tips (15:02)\n\n👥 1.2M subscribers')">
+      <div class="channel-avatar">D</div><h4>DevCraft</h4><p>1.2M subscribers</p><span class="badge"><i class="fas fa-check-circle"></i> Subscribed</span>
+    </div>
+    <div class="channel-card" onclick="alert('📺 CosmoVibes\n\nLatest videos:\n• Mars Landing (8:21)\n• Black Hole Explained (12:34)\n• Space X Launch (5:47)\n\n👥 845K subscribers')">
+      <div class="channel-avatar">C</div><h4>CosmoVibes</h4><p>845K subscribers</p><span class="badge"><i class="fas fa-check-circle"></i> Subscribed</span>
+    </div>
+    <div class="channel-card" onclick="alert('📺 City Beats\n\nLatest videos:\n• Urban Symphony Live (5:47)\n• Street Jazz (4:12)\n• City Lights (9:55)\n\n👥 2.1M subscribers')">
+      <div class="channel-avatar">B</div><h4>City Beats</h4><p>2.1M subscribers</p><span class="badge"><i class="fas fa-check-circle"></i> Subscribed</span>
+    </div>
+    <div class="channel-card" onclick="alert('📺 ZenFlow\n\nLatest videos:\n• Meditation Guide (15:02)\n• Yoga Flow (8:21)\n• Peaceful Sounds (12:34)\n\n👥 623K subscribers')">
+      <div class="channel-avatar">Z</div><h4>ZenFlow</h4><p>623K subscribers</p><span class="badge"><i class="fas fa-check-circle"></i> Subscribed</span>
+    </div>
+    <div class="channel-card" onclick="alert('📺 Synth Nation\n\nLatest videos:\n• Retro Wave Mix (4:12)\n• Synthwave Live (5:47)\n• Electronic Dreams (9:55)\n\n👥 1.8M subscribers')">
+      <div class="channel-avatar">S</div><h4>Synth Nation</h4><p>1.8M subscribers</p><span class="badge"><i class="fas fa-check-circle"></i> Subscribed</span>
+    </div>
+    <div class="channel-card" onclick="alert('📺 NatureLens\n\nLatest videos:\n• Wildlife Documentary (9:55)\n• Ocean Deep (12:34)\n• Forest Walk (8:21)\n\n👥 976K subscribers')">
+      <div class="channel-avatar">N</div><h4>NatureLens</h4><p>976K subscribers</p><span class="badge"><i class="fas fa-check-circle"></i> Subscribed</span>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <span>© 2026 StreamVibe · all rights reserved</span>
+    <div class="footer-links">
+      <a href="#" id="privacyLink">Privacy</a>
+      <a href="#" id="termsLink">Terms</a>
+      <a href="#" id="helpLink">Help</a>
+    </div>
+  </footer>
+</div>
+
+<script>
+  (function() {
+    "use strict";
+
+    // --- NAV BUTTONS ---
+    document.getElementById('searchBtn').addEventListener('click', function() {
+      const query = prompt('🔍 Search your subscriptions:');
+      if (query && query.trim() !== '') {
+        alert(`🔍 Searching "${query.trim()}" in your subscriptions...\n\nFound content from 3 of your subscribed channels.`);
+      } else if (query !== null) {
+        alert('Please enter a search term.');
+      }
+    });
+
+    document.getElementById('notifBtn').addEventListener('click', function() {
+      alert('🔔 Subscription Notifications\n\n📱 New uploads from your subscriptions:\n1. DevCraft - "The Art of Code 2" 🔥\n2. NatureLens - "Wildlife Documentary" 🌿\n3. ZenFlow - "Meditation Guide" 🧘\n\n4 new videos from channels you follow.');
+    });
+
+    document.getElementById('avatarBtn').addEventListener('click', function() {
+      alert('👤 Profile\n\nName: John Doe\n📧 Email: john.doe@email.com\n📺 Subscribed to: 47 channels\n🔔 Notifications: 12 unread\n\n📱 Manage your subscriptions');
+    });
+
+    // --- FOOTER LINKS ---
+    document.getElementById('privacyLink').addEventListener('click', function(e) {
+      e.preventDefault();
+      alert('🔒 Privacy Policy - Subscriptions\n\n' +
+            '📌 Information We Collect:\n' +
+            '• Subscription preferences\n' +
+            '• Channel engagement data\n' +
+            '• Notification settings\n\n' +
+            '🔐 Data Protection:\n' +
+            '• Your subscriptions are private\n' +
+            '• No data shared with channels\n' +
+            '• You can unsubscribe anytime\n\n' +
+            '📅 Last updated: January 2026');
+    });
+
+    document.getElementById('termsLink').addEventListener('click', function(e) {
+      e.preventDefault();
+      alert('📜 Subscriptions Terms\n\n' +
+            '📋 Subscription Guidelines:\n' +
+            '1. Subscribing is free and optional\n' +
+            '2. You control your notification preferences\n' +
+            '3. Channels cannot see who subscribes\n' +
+            '4. You can unsubscribe at any time\n\n' +
+            '🔔 Notification Settings:\n' +
+            '• All: All uploads and updates\n' +
+            '• Highlights: Major uploads only\n' +
+            '• Off: No notifications\n\n' +
+            '📅 Last updated: January 2026');
+    });
+
+    document.getElementById('helpLink').addEventListener('click', function(e) {
+      e.preventDefault();
+      alert('❓ Subscriptions Help\n\n' +
+            '📚 Managing Subscriptions:\n' +
+            '• Click "Subscribed" to unsubscribe\n' +
+            '• Use the bell icon to change notifications\n' +
+            '• View all subscriptions in your Library\n\n' +
+            '💡 Tips:\n' +
+            '• Subscribe to your favorite creators\n' +
+            '• Use the "Subscriptions" feed for new content\n' +
+            '• Manage notifications for each channel\n\n' +
+            '📧 Support: subscriptions@streamvibe.com');
+    });
+
+  })();
+</script>
+</body>
+</html>
