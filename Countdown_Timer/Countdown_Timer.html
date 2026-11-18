@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Countdown Timer</title>
+  <style>
+    /* ----- reset & base ----- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at 30% 10%, #1a1f33, #0b0d17 80%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.8rem;
+    }
+
+    .card {
+      max-width: 800px;
+      width: 100%;
+      background: rgba(18, 22, 38, 0.75);
+      backdrop-filter: blur(14px) saturate(1.2);
+      -webkit-backdrop-filter: blur(14px) saturate(1.2);
+      border-radius: 3.6rem;
+      padding: 2.8rem 2.4rem 3rem;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      transition: all 0.3s ease;
+    }
+
+    /* ----- header ----- */
+    .header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      margin-bottom: 0.5rem;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #f0f4ff;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .badge {
+      background: rgba(75, 124, 247, 0.15);
+      color: #7a9cff;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.6px;
+      padding: 0.25rem 1rem;
+      border-radius: 60px;
+      text-transform: uppercase;
+      border: 1px solid rgba(75, 124, 247, 0.15);
+      backdrop-filter: blur(2px);
+    }
+
+    .subhead {
+      color: #a3b0d6;
+      font-size: 0.95rem;
+      font-weight: 400;
+      border-left: 3px solid #4b7cf7;
+      padding-left: 1.1rem;
+      margin: 0.5rem 0 1.8rem 0;
+      background: rgba(75, 124, 247, 0.04);
+      border-radius: 0 12px 12px 0;
+      line-height: 1.6;
+    }
+
+    /* ----- event title ----- */
+    .event-area {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 0.2rem 1.2rem 0.2rem 1.6rem;
+      border-radius: 60px;
+      border: 1px solid #2b3250;
+    }
+
+    .event-label {
+      color: #8d9bc9;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+
+    #eventTitle {
+      background: transparent;
+      border: none;
+      color: #eef3ff;
+      font-size: 1.2rem;
+      font-weight: 500;
+      padding: 0.6rem 0.2rem;
+      min-width: 160px;
+      flex: 1;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    #eventTitle::placeholder {
+      color: #4f5a7a;
+      font-weight: 300;
+    }
+
+    /* ----- picker grid ----- */
+    .picker-grid {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.8rem 1rem;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 0.8rem 1.5rem 0.8rem 1.8rem;
+      border-radius: 3rem;
+      margin-bottom: 2.2rem;
+      border: 1px solid #29304d;
+      backdrop-filter: blur(2px);
+    }
+
+    .picker-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .picker-item label {
+      color: #8b99c9;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .picker-item input {
+      background: #0f1425;
+      border: 1px solid #2e3657;
+      color: #f0f5ff;
+      padding: 0.45rem 0.9rem;
+      border-radius: 40px;
+      font-size: 0.9rem;
+      width: 140px;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    .picker-item input:focus {
+      border-color: #4b7cf7;
+      box-shadow: 0 0 0 3px rgba(75, 124, 247, 0.15);
+    }
+
+    .picker-item input[type="date"] {
+      width: 155px;
+    }
+    .picker-item input[type="time"] {
+      width: 125px;
+    }
+
+    .btn-start {
+      background: linear-gradient(145deg, #4b7cf7, #3a65d9);
+      border: none;
+      padding: 0.6rem 2.2rem;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 1rem;
+      color: white;
+      cursor: pointer;
+      transition: 0.25s;
+      box-shadow: 0 6px 18px rgba(75, 124, 247, 0.3);
+      margin-left: auto;
+      letter-spacing: 0.4px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-start:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 10px 28px rgba(75, 124, 247, 0.45);
+      background: linear-gradient(145deg, #5a87ff, #3f6be0);
+    }
+
+    .btn-start:active {
+      transform: scale(0.95);
+      box-shadow: 0 4px 10px rgba(75, 124, 247, 0.3);
+    }
+
+    .btn-start:disabled {
+      opacity: 0.5;
+      pointer-events: none;
+      filter: grayscale(0.3);
+    }
+
+    /* ----- timer display ----- */
+    .timer-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.8rem;
+      margin: 1.8rem 0 1.8rem;
+    }
+
+    .time-block {
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
+      border-radius: 2.2rem;
+      padding: 1.4rem 0.2rem 1rem;
+      text-align: center;
+      border: 1px solid #2b3354;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+      transition: 0.2s;
+    }
+
+    .time-block:hover {
+      border-color: #3d4770;
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .time-number {
+      font-size: 3.6rem;
+      font-weight: 700;
+      color: #f2f7ff;
+      letter-spacing: 0.02em;
+      line-height: 1;
+      display: block;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    .time-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 1.8px;
+      color: #7c89b5;
+      margin-top: 0.4rem;
+      font-weight: 500;
+    }
+
+    /* ----- footer: status + actions ----- */
+    .footer-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 0.6rem;
+    }
+
+    .status-wrapper {
+      flex: 1;
+      min-width: 160px;
+    }
+
+    .status-message {
+      color: #b3c0e6;
+      font-weight: 400;
+      font-size: 0.9rem;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 0.5rem 1.4rem;
+      border-radius: 60px;
+      border: 1px solid #2a3150;
+      backdrop-filter: blur(2px);
+      display: inline-block;
+      letter-spacing: 0.2px;
+      width: 100%;
+      text-align: center;
+      min-height: 2.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .action-group {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid #2f385a;
+      color: #b3c0e6;
+      padding: 0.4rem 1.2rem;
+      border-radius: 60px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.2s;
+      backdrop-filter: blur(2px);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: #4b5a85;
+      color: #d6e0ff;
+    }
+
+    .btn-secondary:active {
+      transform: scale(0.94);
+    }
+
+    /* responsive */
+    @media (max-width: 650px) {
+      .card {
+        padding: 1.8rem 1.2rem;
+        border-radius: 2.4rem;
+      }
+      .timer-grid {
+        gap: 0.5rem;
+      }
+      .time-number {
+        font-size: 2.6rem;
+      }
+      .picker-grid {
+        flex-direction: column;
+        align-items: stretch;
+        border-radius: 2rem;
+        padding: 1.2rem;
+      }
+      .btn-start {
+        margin-left: 0;
+        justify-content: center;
+        margin-top: 0.2rem;
+      }
+      .picker-item input {
+        width: 100%;
+      }
+      .footer-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .action-group {
+        justify-content: center;
+      }
+      .event-area {
+        border-radius: 2rem;
+        padding: 0.2rem 1rem;
+      }
+      #eventTitle {
+        font-size: 1rem;
+      }
+      h1 {
+        font-size: 1.7rem;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .time-number {
+        font-size: 2rem;
+      }
+      .time-block {
+        padding: 0.8rem 0.1rem;
+      }
+      .card {
+        padding: 1.2rem 0.8rem;
+      }
+      .subhead {
+        font-size: 0.85rem;
+        padding-left: 0.7rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <!-- header -->
+    <div class="header">
+      <h1>⏳ Countdown</h1>
+      <span class="badge">live</span>
+    </div>
+    <div class="subhead">
+      Set a target date &amp; watch the time melt away — every second counts.
+    </div>
+
+    <!-- event title -->
+    <div class="event-area">
+      <span class="event-label">📌 event</span>
+      <input type="text" id="eventTitle" placeholder="Launch / Birthday / Deadline" value="Launch 🚀" />
+    </div>
+
+    <!-- picker + start -->
+    <div class="picker-grid">
+      <div class="picker-item">
+        <label for="targetDate">📅 date</label>
+        <input type="date" id="targetDate" />
+      </div>
+      <div class="picker-item">
+        <label for="targetTime">⏰ time</label>
+        <input type="time" id="targetTime" step="1" />
+      </div>
+      <button class="btn-start" id="startBtn">▶ Start</button>
+    </div>
+
+    <!-- timer display -->
+    <div class="timer-grid" id="timerGrid">
+      <div class="time-block"><span class="time-number" id="daysDisplay">00</span><span class="time-label">Days</span></div>
+      <div class="time-block"><span class="time-number" id="hoursDisplay">00</span><span class="time-label">Hours</span></div>
+      <div class="time-block"><span class="time-number" id="minutesDisplay">00</span><span class="time-label">Minutes</span></div>
+      <div class="time-block"><span class="time-number" id="secondsDisplay">00</span><span class="time-label">Seconds</span></div>
+    </div>
+
+    <!-- footer: status + actions -->
+    <div class="footer-actions">
+      <div class="status-wrapper">
+        <div class="status-message" id="statusMsg">⏱️ set target &amp; press Start</div>
+      </div>
+      <div class="action-group">
+        <button class="btn-secondary" id="resetBtn">⟲ Reset</button>
+        <button class="btn-secondary" id="nowBtn">📍 Now + 1h</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      "use strict";
+
+      // ----- DOM refs -----
+      const eventTitleInput = document.getElementById('eventTitle');
+      const dateInput = document.getElementById('targetDate');
+      const timeInput = document.getElementById('targetTime');
+      const startBtn = document.getElementById('startBtn');
+      const resetBtn = document.getElementById('resetBtn');
+      const nowBtn = document.getElementById('nowBtn');
+
+      const daysEl = document.getElementById('daysDisplay');
+      const hoursEl = document.getElementById('hoursDisplay');
+      const minutesEl = document.getElementById('minutesDisplay');
+      const secondsEl = document.getElementById('secondsDisplay');
+      const statusMsg = document.getElementById('statusMsg');
+
+      // ----- state -----
+      let countdownInterval = null;
+      let targetTimestamp = null;
+      let isRunning = false;
+
+      // ----- helpers -----
+      function formatTwoDigits(num) {
+        return String(Math.floor(Math.max(0, num))).padStart(2, '0');
+      }
+
+      function formatTimeUnit(value) {
+        return String(Math.floor(Math.max(0, value))).padStart(2, '0');
+      }
+
+      // ----- update DOM with distance (ms) -----
+      function updateDisplay(distanceMs) {
+        if (distanceMs <= 0) {
+          daysEl.textContent = '00';
+          hoursEl.textContent = '00';
+          minutesEl.textContent = '00';
+          secondsEl.textContent = '00';
+          statusMsg.textContent = '🎯 Countdown reached!';
+          return;
+        }
+
+        const seconds = Math.floor(distanceMs / 1000);
+        const days = Math.floor(seconds / 86400);
+        const hours = Math.floor((seconds % 86400) / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+
+        daysEl.textContent = formatTimeUnit(days);
+        hoursEl.textContent = formatTimeUnit(hours);
+        minutesEl.textContent = formatTimeUnit(minutes);
+        secondsEl.textContent = formatTimeUnit(secs);
+
+        const title = eventTitleInput.value.trim() || 'Countdown';
+        if (days > 0) {
+          statusMsg.textContent = `⏳ ${title} · ${days}d ${hours}h ${minutes}m ${secs}s remaining`;
+        } else if (hours > 0) {
+          statusMsg.textContent = `⏳ ${title} · ${hours}h ${minutes}m ${secs}s left`;
+        } else if (minutes > 0) {
+          statusMsg.textContent = `⏳ ${title} · ${minutes}m ${secs}s left`;
+        } else {
+          statusMsg.textContent = `⏳ ${title} · ${secs}s left`;
+        }
+      }
+
+      // ----- tick -----
+      function tick() {
+        if (!targetTimestamp) {
+          stopCountdown();
+          statusMsg.textContent = '⚠️ no target date set';
+          return;
+        }
+        const now = Date.now();
+        const distance = targetTimestamp - now;
+        if (distance <= 0) {
+          updateDisplay(0);
+          stopCountdown();
+          statusMsg.textContent = `🎉 ${eventTitleInput.value.trim() || 'Countdown'} reached!`;
+          return;
+        }
+        updateDisplay(distance);
+      }
+
+      // ----- stop interval -----
+      function stopCountdown() {
+        if (countdownInterval) {
+          clearInterval(countdownInterval);
+          countdownInterval = null;
+        }
+        isRunning = false;
+        startBtn.textContent = '▶ Start';
+        startBtn.disabled = false;
+      }
+
+      // ----- start countdown -----
+      function startCountdown() {
+        const dateVal = dateInput.value;
+        const timeVal = timeInput.value;
+
+        if (!dateVal) {
+          statusMsg.textContent = '❌ please select a date';
+          return;
+        }
+
+        let targetStr = dateVal;
+        if (timeVal) {
+          targetStr += `T${timeVal}`;
+        } else {
+          targetStr += 'T00:00:00';
+        }
+
+        const targetDate = new Date(targetStr);
+        if (isNaN(targetDate.getTime())) {
+          statusMsg.textContent = '⚠️ invalid date/time';
+          return;
+        }
+
+        const now = Date.now();
+        const targetMs = targetDate.getTime();
+        targetTimestamp = targetMs;
+
+        // stop any previous
+        stopCountdown();
+
+        if (targetMs <= now) {
+          updateDisplay(0);
+          statusMsg.textContent = `⏳ ${eventTitleInput.value.trim() || 'Countdown'} · time is up!`;
+          isRunning = false;
+          startBtn.textContent = '▶ Start';
+          startBtn.disabled = false;
+          return;
+        }
+
+        // start
+        updateDisplay(targetMs - now);
+        countdownInterval = setInterval(tick, 1000);
+        isRunning = true;
+        startBtn.textContent = '⏳ Running';
+        startBtn.disabled = true;
+        statusMsg.textContent = `▶️ counting down to ${targetDate.toLocaleString()}`;
+      }
+
+      // ----- reset display -----
+      function resetDisplay() {
+        stopCountdown();
+        targetTimestamp = null;
+        daysEl.textContent = '00';
+        hoursEl.textContent = '00';
+        minutesEl.textContent = '00';
+        secondsEl.textContent = '00';
+        statusMsg.textContent = '⏱️ set target & press Start';
+        isRunning = false;
+        startBtn.textContent = '▶ Start';
+        startBtn.disabled = false;
+      }
+
+      // ----- set default to tomorrow 00:00 -----
+      function setDefaultDateTime() {
+        const now = new Date();
+        const tomorrow = new Date(now);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        tomorrow.setHours(0, 0, 0, 0);
+        const year = tomorrow.getFullYear();
+        const month = String(tomorrow.getMonth() + 1).padStart(2, '0');
+        const day = String(tomorrow.getDate()).padStart(2, '0');
+        dateInput.value = `${year}-${month}-${day}`;
+        timeInput.value = '00:00';
+      }
+
+      // ----- set target to now + 1 hour (quick) -----
+      function setNowPlusHour() {
+        const now = new Date();
+        const target = new Date(now.getTime() + 60 * 60 * 1000);
+        const year = target.getFullYear();
+        const month = String(target.getMonth() + 1).padStart(2, '0');
+        const day = String(target.getDate()).padStart(2, '0');
+        const hours = String(target.getHours()).padStart(2, '0');
+        const mins = String(target.getMinutes()).padStart(2, '0');
+        dateInput.value = `${year}-${month}-${day}`;
+        timeInput.value = `${hours}:${mins}`;
+        // auto-start
+        startCountdown();
+      }
+
+      // ----- event listeners -----
+      startBtn.addEventListener('click', startCountdown);
+      resetBtn.addEventListener('click', resetDisplay);
+      nowBtn.addEventListener('click', setNowPlusHour);
+
+      // Enter key on inputs triggers start
+      document.querySelectorAll('input').forEach(inp => {
+        inp.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            startCountdown();
+          }
+        });
+      });
+
+      // if date/time changes while running → stop (graceful)
+      dateInput.addEventListener('change', () => {
+        if (isRunning) {
+          stopCountdown();
+          resetDisplay();
+          statusMsg.textContent = '⏸️ target changed · press Start again';
+        }
+      });
+      timeInput.addEventListener('change', () => {
+        if (isRunning) {
+          stopCountdown();
+          resetDisplay();
+          statusMsg.textContent = '⏸️ target changed · press Start again';
+        }
+      });
+
+      // ----- init -----
+      setDefaultDateTime();
+      if (!eventTitleInput.value.trim()) {
+        eventTitleInput.value = 'Launch 🚀';
+      }
+      statusMsg.textContent = '⏱️ set target & press Start';
+      resetDisplay();
+
+      // cleanup
+      window.addEventListener('beforeunload', () => {
+        stopCountdown();
+      });
+
+      console.log('✅ Countdown Timer · professional edition');
+    })();
+  </script>
+</body>
+</html>

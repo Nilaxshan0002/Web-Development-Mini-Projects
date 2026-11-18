@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>✨ Blog · Comments & Likes</title>
+  <!-- Font Awesome 6 (free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <!-- Google Font: Inter + Playfair Display -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet" />
+  <!-- external CSS -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="blog-container" id="app">
+  <!-- header -->
+  <header class="blog-header">
+    <div class="blog-tag"><i class="fas fa-feather-alt" style="margin-right: 8px;"></i> Product · Design</div>
+    <h1 class="blog-title">Crafting digital experiences that matter</h1>
+    <div class="blog-meta">
+      <span><i class="fas fa-user-astronaut"></i> <span class="author">Elena Rossi</span></span>
+      <span><i class="fas fa-calendar-alt"></i> August 2, 2026</span>
+      <span><i class="fas fa-clock"></i> 6 min read</span>
+      <span><i class="fas fa-message"></i> 2 comments</span>
+    </div>
+  </header>
+
+  <!-- blog body -->
+  <div class="blog-body">
+    <p>
+      <span class="highlight">✨ Design is not just how it looks, but how it works.</span> 
+      In today’s fast-paced digital world, creating meaningful connections with users 
+      goes beyond aesthetics. It’s about empathy, clarity, and seamless interaction.
+    </p>
+    <div class="blog-image-placeholder">
+      <i class="fas fa-paint-brush"></i>  Illustration: design thinking process
+    </div>
+    <p>
+      We believe that every pixel has a purpose. This blog explores the intersection 
+      of user experience, interface design, and the human side of technology. 
+      From micro-interactions to accessibility, we dive deep into what makes products 
+      truly delightful.
+    </p>
+    <p>
+      <i class="fas fa-hand-peace" style="color: #8b6fe0; margin-right: 6px;"></i> 
+      Join the conversation — share your thoughts below, and if you enjoy this post, give it a like!
+    </p>
+  </div>
+
+  <!-- like section -->
+  <div class="like-section">
+    <button class="like-btn" id="likeButton" aria-label="like this post">
+      <i class="fa-regular fa-heart"></i> Like
+    </button>
+    <span class="like-count" id="likeCountDisplay">0</span>
+    <span class="like-extra"><i class="fas fa-arrow-right"></i> show your support</span>
+  </div>
+
+  <!-- comments section -->
+  <section class="comments-section">
+    <div class="comments-header">
+      <h3><i class="fas fa-comment-dots"></i> Comments</h3>
+      <span id="commentCounter">0</span>
+    </div>
+
+    <!-- comment list -->
+    <div class="comment-list" id="commentList">
+      <div class="empty-comments" id="emptyComments">
+        <i class="far fa-comment" style="margin-right: 8px;"></i> No comments yet. Start the conversation!
+      </div>
+    </div>
+
+    <!-- new comment form -->
+    <div class="comment-form">
+      <div class="form-row">
+        <input type="text" id="commentAuthorInput" placeholder="Your name" maxlength="40" value="Guest" />
+        <textarea id="commentTextInput" placeholder="Write your comment…" rows="2"></textarea>
+        <div class="form-actions">
+          <button id="submitCommentBtn"><i class="fas fa-paper-plane"></i> Post comment</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- external JavaScript -->
+<script src="script.js"></script>
+</body>
+</html>

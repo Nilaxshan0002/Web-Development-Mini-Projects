@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>EventHub Pro · Booking System</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <!-- Google Font: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            background: linear-gradient(135deg, #f0f4fe 0%, #e8eeff 50%, #f5f0ff 100%);
+            color: #1a2332;
+            min-height: 100vh;
+            line-height: 1.5;
+            padding: 1.5rem;
+        }
+
+        .app-wrapper {
+            max-width: 1360px;
+            margin: 0 auto;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            padding: 0.6rem 1.8rem;
+            border-radius: 60px;
+            box-shadow: 0 8px 32px rgba(79, 110, 247, 0.08);
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+            color: #1a2332;
+        }
+
+        .logo i {
+            background: linear-gradient(135deg, #4f6ef7, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.8rem;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem 1rem;
+        }
+
+        .header-actions .icon-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.2rem;
+            color: #5a6e8a;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            padding: 0.5rem;
+            border-radius: 50%;
+            position: relative;
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-actions .icon-btn:hover {
+            background: rgba(79, 110, 247, 0.08);
+            color: #4f6ef7;
+            transform: scale(1.05);
+        }
+
+        .header-actions .icon-btn .badge {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: linear-gradient(135deg, #f25a6a, #ff6b7a);
+            color: #fff;
+            font-size: 0.55rem;
+            font-weight: 700;
+            padding: 0.1rem 0.4rem;
+            border-radius: 30px;
+            min-width: 18px;
+            text-align: center;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 8px rgba(242, 90, 106, 0.3);
+        }
+
+        .header-actions .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.2rem 0.8rem 0.2rem 0.2rem;
+            border-radius: 40px;
+            background: linear-gradient(135deg, rgba(79, 110, 247, 0.1), rgba(167, 139, 250, 0.1));
+            border: 1px solid rgba(79, 110, 247, 0.15);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+
+        .header-actions .profile-section:hover {
+            background: linear-gradient(135deg, rgba(79, 110, 247, 0.2), rgba(167, 139, 250, 0.2));
+            border-color: rgba(79, 110, 247, 0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(79, 110, 247, 0.1);
+        }
+
+        .header-actions .profile-section .profile-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 0.6rem 0;
+            min-width: 200px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid #eef2f8;
+            z-index: 100;
+        }
+
+        .header-actions .profile-section .profile-dropdown.show {
+            display: block;
+            animation: slideDown 0.2s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header-actions .profile-section .profile-dropdown a {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.6rem 1.2rem;
+            color: #1a2332;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: 0.2s;
+        }
+
+        .header-actions .profile-section .profile-dropdown a:hover {
+            background: #f0f4fe;
+        }
+
+        .header-actions .profile-section .profile-dropdown a i {
+            width: 1.2rem;
+            color: #4f6ef7;
+        }
+
+        .header-actions .profile-section .profile-dropdown .divider {
+            border-top: 1px solid #eef2f8;
+            margin: 0.3rem 0;
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4f6ef7, #a78bfa);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 8px rgba(79, 110, 247, 0.2);
+        }
+
+        .profile-name {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #1a2332;
+            white-space: nowrap;
+        }
+
+        .profile-name span {
+            font-weight: 400;
+            color: #6b7f9e;
+            font-size: 0.7rem;
+            display: block;
+        }
+
+        /* ===== TABS ===== */
+        .tabs {
+            display: flex;
+            gap: 0.4rem;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(8px);
+            padding: 0.3rem;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            box-shadow: 0 4px 20px rgba(79, 110, 247, 0.04);
+        }
+
+        .tabs button {
+            background: transparent;
+            border: none;
+            padding: 0.5rem 1.6rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #5a6e8a;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tabs button:hover {
+            color: #1a2332;
+            background: rgba(79, 110, 247, 0.06);
+        }
+
+        .tabs button.active {
+            background: linear-gradient(135deg, #4f6ef7, #7a94fa);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(79, 110, 247, 0.3);
+        }
+
+        .tabs button i {
+            margin-right: 0.4rem;
+        }
+
+        /* ===== EVENT GRID ===== */
+        .event-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.6rem;
+            margin-bottom: 2rem;
+        }
+
+        .event-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border-radius: 28px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 24px rgba(79, 110, 247, 0.04);
+            transition: all 0.35s ease;
+            cursor: pointer;
+        }
+
+        .event-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 48px rgba(79, 110, 247, 0.08);
+            border-color: rgba(79, 110, 247, 0.15);
+        }
+
+        .event-image {
+            height: 180px;
+            background: linear-gradient(135deg, #e6edfc, #d6e2fa);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #4f6ef7;
+            position: relative;
+        }
+
+        .event-image .date-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(4px);
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .event-image .price-badge {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            background: linear-gradient(135deg, #4f6ef7, #a78bfa);
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(79, 110, 247, 0.3);
+        }
+
+        .event-info {
+            padding: 1.2rem 1.4rem 1.4rem;
+        }
+
+        .event-info h4 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+            color: #1a2332;
+        }
+
+        .event-info .meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem 1.2rem;
+            font-size: 0.8rem;
+            color: #6b7f9e;
+            margin: 0.3rem 0 0.6rem;
+        }
+
+        .event-info .meta i {
+            color: #4f6ef7;
+            width: 1.1rem;
+        }
+
+        .event-info .description {
+            font-size: 0.85rem;
+            color: #6b7f9e;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .event-info .ticket-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.8rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .event-info .ticket-status .available {
+            font-size: 0.8rem;
+            color: #22a65e;
+            font-weight: 600;
+        }
+
+        .event-info .ticket-status .available.sold-out {
+            color: #f25a6a;
+        }
+
+        .btn-book {
+            background: linear-gradient(135deg, #4f6ef7, #7a94fa);
+            border: none;
+            color: #fff;
+            padding: 0.4rem 1.4rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 4px 12px rgba(79, 110, 247, 0.2);
+        }
+
+        .btn-book:hover:not(:disabled) {
+            transform: scale(1.04);
+            box-shadow: 0 6px 20px rgba(79, 110, 247, 0.3);
+        }
+
+        .btn-book:disabled {
+            background: #b0c4f0;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* ===== MY BOOKINGS ===== */
+        .bookings-section {
+            display: none;
+        }
+
+        .bookings-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .booking-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border-radius: 24px;
+            padding: 1.2rem 1.6rem;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            margin-bottom: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            box-shadow: 0 2px 16px rgba(79, 110, 247, 0.03);
+            transition: 0.2s;
+        }
+
+        .booking-card:hover {
+            box-shadow: 0 4px 24px rgba(79, 110, 247, 0.06);
+        }
+
+        .booking-card .booking-info {
+            flex: 1;
+        }
+
+        .booking-card .booking-info h4 {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .booking-card .booking-info .details {
+            font-size: 0.85rem;
+            color: #6b7f9e;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem 1.2rem;
+        }
+
+        .booking-card .booking-info .details i {
+            color: #4f6ef7;
+            width: 1.1rem;
+        }
+
+        .booking-card .booking-status {
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 0.2rem 1rem;
+            border-radius: 30px;
+        }
+
+        .booking-card .booking-status.confirmed {
+            background: #e6f7ed;
+            color: #22a65e;
+        }
+
+        .booking-card .booking-status.cancelled {
+            background: #fee9ec;
+            color: #f25a6a;
+        }
+
+        .booking-card .booking-status.pending {
+            background: #fff3e0;
+            color: #f5a623;
+        }
+
+        .booking-card .btn-cancel {
+            background: transparent;
+            border: 1px solid #eef2f8;
+            color: #5a6e8a;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .booking-card .btn-cancel:hover {
+            background: #fee9ec;
+            border-color: #f25a6a;
+            color: #f25a6a;
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 300;
+            padding: 1.5rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.25s ease;
+        }
+
+        .modal {
+            background: #ffffff;
+            border-radius: 32px;
+            max-width: 520px;
+            width: 100%;
+            padding: 2rem 2.5rem;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.15);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .modal .modal-header h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1a2332, #4f6ef7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .modal .modal-header .close-modal {
+            background: transparent;
+            border: none;
+            font-size: 1.4rem;
+            color: #6b7f9e;
+            cursor: pointer;
+            transition: 0.2s;
+            padding: 0.2rem;
+        }
+
+        .modal .modal-header .close-modal:hover {
+            color: #1a2332;
+            transform: rotate(90deg);
+        }
+
+        .modal .event-detail {
+            margin-bottom: 1.2rem;
+            padding: 0.8rem;
+            background: #f8faff;
+            border-radius: 16px;
+        }
+
+        .modal .event-detail .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.3rem 0;
+            font-size: 0.9rem;
+        }
+
+        .modal .event-detail .detail-row .label {
+            color: #6b7f9e;
+        }
+
+        .modal .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .modal .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+            color: #1a2332;
+        }
+
+        .modal .form-group input,
+        .modal .form-group select {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border: 1px solid #dce5f5;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.25s ease;
+            outline: none;
+            background: #fafcff;
+        }
+
+        .modal .form-group input:focus,
+        .modal .form-group select:focus {
+            border-color: #4f6ef7;
+            box-shadow: 0 0 0 4px rgba(79, 110, 247, 0.08);
+            background: #fff;
+        }
+
+        .modal .ticket-qty {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .modal .ticket-qty button {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid #dce5f5;
+            background: transparent;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 700;
+            color: #1a2332;
+        }
+
+        .modal .ticket-qty button:hover {
+            background: #f0f4fe;
+            border-color: #4f6ef7;
+            color: #4f6ef7;
+        }
+
+        .modal .ticket-qty span {
+            font-size: 1.2rem;
+            font-weight: 700;
+            min-width: 2.5rem;
+            text-align: center;
+        }
+
+        .modal .total-price {
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-align: right;
+            padding: 0.6rem 0;
+            border-top: 1px solid #eef2f8;
+            margin-top: 0.4rem;
+            color: #4f6ef7;
+        }
+
+        .modal .modal-actions {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
+
+        .modal .modal-actions button {
+            padding: 0.6rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: 1px solid #dce5f5;
+            background: transparent;
+            transition: all 0.25s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .modal .modal-actions .btn-primary {
+            background: linear-gradient(135deg, #4f6ef7, #7a94fa);
+            border-color: #4f6ef7;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(79, 110, 247, 0.2);
+        }
+
+        .modal .modal-actions .btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 20px rgba(79, 110, 247, 0.3);
+        }
+
+        .modal .modal-actions .btn-secondary:hover {
+            background: #f0f4fe;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            margin-top: 2.5rem;
+            padding-top: 1.2rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.04);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: #6b7f9e;
+        }
+
+        .footer a {
+            color: #5a6e8a;
+            text-decoration: none;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .footer a:hover {
+            color: #4f6ef7;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.6rem;
+        }
+
+        /* ===== NOTIFICATION TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #1a2332;
+            color: #fff;
+            padding: 0.8rem 1.6rem;
+            border-radius: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            font-weight: 500;
+            font-size: 0.9rem;
+            z-index: 400;
+            display: none;
+            align-items: center;
+            gap: 0.6rem;
+            animation: slideUp 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .toast.show {
+            display: flex;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .toast i {
+            color: #22a65e;
+            font-size: 1.2rem;
+        }
+
+        .toast i.error {
+            color: #f25a6a;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 640px) {
+            body {
+                padding: 0.8rem;
+            }
+            .header {
+                padding: 0.6rem 1rem;
+                border-radius: 32px;
+                gap: 0.6rem;
+            }
+            .logo {
+                font-size: 1.2rem;
+            }
+            .tabs button {
+                padding: 0.4rem 1rem;
+                font-size: 0.8rem;
+            }
+            .event-grid {
+                grid-template-columns: 1fr;
+            }
+            .modal {
+                padding: 1.5rem;
+            }
+            .booking-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .header-actions .profile-section .profile-name {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-wrapper">
+
+        <!-- ===== HEADER ===== -->
+        <header class="header">
+            <div class="logo"><i class="fas fa-calendar-alt"></i> EventHub</div>
+            <div class="header-actions">
+                <button class="icon-btn" id="notificationBtn" aria-label="notifications">
+                    <i class="far fa-bell"></i>
+                    <span class="badge" id="notificationBadge">3</span>
+                </button>
+                <button class="icon-btn" id="helpBtn" aria-label="help">
+                    <i class="far fa-question-circle"></i>
+                </button>
+                <div class="profile-section" id="profileSection">
+                    <div class="avatar">JD</div>
+                    <div class="profile-name">
+                        James Davis
+                        <span>Admin</span>
+                    </div>
+                    <i class="fas fa-chevron-down" style="font-size:0.7rem; color:#6b7f9e;"></i>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <a href="#" id="profileLink"><i class="fas fa-user"></i> My Profile</a>
+                        <a href="#" id="myEventsLink"><i class="fas fa-calendar-alt"></i> My Events</a>
+                        <a href="#" id="myBookingsLink"><i class="fas fa-ticket-alt"></i> My Bookings</a>
+                        <a href="#" id="settingsLink"><i class="fas fa-cog"></i> Settings</a>
+                        <div class="divider"></div>
+                        <a href="#" id="logoutLink" style="color:#f25a6a;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- ===== TABS ===== -->
+        <div class="tabs">
+            <button class="active" data-tab="events"><i class="fas fa-calendar-day"></i> Events</button>
+            <button data-tab="bookings"><i class="fas fa-ticket-alt"></i> My Bookings</button>
+        </div>
+
+        <!-- ===== EVENTS SECTION ===== -->
+        <div id="eventsSection">
+            <div class="event-grid" id="eventGrid">
+                <!-- injected by JS -->
+            </div>
+        </div>
+
+        <!-- ===== BOOKINGS SECTION ===== -->
+        <div id="bookingsSection" class="bookings-section">
+            <div id="bookingsList">
+                <!-- injected by JS -->
+            </div>
+        </div>
+
+        <!-- ===== FOOTER ===== -->
+        <footer class="footer">
+            <span>© 2026 EventHub · Book with confidence</span>
+            <div class="footer-links">
+                <a id="helpLink">Help</a>
+                <a id="privacyLink">Privacy</a>
+                <a id="termsLink">Terms</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ===== MODAL ===== -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modalTitle">Book Event</h3>
+                <button class="close-modal" id="closeModalBtn"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="modalBody">
+                <!-- dynamic content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Success!</span>
+    </div>
+
+    <script>
+        (function() {
+            "use strict";
+
+            // ----- event database -----
+            let events = [
+                { id: 1, title: "Tech Summit 2026", date: "2026-08-15", time: "09:00", venue: "Convention Center",
+                    category: "Conference", price: 299, available: 120,
+                    description: "Join industry leaders for a day of innovation, networking, and cutting-edge technology talks.",
+                    image: "💻" },
+                { id: 2, title: "Jazz & Blues Night", date: "2026-08-20", time: "19:30", venue: "The Grand Hall",
+                    category: "Concert", price: 89, available: 45,
+                    description: "An unforgettable evening of smooth jazz and soulful blues performed by world-class musicians.",
+                    image: "🎷" },
+                { id: 3, title: "Startup Pitch Fest", date: "2026-08-25", time: "14:00", venue: "Innovation Hub",
+                    category: "Networking", price: 149, available: 80,
+                    description: "Watch 10 startups pitch their ideas to a panel of investors. Network with founders and VCs.",
+                    image: "🚀" },
+                { id: 4, title: "Art Exhibition: Modern Masters", date: "2026-09-01", time: "10:00",
+                    venue: "City Art Gallery", category: "Exhibition", price: 45, available: 200,
+                    description: "Explore the works of modern art masters in this exclusive curated exhibition.",
+                    image: "🎨" },
+                { id: 5, title: "Cooking Masterclass", date: "2026-09-05", time: "11:00", venue: "Culinary Studio",
+                    category: "Workshop", price: 120, available: 25,
+                    description: "Learn to cook gourmet dishes with celebrity chef Marco Rossi. Includes ingredients and recipes.",
+                    image: "🍳" },
+                { id: 6, title: "Film Festival: Indie Showcase", date: "2026-09-10", time: "18:00",
+                    venue: "Cinema Paradiso", category: "Film", price: 65, available: 90,
+                    description: "Independent filmmakers showcase their latest works. Q&A sessions with directors after screenings.",
+                    image: "🎬" },
+            ];
+
+            // ----- bookings state -----
+            let bookings = [];
+            let bookingIdCounter = 1;
+
+            // ----- DOM refs -----
+            const eventGrid = document.getElementById('eventGrid');
+            const bookingsList = document.getElementById('bookingsList');
+            const eventsSection = document.getElementById('eventsSection');
+            const bookingsSection = document.getElementById('bookingsSection');
+            const tabs = document.querySelectorAll('.tabs button');
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            const notificationBtn = document.getElementById('notificationBtn');
+            const helpBtn = document.getElementById('helpBtn');
+            const profileSection = document.getElementById('profileSection');
+            const profileDropdown = document.getElementById('profileDropdown');
+
+            // Footer links
+            const helpLink = document.getElementById('helpLink');
+            const privacyLink = document.getElementById('privacyLink');
+            const termsLink = document.getElementById('termsLink');
+
+            // Profile dropdown links
+            const profileLink = document.getElementById('profileLink');
+            const myEventsLink = document.getElementById('myEventsLink');
+            const myBookingsLink = document.getElementById('myBookingsLink');
+            const settingsLink = document.getElementById('settingsLink');
+            const logoutLink = document.getElementById('logoutLink');
+
+            let currentEventId = null;
+            let toastTimeout = null;
+
+            // ----- show toast notification -----
+            function showToast(message, isError = false) {
+                toastMessage.textContent = message;
+                toast.classList.add('show');
+                const icon = toast.querySelector('i');
+                if (isError) {
+                    icon.className = 'fas fa-exclamation-circle error';
+                } else {
+                    icon.className = 'fas fa-check-circle';
+                }
+                clearTimeout(toastTimeout);
+                toastTimeout = setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+
+            // ----- render events -----
+            function renderEvents() {
+                eventGrid.innerHTML = '';
+                events.forEach(e => {
+                    const card = document.createElement('div');
+                    card.className = 'event-card';
+                    const isSoldOut = e.available <= 0;
+                    card.innerHTML = `
+                    <div class="event-image">
+                      <span style="font-size:3.5rem;">${e.image || '🎫'}</span>
+                      <span class="date-badge"><i class="far fa-calendar-alt"></i> ${formatDate(e.date)}</span>
+                      <span class="price-badge">$${e.price}</span>
+                    </div>
+                    <div class="event-info">
+                      <h4>${e.title}</h4>
+                      <div class="meta">
+                        <span><i class="fas fa-clock"></i> ${e.time}</span>
+                        <span><i class="fas fa-map-marker-alt"></i> ${e.venue}</span>
+                      </div>
+                      <div class="description">${e.description}</div>
+                      <div class="ticket-status">
+                        <span class="available ${isSoldOut ? 'sold-out' : ''}">
+                          <i class="fas ${isSoldOut ? 'fa-times-circle' : 'fa-check-circle'}"></i>
+                          ${isSoldOut ? 'Sold Out' : `${e.available} tickets left`}
+                        </span>
+                        <button class="btn-book" data-id="${e.id}" ${isSoldOut ? 'disabled' : ''}>
+                          ${isSoldOut ? 'Sold Out' : 'Book Now'}
+                        </button>
+                      </div>
+                    </div>
+                  `;
+                    eventGrid.appendChild(card);
+                });
+
+                // attach book button events
+                document.querySelectorAll('.btn-book:not([disabled])').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const id = parseInt(this.dataset.id);
+                        openBookingModal(id);
+                    });
+                });
+
+                // click on card to view details
+                document.querySelectorAll('.event-card').forEach(card => {
+                    card.addEventListener('click', function() {
+                        const btn = this.querySelector('.btn-book');
+                        if (btn && !btn.disabled) {
+                            const id = parseInt(btn.dataset.id);
+                            openBookingModal(id);
+                        }
+                    });
+                });
+            }
+
+            // ----- render bookings -----
+            function renderBookings() {
+                bookingsList.innerHTML = '';
+                if (bookings.length === 0) {
+                    bookingsList.innerHTML = `
+                    <div style="text-align:center; padding:3rem 1rem; color:#6b7f9e; background:rgba(255,255,255,0.7); backdrop-filter:blur(8px); border-radius:28px; border:1px solid rgba(255,255,255,0.5);">
+                      <i class="fas fa-ticket-alt" style="font-size:3rem; color:#dce5f5; margin-bottom:0.5rem;"></i>
+                      <h3 style="color:#1a2332;">No bookings yet</h3>
+                      <p>Browse events and book your first ticket!</p>
+                    </div>
+                  `;
+                    return;
+                }
+
+                bookings.forEach(b => {
+                    const event = events.find(e => e.id === b.eventId);
+                    if (!event) return;
+                    const div = document.createElement('div');
+                    div.className = 'booking-card';
+                    div.innerHTML = `
+                    <div class="booking-info">
+                      <h4>${event.title}</h4>
+                      <div class="details">
+                        <span><i class="fas fa-calendar-alt"></i> ${formatDate(event.date)} at ${event.time}</span>
+                        <span><i class="fas fa-map-marker-alt"></i> ${event.venue}</span>
+                        <span><i class="fas fa-ticket-alt"></i> ${b.tickets} ticket${b.tickets > 1 ? 's' : ''}</span>
+                        <span><i class="fas fa-dollar-sign"></i> $${b.totalPrice}</span>
+                        <span><i class="fas fa-user"></i> ${b.name}</span>
+                        <span><i class="fas fa-envelope"></i> ${b.email}</span>
+                      </div>
+                    </div>
+                    <span class="booking-status ${b.status}">${b.status.charAt(0).toUpperCase() + b.status.slice(1)}</span>
+                    ${b.status === 'confirmed' ? `<button class="btn-cancel" data-id="${b.id}">Cancel</button>` : ''}
+                  `;
+                    bookingsList.appendChild(div);
+                });
+
+                // attach cancel events
+                document.querySelectorAll('.btn-cancel').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = parseInt(this.dataset.id);
+                        cancelBooking(id);
+                    });
+                });
+            }
+
+            // ----- open booking modal -----
+            function openBookingModal(eventId) {
+                const event = events.find(e => e.id === eventId);
+                if (!event || event.available <= 0) return;
+
+                currentEventId = eventId;
+                modalTitle.textContent = `🎟️ ${event.title}`;
+
+                let quantity = 1;
+                const pricePerTicket = event.price;
+
+                function updateModal() {
+                    const total = quantity * pricePerTicket;
+                    modalBody.innerHTML = `
+                    <div class="event-detail">
+                      <div class="detail-row"><span class="label">📅 Date</span><span>${formatDate(event.date)} at ${event.time}</span></div>
+                      <div class="detail-row"><span class="label">📍 Venue</span><span>${event.venue}</span></div>
+                      <div class="detail-row"><span class="label">💰 Price per ticket</span><span>$${pricePerTicket}</span></div>
+                      <div class="detail-row"><span class="label">🎫 Available</span><span>${event.available}</span></div>
+                    </div>
+                    <div class="form-group">
+                      <label>Your Name</label>
+                      <input type="text" id="bookingName" value="James Davis" placeholder="Full name" />
+                    </div>
+                    <div class="form-group">
+                      <label>Email</label>
+                      <input type="email" id="bookingEmail" value="james@example.com" placeholder="Email address" />
+                    </div>
+                    <div class="form-group">
+                      <label>Number of Tickets</label>
+                      <div class="ticket-qty">
+                        <button id="qtyMinus">−</button>
+                        <span id="qtyDisplay">${quantity}</span>
+                        <button id="qtyPlus">+</button>
+                      </div>
+                    </div>
+                    <div class="total-price">Total: $${total}</div>
+                    <div class="modal-actions">
+                      <button class="btn-secondary" id="cancelBookingBtn">Cancel</button>
+                      <button class="btn-primary" id="confirmBookingBtn"><i class="fas fa-check"></i> Confirm Booking</button>
+                    </div>
+                  `;
+
+                    // attach qty events
+                    document.getElementById('qtyMinus').addEventListener('click', function() {
+                        if (quantity > 1) {
+                            quantity--;
+                            updateModal();
+                        }
+                    });
+                    document.getElementById('qtyPlus').addEventListener('click', function() {
+                        if (quantity < event.available) {
+                            quantity++;
+                            updateModal();
+                        } else {
+                            showToast('❌ Not enough tickets available.', true);
+                        }
+                    });
+
+                    document.getElementById('cancelBookingBtn').addEventListener('click', function() {
+                        modalOverlay.classList.remove('active');
+                    });
+
+                    document.getElementById('confirmBookingBtn').addEventListener('click', function() {
+                        const name = document.getElementById('bookingName').value.trim();
+                        const email = document.getElementById('bookingEmail').value.trim();
+                        if (!name || !email) {
+                            showToast('⚠️ Please enter your name and email.', true);
+                            return;
+                        }
+                        confirmBooking(eventId, quantity, name, email);
+                    });
+                }
+
+                updateModal();
+                modalOverlay.classList.add('active');
+            }
+
+            // ----- confirm booking -----
+            function confirmBooking(eventId, quantity, name, email) {
+                const event = events.find(e => e.id === eventId);
+                if (!event || event.available < quantity) {
+                    showToast('❌ Sorry, tickets are no longer available.', true);
+                    modalOverlay.classList.remove('active');
+                    return;
+                }
+
+                // update event availability
+                event.available -= quantity;
+
+                // create booking
+                const booking = {
+                    id: bookingIdCounter++,
+                    eventId: eventId,
+                    tickets: quantity,
+                    totalPrice: quantity * event.price,
+                    status: 'confirmed',
+                    name: name,
+                    email: email,
+                    bookedAt: new Date().toISOString()
+                };
+                bookings.push(booking);
+
+                modalOverlay.classList.remove('active');
+                renderAll();
+                showToast(`🎉 Booked ${quantity} ticket${quantity > 1 ? 's' : ''} for ${event.title}!`);
+            }
+
+            // ----- cancel booking -----
+            function cancelBooking(bookingId) {
+                const booking = bookings.find(b => b.id === bookingId);
+                if (!booking) return;
+
+                if (confirm('Cancel this booking?')) {
+                    // return tickets to event
+                    const event = events.find(e => e.id === booking.eventId);
+                    if (event) {
+                        event.available += booking.tickets;
+                    }
+                    booking.status = 'cancelled';
+                    renderAll();
+                    showToast('✅ Booking cancelled successfully.');
+                }
+            }
+
+            // ----- helper functions -----
+            function formatDate(dateStr) {
+                const d = new Date(dateStr);
+                return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            }
+
+            function renderAll() {
+                renderEvents();
+                renderBookings();
+                updateBadge();
+            }
+
+            function updateBadge() {
+                const confirmed = bookings.filter(b => b.status === 'confirmed').length;
+                const badge = document.getElementById('notificationBadge');
+                if (badge) {
+                    badge.textContent = confirmed;
+                    badge.style.display = confirmed > 0 ? 'block' : 'none';
+                }
+            }
+
+            // ----- tab switching -----
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    const tabName = this.dataset.tab;
+                    if (tabName === 'events') {
+                        eventsSection.style.display = 'block';
+                        bookingsSection.classList.remove('active');
+                    } else {
+                        eventsSection.style.display = 'none';
+                        bookingsSection.classList.add('active');
+                        renderBookings();
+                    }
+                });
+            });
+
+            // ----- modal controls -----
+            closeModalBtn.addEventListener('click', function() {
+                modalOverlay.classList.remove('active');
+            });
+
+            modalOverlay.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    modalOverlay.classList.remove('active');
+                }
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+                    modalOverlay.classList.remove('active');
+                }
+            });
+
+            // ----- profile dropdown toggle -----
+            profileSection.addEventListener('click', function(e) {
+                e.stopPropagation();
+                profileDropdown.classList.toggle('show');
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!profileSection.contains(e.target)) {
+                    profileDropdown.classList.remove('show');
+                }
+            });
+
+            // ----- profile dropdown actions -----
+            profileLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                profileDropdown.classList.remove('show');
+                showToast('👤 Viewing your profile');
+            });
+
+            myEventsLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                profileDropdown.classList.remove('show');
+                showToast('📅 Showing your created events');
+            });
+
+            myBookingsLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                profileDropdown.classList.remove('show');
+                document.querySelector('[data-tab="bookings"]').click();
+                showToast('🎫 Viewing your bookings');
+            });
+
+            settingsLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                profileDropdown.classList.remove('show');
+                showToast('⚙️ Opening settings');
+            });
+
+            logoutLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                profileDropdown.classList.remove('show');
+                if (confirm('Are you sure you want to logout?')) {
+                    showToast('👋 Logged out successfully');
+                }
+            });
+
+            // ----- notification button -----
+            notificationBtn.addEventListener('click', function() {
+                const count = bookings.filter(b => b.status === 'confirmed').length;
+                if (count > 0) {
+                    showToast(`📬 You have ${count} confirmed booking${count !== 1 ? 's' : ''}`);
+                } else {
+                    showToast('📬 No new notifications');
+                }
+            });
+
+            // ----- help button (header) -----
+            helpBtn.addEventListener('click', function() {
+                showToast('💡 Need help? Contact support at support@eventhub.com');
+            });
+
+            // ----- footer links -----
+            helpLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                showToast('📖 Help Center - Find answers to common questions');
+            });
+
+            privacyLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                showToast('🔒 Privacy Policy - Your data is safe with us');
+            });
+
+            termsLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                showToast('📜 Terms of Service - Please read our terms carefully');
+            });
+
+            // ----- init -----
+            renderAll();
+
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>✨ Blog · Comments & Likes</title>
+  <!-- Font Awesome 6 (free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <!-- Google Font: Inter + Playfair Display for accents -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, system-ui, sans-serif;
+      background: linear-gradient(145deg, #f9f3ff 0%, #e9f0ff 100%);
+      color: #1b1f2b;
+      display: flex;
+      justify-content: center;
+      padding: 2.5rem 1.2rem;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* main card – colorful & playful */
+    .blog-container {
+      max-width: 860px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(4px);
+      border-radius: 48px;
+      box-shadow: 0 30px 60px -20px rgba(0, 20, 60, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.6);
+      padding: 2.8rem 3rem;
+      transition: box-shadow 0.25s ease;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    @media (max-width: 640px) {
+      .blog-container {
+        padding: 1.8rem 1.2rem;
+        border-radius: 32px;
+      }
+    }
+
+    /* ----- colorful header with gradient ----- */
+    .blog-header {
+      margin-bottom: 2.4rem;
+      padding-bottom: 1.8rem;
+      border-bottom: 2px dashed #d7c9ff;
+      position: relative;
+    }
+
+    .blog-header::after {
+      content: "✦";
+      position: absolute;
+      right: 0;
+      bottom: -12px;
+      font-size: 1.8rem;
+      color: #b38bff;
+      opacity: 0.4;
+    }
+
+    .blog-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #a78bfa, #7c5cfc);
+      color: white;
+      display: inline-block;
+      padding: 0.35rem 1.2rem;
+      border-radius: 40px;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 8px rgba(124, 92, 252, 0.25);
+    }
+
+    .blog-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.6rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin: 0.4rem 0 0.2rem;
+      background: linear-gradient(135deg, #1f1b4b, #4a2c7a, #b55ef0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .blog-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.8rem 2rem;
+      margin-top: 0.8rem;
+      color: #3f3d56;
+      font-size: 0.95rem;
+    }
+
+    .blog-meta i {
+      margin-right: 6px;
+      color: #8b6fe0;
+      width: 1.2rem;
+    }
+
+    .blog-meta .author {
+      font-weight: 700;
+      color: #2a1f4e;
+      background: #ede7ff;
+      padding: 0.1rem 0.8rem;
+      border-radius: 30px;
+    }
+
+    /* ----- blog content with colorful touches ----- */
+    .blog-body {
+      margin: 2.2rem 0 2.8rem;
+    }
+
+    .blog-body p {
+      margin-bottom: 1.4rem;
+      font-size: 1.05rem;
+      color: #26243a;
+    }
+
+    .blog-body .highlight {
+      background: linear-gradient(120deg, #fae8ff 0%, #e1d5ff 100%);
+      padding: 0.2rem 0.7rem;
+      border-radius: 20px;
+      font-weight: 600;
+      color: #3f1d7a;
+      border: 1px solid #d9c5ff;
+    }
+
+    .blog-image-placeholder {
+      background: linear-gradient(135deg, #fee8ff, #d4c6ff, #b7adff);
+      border-radius: 36px;
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 2rem 0 2rem;
+      color: #2f255a;
+      font-weight: 600;
+      font-size: 1.1rem;
+      letter-spacing: 0.3px;
+      box-shadow: 0 8px 20px rgba(130, 80, 230, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .blog-image-placeholder i {
+      font-size: 2.4rem;
+      margin-right: 14px;
+      color: #6244b0;
+      filter: drop-shadow(0 2px 4px rgba(98, 68, 176, 0.3));
+    }
+
+    /* ----- like section – vibrant heart ----- */
+    .like-section {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      padding: 0.8rem 0 1.8rem;
+      border-bottom: 2px dashed #d7c9ff;
+      flex-wrap: wrap;
+    }
+
+    .like-btn {
+      background: none;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #2a1f4e;
+      padding: 0.5rem 1.6rem 0.5rem 1.2rem;
+      border-radius: 60px;
+      background: rgba(255, 240, 255, 0.7);
+      backdrop-filter: blur(4px);
+      transition: all 0.25s ease;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      border: 1px solid rgba(200, 170, 255, 0.4);
+      box-shadow: 0 4px 10px rgba(130, 80, 230, 0.08);
+    }
+
+    .like-btn i {
+      font-size: 1.8rem;
+      transition: transform 0.25s, color 0.25s;
+      color: #b197fc;
+    }
+
+    .like-btn.liked i {
+      color: #ff4d7a;
+      transform: scale(1.1);
+      filter: drop-shadow(0 0 6px #ff8aae);
+    }
+
+    .like-btn.liked {
+      background: #fff0f5;
+      border-color: #ffb3c9;
+      box-shadow: 0 4px 16px rgba(255, 77, 122, 0.2);
+    }
+
+    .like-btn:hover {
+      background: #f3eaff;
+      transform: translateY(-2px);
+    }
+
+    .like-btn:active {
+      transform: scale(0.94);
+    }
+
+    .like-count {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #2a1f4e;
+      background: #e7ddff;
+      padding: 0.3rem 1.2rem;
+      border-radius: 60px;
+      border: 1px solid #cbb5ff;
+      box-shadow: inset 0 1px 4px rgba(255, 255, 255, 0.7);
+    }
+
+    .like-extra {
+      font-size: 0.9rem;
+      color: #5f4d8a;
+      background: rgba(255, 255, 255, 0.4);
+      padding: 0.3rem 1rem;
+      border-radius: 40px;
+      backdrop-filter: blur(2px);
+    }
+
+    /* ----- comments section – colorful & airy ----- */
+    .comments-section {
+      margin-top: 2.4rem;
+    }
+
+    .comments-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.8rem;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+    }
+
+    .comments-header h3 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: #1f1b4b;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .comments-header h3 i {
+      color: #8b6fe0;
+      background: #ede7ff;
+      padding: 0.3rem 0.6rem;
+      border-radius: 40px;
+      font-size: 1.2rem;
+    }
+
+    .comments-header span {
+      background: linear-gradient(135deg, #d4c6ff, #b7adff);
+      color: #1f1b4b;
+      padding: 0.25rem 1.2rem;
+      border-radius: 40px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      border: 1px solid white;
+    }
+
+    /* comment list */
+    .comment-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
+      margin-bottom: 2.2rem;
+    }
+
+    .comment-item {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(4px);
+      padding: 1.2rem 1.4rem;
+      border-radius: 28px;
+      border: 1px solid rgba(215, 201, 255, 0.6);
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(130, 80, 230, 0.06);
+    }
+
+    .comment-item:hover {
+      background: rgba(255, 248, 255, 0.9);
+      border-color: #b79eff;
+      box-shadow: 0 8px 20px rgba(130, 80, 230, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .comment-avatar {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #d9c5ff, #b197fc);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #2a1f4e;
+      flex-shrink: 0;
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      box-shadow: 0 4px 8px rgba(130, 80, 230, 0.2);
+      border: 2px solid white;
+    }
+
+    .comment-content {
+      flex: 1;
+    }
+
+    .comment-author {
+      font-weight: 700;
+      color: #1f1b4b;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .comment-author .time {
+      font-weight: 400;
+      font-size: 0.75rem;
+      color: #6f5b94;
+      background: #f2ecff;
+      padding: 0.1rem 0.7rem;
+      border-radius: 30px;
+    }
+
+    .comment-text {
+      margin-top: 0.3rem;
+      font-size: 0.98rem;
+      color: #26243a;
+      word-break: break-word;
+      background: rgba(255, 255, 255, 0.3);
+      padding: 0.2rem 0.4rem;
+      border-radius: 12px;
+    }
+
+    /* comment form – gradient & vibrant */
+    .comment-form {
+      background: rgba(255, 248, 255, 0.7);
+      backdrop-filter: blur(4px);
+      border-radius: 36px;
+      padding: 1.5rem 1.8rem 2rem;
+      border: 1px solid rgba(200, 170, 255, 0.5);
+      box-shadow: 0 8px 24px rgba(130, 80, 230, 0.08);
+      margin-top: 0.8rem;
+    }
+
+    .comment-form .form-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .comment-form input,
+    .comment-form textarea {
+      font-family: 'Inter', sans-serif;
+      border: 1px solid #d4c6ff;
+      border-radius: 40px;
+      padding: 0.9rem 1.4rem;
+      font-size: 0.95rem;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(2px);
+      transition: 0.25s;
+      outline: none;
+      width: 100%;
+      color: #1f1b4b;
+    }
+
+    .comment-form input:focus,
+    .comment-form textarea:focus {
+      border-color: #8b6fe0;
+      box-shadow: 0 0 0 5px rgba(139, 111, 224, 0.2);
+      background: white;
+    }
+
+    .comment-form textarea {
+      min-height: 90px;
+      resize: vertical;
+      border-radius: 28px;
+    }
+
+    .comment-form .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 0.6rem;
+    }
+
+    .comment-form button {
+      background: linear-gradient(135deg, #7c5cfc, #a78bfa);
+      border: none;
+      color: white;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 0.8rem 2.6rem;
+      border-radius: 60px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 0.3px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      box-shadow: 0 6px 16px rgba(124, 92, 252, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .comment-form button i {
+      font-size: 1rem;
+    }
+
+    .comment-form button:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 12px 28px rgba(124, 92, 252, 0.4);
+      background: linear-gradient(135deg, #6b4ae0, #9a7cfc);
+    }
+
+    .comment-form button:active {
+      transform: scale(0.96);
+    }
+
+    .empty-comments {
+      text-align: center;
+      color: #5f4d8a;
+      padding: 1.6rem 0;
+      font-style: italic;
+      background: rgba(235, 225, 255, 0.3);
+      border-radius: 60px;
+      border: 2px dashed #cbb5ff;
+      font-weight: 500;
+      backdrop-filter: blur(2px);
+    }
+
+    /* delete button – colorful */
+    .delete-comment {
+      background: none;
+      border: none;
+      color: #9a85c7;
+      font-size: 0.9rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: 0.2s;
+      opacity: 0.6;
+      margin-left: 0.2rem;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .delete-comment:hover {
+      color: #d44b6a;
+      background: #ffe3eb;
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    hr {
+      border: none;
+      border-top: 2px dashed #d7c9ff;
+      margin: 1.2rem 0;
+    }
+
+    /* tiny extra flair */
+    .floating-dots {
+      position: relative;
+    }
+
+    .fa-regular,
+    .fa-solid {
+      pointer-events: none;
+    }
+
+    /* responsive */
+    @media (max-width: 480px) {
+      .blog-title {
+        font-size: 2rem;
+      }
+      .blog-container {
+        padding: 1.2rem;
+      }
+      .comment-form {
+        padding: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="blog-container" id="app">
+  <!-- header -->
+  <header class="blog-header">
+    <div class="blog-tag"><i class="fas fa-feather-alt" style="margin-right: 8px;"></i> Product · Design</div>
+    <h1 class="blog-title">Crafting digital experiences that matter</h1>
+    <div class="blog-meta">
+      <span><i class="fas fa-user-astronaut"></i> <span class="author">Elena Rossi</span></span>
+      <span><i class="fas fa-calendar-alt"></i> August 2, 2026</span>
+      <span><i class="fas fa-clock"></i> 6 min read</span>
+      <span><i class="fas fa-message"></i> 2 comments</span>
+    </div>
+  </header>
+
+  <!-- blog body -->
+  <div class="blog-body">
+    <p>
+      <span class="highlight">✨ Design is not just how it looks, but how it works.</span> 
+      In today’s fast-paced digital world, creating meaningful connections with users 
+      goes beyond aesthetics. It’s about empathy, clarity, and seamless interaction.
+    </p>
+    <div class="blog-image-placeholder">
+      <i class="fas fa-paint-brush"></i>  Illustration: design thinking process
+    </div>
+    <p>
+      We believe that every pixel has a purpose. This blog explores the intersection 
+      of user experience, interface design, and the human side of technology. 
+      From micro-interactions to accessibility, we dive deep into what makes products 
+      truly delightful.
+    </p>
+    <p>
+      <i class="fas fa-hand-peace" style="color: #8b6fe0; margin-right: 6px;"></i> 
+      Join the conversation — share your thoughts below, and if you enjoy this post, give it a like!
+    </p>
+  </div>
+
+  <!-- like section -->
+  <div class="like-section">
+    <button class="like-btn" id="likeButton" aria-label="like this post">
+      <i class="fa-regular fa-heart"></i> Like
+    </button>
+    <span class="like-count" id="likeCountDisplay">0</span>
+    <span class="like-extra"><i class="fas fa-arrow-right"></i> show your support</span>
+  </div>
+
+  <!-- comments section -->
+  <section class="comments-section">
+    <div class="comments-header">
+      <h3><i class="fas fa-comment-dots"></i> Comments</h3>
+      <span id="commentCounter">0</span>
+    </div>
+
+    <!-- comment list -->
+    <div class="comment-list" id="commentList">
+      <div class="empty-comments" id="emptyComments">
+        <i class="far fa-comment" style="margin-right: 8px;"></i> No comments yet. Start the conversation!
+      </div>
+    </div>
+
+    <!-- new comment form -->
+    <div class="comment-form">
+      <div class="form-row">
+        <input type="text" id="commentAuthorInput" placeholder="Your name" maxlength="40" value="Guest" />
+        <textarea id="commentTextInput" placeholder="Write your comment…" rows="2"></textarea>
+        <div class="form-actions">
+          <button id="submitCommentBtn"><i class="fas fa-paper-plane"></i> Post comment</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  (function() {
+    "use strict";
+
+    // ----- state -----
+    let likes = 0;
+    let comments = [];
+
+    // ----- DOM refs -----
+    const likeBtn = document.getElementById('likeButton');
+    const likeCountDisplay = document.getElementById('likeCountDisplay');
+    const commentList = document.getElementById('commentList');
+    const emptyComments = document.getElementById('emptyComments');
+    const commentCounter = document.getElementById('commentCounter');
+    const authorInput = document.getElementById('commentAuthorInput');
+    const textInput = document.getElementById('commentTextInput');
+    const submitBtn = document.getElementById('submitCommentBtn');
+
+    // ----- helper: render comments -----
+    function renderComments() {
+      // remove empty placeholder if exists
+      const emptyPlaceholder = document.getElementById('emptyComments');
+      if (emptyPlaceholder) emptyPlaceholder.remove();
+
+      commentList.innerHTML = '';
+
+      if (comments.length === 0) {
+        const emptyDiv = document.createElement('div');
+        emptyDiv.className = 'empty-comments';
+        emptyDiv.id = 'emptyComments';
+        emptyDiv.innerHTML = `<i class="far fa-comment" style="margin-right: 8px;"></i> No comments yet. Start the conversation!`;
+        commentList.appendChild(emptyDiv);
+        commentCounter.textContent = '0';
+        return;
+      }
+
+      // newest first
+      const sorted = [...comments].reverse();
+      for (const comment of sorted) {
+        const commentItem = document.createElement('div');
+        commentItem.className = 'comment-item';
+        commentItem.dataset.id = comment.id;
+
+        const avatar = document.createElement('div');
+        avatar.className = 'comment-avatar';
+        const initial = comment.author.trim().charAt(0).toUpperCase() || '?';
+        avatar.textContent = initial;
+
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'comment-content';
+
+        const authorDiv = document.createElement('div');
+        authorDiv.className = 'comment-author';
+        authorDiv.innerHTML = `
+          ${comment.author}
+          <span class="time">${comment.time}</span>
+          <button class="delete-comment" data-id="${comment.id}" aria-label="delete comment">
+            <i class="fas fa-times"></i>
+          </button>
+        `;
+
+        const textP = document.createElement('div');
+        textP.className = 'comment-text';
+        textP.textContent = comment.text;
+
+        contentDiv.appendChild(authorDiv);
+        contentDiv.appendChild(textP);
+        commentItem.appendChild(avatar);
+        commentItem.appendChild(contentDiv);
+        commentList.appendChild(commentItem);
+      }
+
+      commentCounter.textContent = comments.length;
+
+      document.querySelectorAll('.delete-comment').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          const id = Number(this.dataset.id);
+          deleteCommentById(id);
+        });
+      });
+    }
+
+    // ----- delete comment by id -----
+    function deleteCommentById(id) {
+      comments = comments.filter(c => c.id !== id);
+      renderComments();
+      saveToLocalStorage();
+    }
+
+    // ----- add new comment -----
+    function addComment(author, text) {
+      if (!author.trim() || !text.trim()) {
+        alert('✨ Please enter your name and comment.');
+        return false;
+      }
+
+      const newComment = {
+        id: Date.now() + Math.floor(Math.random() * 1000),
+        author: author.trim().substring(0, 40),
+        text: text.trim().substring(0, 500),
+        time: new Date().toLocaleString('en-US', { 
+          month: 'short', day: 'numeric', year: 'numeric', 
+          hour: '2-digit', minute: '2-digit' 
+        })
+      };
+
+      comments.push(newComment);
+      renderComments();
+      saveToLocalStorage();
+      textInput.value = '';
+      return true;
+    }
+
+    // ----- like logic -----
+    function toggleLike() {
+      const isLiked = likeBtn.classList.contains('liked');
+      if (isLiked) {
+        likes = Math.max(0, likes - 1);
+        likeBtn.classList.remove('liked');
+        likeBtn.innerHTML = `<i class="fa-regular fa-heart"></i> Like`;
+      } else {
+        likes += 1;
+        likeBtn.classList.add('liked');
+        likeBtn.innerHTML = `<i class="fa-solid fa-heart" style="color: #ff4d7a;"></i> Liked`;
+      }
+      likeCountDisplay.textContent = likes;
+      saveToLocalStorage();
+    }
+
+    // ----- localStorage persistence -----
+    function saveToLocalStorage() {
+      try {
+        const data = { likes, comments };
+        localStorage.setItem('blog_comments_likes_data', JSON.stringify(data));
+      } catch (e) { /* ignore */ }
+    }
+
+    function loadFromLocalStorage() {
+      try {
+        const raw = localStorage.getItem('blog_comments_likes_data');
+        if (!raw) return false;
+        const data = JSON.parse(raw);
+        if (data.likes !== undefined && typeof data.likes === 'number') likes = data.likes;
+        if (Array.isArray(data.comments)) comments = data.comments;
+        return true;
+      } catch (e) { return false; }
+    }
+
+    // ----- init -----
+    function init() {
+      const hasData = loadFromLocalStorage();
+
+      if (!hasData || comments.length === 0) {
+        comments = [
+          { id: 1001, author: 'Mia Chen', text: 'This is such a thoughtful piece. Really resonates with me!', time: 'Aug 2, 2026, 10:15 AM' },
+          { id: 1002, author: 'James Park', text: 'I love the focus on empathy in design. Looking forward to more.', time: 'Aug 2, 2026, 12:40 PM' }
+        ];
+        likes = 12;
+      }
+
+      likeCountDisplay.textContent = likes;
+      if (likes > 0) {
+        likeBtn.classList.add('liked');
+        likeBtn.innerHTML = `<i class="fa-solid fa-heart" style="color: #ff4d7a;"></i> Liked`;
+      } else {
+        likeBtn.classList.remove('liked');
+        likeBtn.innerHTML = `<i class="fa-regular fa-heart"></i> Like`;
+      }
+
+      renderComments();
+
+      likeBtn.addEventListener('click', toggleLike);
+
+      submitBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const author = authorInput.value.trim() || 'Guest';
+        const text = textInput.value.trim();
+        if (addComment(author, text)) {
+          if (!authorInput.value.trim()) authorInput.value = 'Guest';
+        }
+      });
+
+      textInput.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+          e.preventDefault();
+          submitBtn.click();
+        }
+      });
+
+      if (!authorInput.value.trim()) authorInput.value = 'Guest';
+    }
+
+    init();
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>E-Store · premium shop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <!-- ===== NAVIGATION ===== -->
+    <header class="navbar">
+        <div class="container nav-wrapper">
+            <div class="logo" id="logoHome">
+                <i class="fas fa-store-alt"></i> E-Store
+            </div>
+            <div class="nav-links">
+                <a href="#" data-filter="all" class="active">Home</a>
+                <a href="#" data-filter="new">New</a>
+                <a href="#" data-filter="men">Men</a>
+                <a href="#" data-filter="women">Women</a>
+                <a href="#" data-filter="accessories">Accessories</a>
+            </div>
+            <div class="nav-icons">
+                <button class="icon-btn" id="searchIcon" aria-label="Search">
+                    <i class="fas fa-search"></i>
+                </button>
+                <div class="profile-dropdown" id="profileDropdown">
+                    <button class="icon-btn" id="profileIcon" aria-label="Profile">
+                        <i class="fas fa-user-circle"></i>
+                    </button>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <a href="#" id="dropdownAccount"><i class="fas fa-user"></i> My Account</a>
+                        <a href="#" id="dropdownOrders"><i class="fas fa-list-ul"></i> Orders</a>
+                        <a href="#" id="dropdownWishlist"><i class="fas fa-heart"></i> Wishlist</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" id="dropdownSignOut"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+                    </div>
+                </div>
+                <div class="cart-icon" id="cartIcon">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-badge" id="cartBadge">0</span>
+                </div>
+                <button class="btn-outline" id="signInBtn">Sign In</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- ===== HERO ===== -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Premium <span>collection</span> <br />for every day</h1>
+                <p>Discover the finest selection of modern essentials. Crafted with quality, designed for life.</p>
+                <button class="btn-primary" id="exploreBtn">
+                    Explore now <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+            <div class="hero-image">
+                <i class="fas fa-bag-shopping"></i> <i class="fas fa-tshirt"></i>
+            </div>
+        </section>
+
+        <!-- ===== FILTER BAR ===== -->
+        <div class="filter-bar">
+            <div class="filter-tabs">
+                <span class="filter-tab active" data-filter="all">All</span>
+                <span class="filter-tab" data-filter="men">Men</span>
+                <span class="filter-tab" data-filter="women">Women</span>
+                <span class="filter-tab" data-filter="accessories">Accessories</span>
+                <span class="filter-tab" data-filter="sale">Sale</span>
+                <span class="filter-tab" data-filter="wishlist"><i class="far fa-heart" style="margin-right:6px;"></i>Favorites</span>
+            </div>
+            <div class="filter-sort">
+                <label for="sortSelect"><i class="fas fa-arrow-up-wide-short"></i> Sort</label>
+                <select id="sortSelect">
+                    <option value="featured">Featured</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="name">Name A-Z</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- ===== PRODUCT GRID ===== -->
+        <div class="product-grid" id="productGrid"></div>
+
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="container footer">
+        <span>© 2026 E-Store — premium e‑commerce</span>
+        <div class="footer-links">
+            <a href="#" id="secureLink"><i class="fas fa-credit-card"></i> secure checkout</a>
+            <a href="#" id="returnsLink"><i class="fas fa-truck"></i> free returns</a>
+        </div>
+    </footer>
+
+    <!-- ===== CART PANEL ===== -->
+    <div class="cart-overlay" id="cartOverlay"></div>
+    <div class="cart-panel" id="cartPanel">
+        <div class="cart-header">
+            <h2><i class="fas fa-shopping-bag" style="margin-right:10px;"></i>Your cart</h2>
+            <button class="cart-close" id="closeCart"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <div class="cart-empty">
+                <i class="fas fa-bag-shopping"></i>
+                <p>Your cart is empty</p>
+            </div>
+        </div>
+        <div id="cartFooter">
+            <div class="cart-total">
+                <span>Total</span>
+                <span id="cartTotalPrice">$0.00</span>
+            </div>
+            <button class="cart-checkout" id="checkoutBtn"><i class="fas fa-lock" style="margin-right:12px;"></i>Checkout</button>
+        </div>
+    </div>
+
+    <!-- ===== SEARCH OVERLAY ===== -->
+    <div class="search-overlay" id="searchOverlay">
+        <div class="search-modal">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Search for products…" autofocus />
+            <button class="search-close" id="searchClose"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="search-results-hint" id="searchHint">Found <span id="searchCount">0</span> results</div>
+    </div>
+
+    <!-- ===== SIGN-IN MODAL ===== -->
+    <div class="auth-overlay" id="authOverlay">
+        <div class="auth-modal">
+            <button class="auth-close" id="authClose"><i class="fas fa-times"></i></button>
+            <h2>Welcome back</h2>
+            <p class="sub">Sign in to access your account and orders.</p>
+            <form id="signInForm" autocomplete="off">
+                <label for="authEmail">Email address</label>
+                <input type="email" id="authEmail" placeholder="you@example.com" required />
+                <label for="authPassword">Password</label>
+                <input type="password" id="authPassword" placeholder="••••••••" required />
+                <button type="submit" class="btn-signin"><i class="fas fa-arrow-right" style="margin-right:10px;"></i>Sign In</button>
+            </form>
+            <div class="auth-footer">
+                Don't have an account? <a href="#" id="authSignupLink">Create one</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div class="toast" id="toast"><i class="fas fa-check-circle"></i> <span id="toastMsg">Added to cart</span></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

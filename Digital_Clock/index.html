@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digital Clock</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="clock-card">
+    <!-- header -->
+    <div class="header">
+      <h1>🕐 Digital Clock</h1>
+      <div class="badge-group">
+        <span class="badge live">● live</span>
+      </div>
+    </div>
+    <div class="subhead">
+      A clean, real-time digital clock with date &amp; format controls.
+    </div>
+
+    <!-- clock display -->
+    <div class="clock-display">
+      <div class="time-main" id="timeDisplay">
+        <span id="hours">00</span>
+        <span class="separator">:</span>
+        <span id="minutes">00</span>
+        <span class="separator">:</span>
+        <span class="seconds" id="seconds">00</span>
+        <span id="ampm" style="font-size:1.2rem;font-weight:400;color:#7a8fc9;margin-left:0.2rem;"></span>
+      </div>
+      <div class="date-display">
+        <span class="date-text" id="dateDisplay">January 1, 2026</span>
+        <span class="day-text" id="dayDisplay">MON</span>
+      </div>
+    </div>
+
+    <!-- controls -->
+    <div class="clock-controls">
+      <div class="format-toggle" id="formatToggle">
+        <button class="active" data-format="12">12h</button>
+        <button data-format="24">24h</button>
+      </div>
+      <div class="timezone-info">
+        ⏳ <span id="timezone">UTC</span>
+      </div>
+    </div>
+
+    <!-- footer -->
+    <div class="footer">
+      <div class="status-text">
+        <span class="highlight">●</span> updating every second
+      </div>
+      <div class="action-group">
+        <button class="btn-icon" id="refreshBtn">⟳ Refresh</button>
+        <button class="btn-icon" id="fullscreenBtn">⛶ Fullscreen</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

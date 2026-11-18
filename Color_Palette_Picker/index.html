@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Color Palette Picker</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="palette-card">
+    <!-- header -->
+    <div class="header">
+      <h1>🎨 Color Palette</h1>
+      <div class="badge-group">
+        <span class="badge live">● live</span>
+      </div>
+    </div>
+    <div class="subhead">
+      Generate random color palettes — click any color to copy its hex code.
+    </div>
+
+    <!-- palette -->
+    <div class="palette-container" id="paletteContainer">
+      <!-- colors will be generated here -->
+    </div>
+
+    <!-- controls -->
+    <div class="controls">
+      <button class="btn-primary" id="generateBtn">
+        <span>✨</span> Generate Palette
+      </button>
+      <button class="btn-secondary" id="lockAllBtn">🔒 Lock All</button>
+      <button class="btn-secondary" id="unlockAllBtn">🔓 Unlock All</button>
+    </div>
+  </div>
+
+  <!-- toast -->
+  <div class="toast" id="toast"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Countdown Timer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="card">
+    <!-- header -->
+    <div class="header">
+      <h1>⏳ Countdown</h1>
+      <span class="badge">live</span>
+    </div>
+    <div class="subhead">
+      Set a target date &amp; watch the time melt away — every second counts.
+    </div>
+
+    <!-- event title -->
+    <div class="event-area">
+      <span class="event-label">📌 event</span>
+      <input type="text" id="eventTitle" placeholder="Launch / Birthday / Deadline" value="Launch 🚀" />
+    </div>
+
+    <!-- picker + start -->
+    <div class="picker-grid">
+      <div class="picker-item">
+        <label for="targetDate">📅 date</label>
+        <input type="date" id="targetDate" />
+      </div>
+      <div class="picker-item">
+        <label for="targetTime">⏰ time</label>
+        <input type="time" id="targetTime" step="1" />
+      </div>
+      <button class="btn-start" id="startBtn">▶ Start</button>
+    </div>
+
+    <!-- timer display -->
+    <div class="timer-grid" id="timerGrid">
+      <div class="time-block"><span class="time-number" id="daysDisplay">00</span><span class="time-label">Days</span></div>
+      <div class="time-block"><span class="time-number" id="hoursDisplay">00</span><span class="time-label">Hours</span></div>
+      <div class="time-block"><span class="time-number" id="minutesDisplay">00</span><span class="time-label">Minutes</span></div>
+      <div class="time-block"><span class="time-number" id="secondsDisplay">00</span><span class="time-label">Seconds</span></div>
+    </div>
+
+    <!-- footer: status + actions -->
+    <div class="footer-actions">
+      <div class="status-wrapper">
+        <div class="status-message" id="statusMsg">⏱️ set target &amp; press Start</div>
+      </div>
+      <div class="action-group">
+        <button class="btn-secondary" id="resetBtn">⟲ Reset</button>
+        <button class="btn-secondary" id="nowBtn">📍 Now + 1h</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
