@@ -1,0 +1,728 @@
+<!-- ============================================================ -->
+<!-- FILE: community.html                                         -->
+<!-- ============================================================ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RecipeVerse · Community</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        .page-header {
+            padding: 30px 0 10px;
+        }
+        .page-header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            color: #0b182b;
+        }
+        .page-header p {
+            color: #40546b;
+            font-size: 16px;
+            margin-top: 4px;
+        }
+        .community-stats {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            background: #fff;
+            padding: 20px 32px;
+            border-radius: 40px;
+            margin: 16px 0 30px;
+            border: 1px solid #f0f3f9;
+        }
+        .community-stats .stat-item {
+            text-align: center;
+        }
+        .community-stats .stat-item .num {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0b182b;
+        }
+        .community-stats .stat-item .label {
+            font-size: 13px;
+            color: #5c738d;
+        }
+        .community-stats .stat-item i {
+            color: #e85d3a;
+            font-size: 20px;
+            display: block;
+            margin-bottom: 2px;
+        }
+        .review-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 28px;
+            margin: 20px 0 50px;
+        }
+        .review-card {
+            background: #fff;
+            border-radius: 28px;
+            padding: 24px 26px 28px;
+            border: 1px solid #f0f3f9;
+            transition: 0.2s;
+        }
+        .review-card:hover {
+            border-color: #dce4f0;
+        }
+        .review-card .review-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 12px;
+        }
+        .review-card .review-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 24px;
+            background: #f2f6fd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #1d304a;
+            flex-shrink: 0;
+        }
+        .review-card .review-name {
+            font-weight: 700;
+            color: #0b182b;
+            font-size: 16px;
+        }
+        .review-card .review-date {
+            font-size: 12px;
+            color: #8a9bb0;
+        }
+        .review-card .review-stars {
+            color: #f5b342;
+            letter-spacing: 2px;
+            font-size: 14px;
+        }
+        .review-card .review-text {
+            font-size: 14px;
+            color: #40546b;
+            line-height: 1.6;
+            margin: 8px 0 12px;
+        }
+        .review-card .review-recipe {
+            font-size: 13px;
+            color: #e85d3a;
+            font-weight: 500;
+        }
+        .review-card .review-recipe i {
+            margin-right: 4px;
+        }
+        .community-cta {
+            background: linear-gradient(145deg, #0b182b, #1a2f4a);
+            border-radius: 52px;
+            padding: 40px 48px;
+            color: #fff;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            margin: 20px 0 40px;
+        }
+        .community-cta h2 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .community-cta p {
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+        .community-cta .btn-cta {
+            background: #e85d3a;
+            color: #fff;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .community-cta .btn-cta:hover {
+            background: #fff;
+            color: #0b182b;
+        }
+
+        /* ===== SHARE MODAL ===== */
+        .share-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.35s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .share-modal-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .share-modal {
+            background: #ffffff;
+            max-width: 520px;
+            width: 100%;
+            border-radius: 48px;
+            padding: 36px 40px 44px;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.15);
+            transform: scale(0.94) translateY(24px);
+            transition: 0.35s cubic-bezier(0.2, 0.9, 0.3, 1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .share-modal-overlay.open .share-modal {
+            transform: scale(1) translateY(0);
+        }
+        .share-modal .share-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .share-modal .share-header h2 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #0b182b;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .share-modal .share-header h2 i {
+            color: #e85d3a;
+        }
+        .share-modal .share-close {
+            background: #f1f4fa;
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 60px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #1f2f44;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .share-modal .share-close:hover {
+            background: #e3eaf5;
+        }
+        .share-modal .share-subtitle {
+            font-size: 14px;
+            color: #5c738d;
+            margin-bottom: 24px;
+        }
+
+        /* share options grid */
+        .share-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+        .share-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 8px;
+            border-radius: 20px;
+            border: 1px solid #f0f3f9;
+            background: #fafbfd;
+            cursor: pointer;
+            transition: 0.25s;
+            text-decoration: none;
+            color: #0b182b;
+        }
+        .share-option:hover {
+            transform: translateY(-4px);
+            border-color: #dce4f0;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.04);
+        }
+        .share-option i {
+            font-size: 28px;
+        }
+        .share-option span {
+            font-size: 11px;
+            font-weight: 600;
+            color: #40546b;
+            letter-spacing: 0.2px;
+        }
+        .share-option.facebook i {
+            color: #1877f2;
+        }
+        .share-option.twitter i {
+            color: #000000;
+        }
+        .share-option.whatsapp i {
+            color: #25d366;
+        }
+        .share-option.email i {
+            color: #ea4335;
+        }
+        .share-option.copy-link i {
+            color: #0b182b;
+        }
+        .share-option.copy-link:hover i {
+            color: #e85d3a;
+        }
+        .share-option.copy-link.copied i {
+            color: #2e7d32;
+        }
+        .share-option.copy-link.copied span {
+            color: #2e7d32;
+        }
+
+        /* share link input */
+        .share-link-area {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            background: #f2f6fd;
+            border-radius: 60px;
+            padding: 4px 4px 4px 20px;
+            border: 1px solid #eef2f7;
+        }
+        .share-link-area input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 10px 0;
+            font-size: 13px;
+            color: #0b182b;
+            outline: none;
+            min-width: 0;
+        }
+        .share-link-area input::placeholder {
+            color: #8a9bb0;
+        }
+        .share-link-area .btn-copy-link {
+            background: #0b182b;
+            color: #fff;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+        .share-link-area .btn-copy-link:hover {
+            background: #e85d3a;
+        }
+        .share-link-area .btn-copy-link.copied {
+            background: #2e7d32;
+        }
+
+        .toast-message {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: #0b182b;
+            color: #fff;
+            padding: 14px 32px;
+            border-radius: 60px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.4s cubic-bezier(0.2, 0.9, 0.3, 1);
+            z-index: 1100;
+            pointer-events: none;
+        }
+        .toast-message.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+        .toast-message i {
+            margin-right: 10px;
+            color: #e85d3a;
+        }
+
+        @media (max-width: 480px) {
+            .share-options {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .share-modal {
+                padding: 24px 20px 32px;
+            }
+            .share-modal .share-header h2 {
+                font-size: 20px;
+            }
+            .share-link-area {
+                flex-wrap: wrap;
+                padding: 12px;
+                border-radius: 28px;
+            }
+            .share-link-area input {
+                width: 100%;
+                padding: 8px 0;
+            }
+            .share-link-area .btn-copy-link {
+                width: 100%;
+                justify-content: center;
+            }
+            .community-cta {
+                padding: 28px 24px;
+                flex-direction: column;
+                text-align: center;
+                gap: 16px;
+            }
+            .community-cta .btn-cta {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        @media (max-width: 400px) {
+            .share-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="container nav-wrapper">
+            <div class="logo" onclick="location.href='index.html'">
+                <i class="fas fa-utensils"></i> RecipeVerse
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="recipes.html">Recipes</a>
+                <a href="chef.html">Chef</a>
+                <a href="collections.html">Collections</a>
+                <a href="community.html" class="active">Community</a>
+            </div>
+            <div class="nav-actions">
+                <div class="search-wrap">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search community..." id="searchInput" />
+                </div>
+                <button class="btn-outline" id="favoritesBtn">
+                    <i class="far fa-heart"></i> Favorites
+                    <span id="favCount">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h1>Community</h1>
+            <p>Join thousands of food lovers sharing their passion for cooking.</p>
+        </div>
+
+        <div class="community-stats">
+            <div class="stat-item">
+                <i class="fas fa-users"></i>
+                <div class="num">12.4k</div>
+                <div class="label">Members</div>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-comments"></i>
+                <div class="num">3.8k</div>
+                <div class="label">Discussions</div>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-star"></i>
+                <div class="num">4.8</div>
+                <div class="label">Avg. Rating</div>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-utensils"></i>
+                <div class="num">1.2k</div>
+                <div class="label">Recipes Shared</div>
+            </div>
+        </div>
+
+        <div class="review-grid" id="reviewGrid"></div>
+
+        <div class="community-cta">
+            <div>
+                <h2>Share Your Recipe</h2>
+                <p>Have a signature dish? Share it with the community and get feedback from fellow food lovers.</p>
+            </div>
+            <button class="btn-cta" id="openShareModalBtn"><i class="fas fa-upload"></i> Share Recipe</button>
+        </div>
+    </main>
+
+    <footer class="container footer">
+        <span>© 2026 RecipeVerse — cook with passion</span>
+        <div class="footer-links">
+            <a href="#" data-footer-filter="healthy"><i class="fas fa-seedling"></i> healthy</a>
+            <span class="footer-divider">·</span>
+            <a href="#" data-footer-filter="quick"><i class="fas fa-clock"></i> quick</a>
+            <span class="footer-divider">·</span>
+            <a href="#" data-footer-filter="delicious"><i class="fas fa-heart"></i> delicious</a>
+        </div>
+    </footer>
+
+    <!-- ===== SHARE MODAL ===== -->
+    <div class="share-modal-overlay" id="shareModalOverlay">
+        <div class="share-modal">
+            <div class="share-header">
+                <h2><i class="fas fa-share-alt"></i> Share Recipe</h2>
+                <button class="share-close" id="shareModalClose"><i class="fas fa-times"></i></button>
+            </div>
+            <p class="share-subtitle">Share your delicious recipe with friends, family, and the world!</p>
+
+            <div class="share-options">
+                <!-- Facebook -->
+                <a href="#" class="share-option facebook" data-share="facebook">
+                    <i class="fab fa-facebook"></i>
+                    <span>Facebook</span>
+                </a>
+                <!-- Twitter / X -->
+                <a href="#" class="share-option twitter" data-share="twitter">
+                    <i class="fab fa-x-twitter"></i>
+                    <span>Twitter</span>
+                </a>
+                <!-- WhatsApp -->
+                <a href="#" class="share-option whatsapp" data-share="whatsapp">
+                    <i class="fab fa-whatsapp"></i>
+                    <span>WhatsApp</span>
+                </a>
+                <!-- Email -->
+                <a href="#" class="share-option email" data-share="email">
+                    <i class="fas fa-envelope"></i>
+                    <span>Email</span>
+                </a>
+                <!-- Copy Link (spans full width on small screens via grid) -->
+                <div class="share-option copy-link" id="copyLinkOption" style="grid-column: span 1;">
+                    <i class="fas fa-link"></i>
+                    <span>Copy Link</span>
+                </div>
+            </div>
+
+            <div class="share-link-area">
+                <input type="text" id="shareLinkInput" value="https://recipeverse.app/share/your-recipe" readonly />
+                <button class="btn-copy-link" id="copyLinkBtn"><i class="fas fa-copy"></i> Copy</button>
+            </div>
+            <p style="font-size: 12px; color: #8a9bb0; margin-top: 12px; text-align: center;">
+                <i class="fas fa-shield-alt"></i> Your recipe link is private and only visible to people you share it with.
+            </p>
+        </div>
+    </div>
+
+    <!-- Toast notification -->
+    <div class="toast-message" id="toastMessage">
+        <i class="fas fa-check-circle"></i> <span id="toastText">Copied to clipboard!</span>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        (function() {
+            "use strict";
+
+            // ---------- Reviews ----------
+            const reviews = [
+                { name: "Emma W.", date: "2 days ago", stars: 5, text: "The Maple Glazed Salmon was absolutely incredible! My family couldn't get enough. Will definitely make this again.", recipe: "Maple Glazed Salmon", avatar: "fa-user" },
+                { name: "Liam T.", date: "1 week ago", stars: 4, text: "Loved the Quinoa Buddha Bowl. So fresh and filling. I added extra tahini dressing – perfection!", recipe: "Quinoa Buddha Bowl", avatar: "fa-user" },
+                { name: "Sophia R.", date: "2 weeks ago", stars: 5, text: "The Avocado Toast Deluxe is my new go-to breakfast. So simple yet so flavorful. Highly recommend!", recipe: "Avocado Toast Deluxe", avatar: "fa-user" },
+                { name: "Noah K.", date: "3 weeks ago", stars: 5, text: "Thai Green Curry was a hit at my dinner party. Everyone asked for the recipe. Restaurant quality!", recipe: "Thai Green Curry", avatar: "fa-user" },
+                { name: "Mia C.", date: "1 month ago", stars: 4, text: "Creamy Mushroom Pasta is pure comfort food. Rich, creamy, and packed with umami flavor. So good!", recipe: "Creamy Mushroom Pasta", avatar: "fa-user" },
+                { name: "Oliver P.", date: "1 month ago", stars: 5, text: "The Chocolate Lava Cake was divine! The molten center was perfect. A showstopper dessert for sure.", recipe: "Chocolate Lava Cake", avatar: "fa-user" }
+            ];
+
+            const grid = document.getElementById('reviewGrid');
+
+            function renderReviews() {
+                let html = '';
+                reviews.forEach(r => {
+                    const stars = '★'.repeat(r.stars) + '☆'.repeat(5 - r.stars);
+                    html += `
+                        <div class="review-card">
+                            <div class="review-header">
+                                <div class="review-avatar"><i class="fas ${r.avatar}"></i></div>
+                                <div>
+                                    <div class="review-name">${r.name}</div>
+                                    <div class="review-date">${r.date}</div>
+                                </div>
+                            </div>
+                            <div class="review-stars">${stars}</div>
+                            <div class="review-text">"${r.text}"</div>
+                            <div class="review-recipe"><i class="fas fa-utensils"></i> ${r.recipe}</div>
+                        </div>
+                    `;
+                });
+                grid.innerHTML = html;
+            }
+            renderReviews();
+
+            // ---------- SHARE MODAL ----------
+            const shareModalOverlay = document.getElementById('shareModalOverlay');
+            const shareModalClose = document.getElementById('shareModalClose');
+            const openShareModalBtn = document.getElementById('openShareModalBtn');
+            const shareLinkInput = document.getElementById('shareLinkInput');
+            const copyLinkBtn = document.getElementById('copyLinkBtn');
+            const copyLinkOption = document.getElementById('copyLinkOption');
+            const toastMessage = document.getElementById('toastMessage');
+            const toastText = document.getElementById('toastText');
+
+            // Share URL – you can customize this
+            const SHARE_URL = 'https://recipeverse.app/share/your-recipe';
+            const SHARE_TITLE = 'Check out this amazing recipe on RecipeVerse!';
+            const SHARE_TEXT = 'I just discovered this incredible recipe on RecipeVerse – you have to try it!';
+
+            // Open modal
+            function openShareModal() {
+                shareLinkInput.value = SHARE_URL;
+                shareModalOverlay.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+
+            // Close modal
+            function closeShareModal() {
+                shareModalOverlay.classList.remove('open');
+                document.body.style.overflow = '';
+                // Reset copy button state
+                copyLinkBtn.textContent = 'Copy';
+                copyLinkBtn.className = 'btn-copy-link';
+                copyLinkOption.classList.remove('copied');
+            }
+
+            openShareModalBtn.addEventListener('click', openShareModal);
+            shareModalClose.addEventListener('click', closeShareModal);
+            shareModalOverlay.addEventListener('click', function(e) {
+                if (e.target === shareModalOverlay) closeShareModal();
+            });
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeShareModal();
+            });
+
+            // ---------- Copy to clipboard ----------
+            function copyToClipboard(text) {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(text).then(() => {
+                        showToast('✅ Copied to clipboard!');
+                        updateCopyButtonState(true);
+                    }).catch(() => {
+                        fallbackCopy(text);
+                    });
+                } else {
+                    fallbackCopy(text);
+                }
+            }
+
+            function fallbackCopy(text) {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                textarea.style.left = '-9999px';
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast('✅ Copied to clipboard!');
+                    updateCopyButtonState(true);
+                } catch (err) {
+                    showToast('❌ Could not copy. Please copy manually.');
+                }
+                document.body.removeChild(textarea);
+            }
+
+            function updateCopyButtonState(copied) {
+                if (copied) {
+                    copyLinkBtn.textContent = 'Copied!';
+                    copyLinkBtn.className = 'btn-copy-link copied';
+                    copyLinkOption.classList.add('copied');
+                    setTimeout(() => {
+                        copyLinkBtn.textContent = 'Copy';
+                        copyLinkBtn.className = 'btn-copy-link';
+                        copyLinkOption.classList.remove('copied');
+                    }, 3000);
+                }
+            }
+
+            // Copy button in link area
+            copyLinkBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                copyToClipboard(shareLinkInput.value);
+            });
+
+            // Copy link option in grid
+            copyLinkOption.addEventListener('click', function(e) {
+                e.preventDefault();
+                copyToClipboard(shareLinkInput.value);
+            });
+
+            // ---------- Social sharing ----------
+            function shareVia(platform) {
+                const url = encodeURIComponent(SHARE_URL);
+                const title = encodeURIComponent(SHARE_TITLE);
+                const text = encodeURIComponent(SHARE_TEXT);
+                let shareUrl = '';
+
+                switch (platform) {
+                    case 'facebook':
+                        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`;
+                        break;
+                    case 'twitter':
+                        shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+                        break;
+                    case 'whatsapp':
+                        shareUrl = `https://api.whatsapp.com/send?text=${text}%20${url}`;
+                        break;
+                    case 'email':
+                        shareUrl = `mailto:?subject=${title}&body=${text}%0A%0A${url}`;
+                        break;
+                    default:
+                        return;
+                }
+
+                // Open in new window/tab
+                if (shareUrl) {
+                    window.open(shareUrl, '_blank', 'width=600,height=500,scrollbars=yes');
+                    showToast(`📤 Opening ${platform}...`);
+                    // Close modal after a short delay
+                    setTimeout(closeShareModal, 600);
+                }
+            }
+
+            // Attach share events to all share options
+            document.querySelectorAll('.share-option[data-share]').forEach(el => {
+                el.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const platform = this.dataset.share;
+                    shareVia(platform);
+                });
+            });
+
+            // ---------- Toast system ----------
+            let toastTimer = null;
+
+            function showToast(message) {
+                toastText.textContent = message;
+                toastMessage.classList.add('show');
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(() => {
+                    toastMessage.classList.remove('show');
+                }, 3000);
+            }
+
+            // ---------- Make share function globally accessible ----------
+            window.openShareModal = openShareModal;
+            window.closeShareModal = closeShareModal;
+
+        })();
+    </script>
+</body>
+</html>

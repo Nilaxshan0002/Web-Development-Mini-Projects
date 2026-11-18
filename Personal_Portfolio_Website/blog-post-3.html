@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JavaScript ES6 Features - Joe Greyson</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <!-- ===== NAVIGATION ===== -->
+    <nav>
+        <div class="logo">Joe Greyson</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="projects.html">Projects</a></li>
+            <li><a href="blog.html" class="active">Blog</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <button id="theme-toggle">🌙</button>
+    </nav>
+
+    <!-- ===== BLOG POST ===== -->
+    <section class="blog-post-page">
+        <div class="blog-post-container">
+            <div class="blog-post-header">
+                <span class="blog-tag">JavaScript</span>
+                <h1>JavaScript ES6 Features You Must Know</h1>
+                <p class="blog-post-meta">📅 1 week ago • ⏱️ 6 min read • By Joe Greyson</p>
+                <img src="images/Blog 3.webp" alt="Blog Post" class="blog-post-image" />
+            </div>
+
+            <div class="blog-post-body">
+                <h2>Introduction</h2>
+                <p>Every journey begins with a small step toward a bigger goal. Success is achieved through patience, determination, and continuous effort.</p>
+
+                <h2>1. Arrow Functions</h2>
+                <p>Arrow functions provide a concise way to write functions in JavaScript. They also handle the 'this' keyword differently.</p>
+                <pre><code>// Traditional function
+function add(a, b) {
+    return a + b;
+}
+
+// Arrow function
+const add = (a, b) => a + b;</code></pre>
+
+                <h2>2. Template Literals</h2>
+                <p>Template literals allow you to embed expressions in strings using backticks and ${} syntax.</p>
+                <pre><code>const name = 'John';
+const greeting = `Hello, ${name}!`;</code></pre>
+
+                <h2>3. Destructuring</h2>
+                <p>Destructuring allows you to extract values from arrays or objects into distinct variables.</p>
+                <pre><code>const user = { name: 'John', age: 30 };
+const { name, age } = user;</code></pre>
+
+                <h2>4. Spread Operator</h2>
+                <p>The spread operator expands an array or object into individual elements.</p>
+                <pre><code>const arr1 = [1, 2, 3];
+const arr2 = [...arr1, 4, 5];</code></pre>
+
+                <h2>5. Classes</h2>
+                <p>JavaScript classes provide a cleaner way to create objects and handle inheritance.</p>
+
+                <h2>Conclusion</h2>
+                <p>With confidence and hard work, we can overcome challenges and create new opportunities for the future.</p>
+            </div>
+
+            <div class="blog-post-footer">
+                <a href="blog.html" class="btn btn-secondary">← Back to Blog</a>
+                <a href="blog-post-4.html" class="btn btn-primary">Next Post →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <p>&copy; 2026 Joe Greyson. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

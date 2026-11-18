@@ -1,0 +1,299 @@
+<!-- ============================================================ -->
+<!-- FILE: index.html (Home) - FINAL, fully functional            -->
+<!-- ============================================================ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RecipeVerse · Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        /* ----- Home page specific enhancements ----- */
+        .home-stats {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            background: #fff;
+            padding: 14px 28px;
+            border-radius: 40px;
+            margin: -10px 0 24px;
+            border: 1px solid #f0f3f9;
+            font-size: 14px;
+            color: #40546b;
+        }
+        .home-stats .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .home-stats .stat-item i {
+            color: #e85d3a;
+            font-size: 16px;
+        }
+        .home-stats .stat-item strong {
+            color: #0b182b;
+        }
+
+        .hero-recipe .hero-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+        .hero-recipe .hero-actions .btn-outline-hero {
+            border: 1.5px solid #dce3ed;
+            padding: 14px 32px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 14px;
+            background: transparent;
+            transition: 0.2s;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #2f405a;
+        }
+        .hero-recipe .hero-actions .btn-outline-hero:hover {
+            border-color: #e85d3a;
+            color: #e85d3a;
+            background: rgba(232, 93, 58, 0.02);
+        }
+
+        /* Featured badge animation */
+        .hero-recipe .tag {
+            animation: pulse-badge 2s ease-in-out infinite;
+        }
+        @keyframes pulse-badge {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        @media (max-width: 768px) {
+            .home-stats {
+                justify-content: center;
+                padding: 12px 20px;
+                gap: 16px;
+            }
+            .home-stats .stat-item {
+                font-size: 13px;
+            }
+            .hero-recipe .hero-actions {
+                justify-content: center;
+            }
+            .hero-recipe .hero-actions .btn-outline-hero {
+                padding: 12px 24px;
+                font-size: 13px;
+            }
+        }
+        @media (max-width: 480px) {
+            .home-stats {
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+                border-radius: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header class="navbar">
+        <div class="container nav-wrapper">
+            <div class="logo" onclick="location.href='index.html'">
+                <i class="fas fa-utensils"></i> RecipeVerse
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="active">Home</a>
+                <a href="recipes.html">Recipes</a>
+                <a href="chef.html">Chef</a>
+                <a href="collections.html">Collections</a>
+                <a href="community.html">Community</a>
+            </div>
+            <div class="nav-actions">
+                <div class="search-wrap">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search recipes..." id="searchInput" />
+                </div>
+                <button class="btn-outline" id="favoritesBtn">
+                    <i class="far fa-heart"></i> Favorites
+                    <span id="favCount">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- ===== HERO ===== -->
+        <section class="hero-recipe">
+            <div class="hero-recipe-content">
+                <span class="tag"><i class="fas fa-star"></i> chef's pick</span>
+                <h1>Maple Glazed Salmon<br />with Herbed Rice</h1>
+                <p>A perfect balance of sweet and savory – this 30-minute meal is packed with flavor and healthy fats.</p>
+                <div class="hero-meta">
+                    <span><i class="far fa-clock"></i> 30 min</span>
+                    <span><i class="fas fa-utensil-spoon"></i> easy</span>
+                    <span><i class="fas fa-fire"></i> 420 kcal</span>
+                </div>
+                <div class="hero-actions">
+                    <button class="btn-primary" onclick="openModal(1)"><i class="fas fa-book-open"></i> View Recipe</button>
+                    <button class="btn-outline-hero" onclick="document.getElementById('recipeGrid').scrollIntoView({ behavior: 'smooth' })">
+                        <i class="fas fa-arrow-down"></i> Browse All
+                    </button>
+                </div>
+            </div>
+            <div class="hero-recipe-image">
+                <i class="fas fa-fish"></i> <i class="fas fa-leaf"></i>
+            </div>
+        </section>
+
+        <!-- ===== HOME STATS ===== -->
+        <div class="home-stats" id="homeStats">
+            <span class="stat-item"><i class="fas fa-utensils"></i> <strong id="totalRecipes">0</strong> recipes</span>
+            <span class="stat-item"><i class="fas fa-clock"></i> Avg. prep <strong id="avgTime">0</strong> min</span>
+            <span class="stat-item"><i class="fas fa-fire"></i> Avg. <strong id="avgKcal">0</strong> kcal</span>
+            <span class="stat-item"><i class="fas fa-leaf"></i> <strong id="veganCount">0</strong> vegan</span>
+            <span class="stat-item"><i class="fas fa-heart"></i> <strong id="favoriteCount">0</strong> saved</span>
+        </div>
+
+        <!-- ===== FILTER BAR ===== -->
+        <div class="filter-bar">
+            <div class="filter-tabs">
+                <span class="filter-tab active" data-filter="all">All</span>
+                <span class="filter-tab" data-filter="breakfast">Breakfast</span>
+                <span class="filter-tab" data-filter="lunch">Lunch</span>
+                <span class="filter-tab" data-filter="dinner">Dinner</span>
+                <span class="filter-tab" data-filter="vegan">Vegan</span>
+                <span class="filter-tab" data-filter="dessert">Dessert</span>
+            </div>
+            <div class="filter-sort">
+                <select id="sortSelect">
+                    <option value="featured">Featured</option>
+                    <option value="time">Prep time</option>
+                    <option value="name">Name A-Z</option>
+                    <option value="popular">Most popular</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- ===== RECIPE GRID ===== -->
+        <div class="recipe-grid" id="recipeGrid"></div>
+
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="container footer">
+        <span>© 2026 RecipeVerse — cook with passion</span>
+        <div class="footer-links">
+            <a href="#" data-footer-filter="healthy"><i class="fas fa-seedling"></i> healthy</a>
+            <span class="footer-divider">·</span>
+            <a href="#" data-footer-filter="quick"><i class="fas fa-clock"></i> quick</a>
+            <span class="footer-divider">·</span>
+            <a href="#" data-footer-filter="delicious"><i class="fas fa-heart"></i> delicious</a>
+        </div>
+    </footer>
+
+    <!-- ===== RECIPE DETAIL MODAL ===== -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-panel">
+            <div class="modal-header">
+                <h2 id="modalTitle">Recipe name</h2>
+                <button class="modal-close" id="closeModal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        (function() {
+            "use strict";
+
+            // ---------- Home page stats update ----------
+            function updateHomeStats() {
+                let list = [];
+                if (typeof window.getFilteredAndSorted === 'function') {
+                    try {
+                        list = window.getFilteredAndSorted();
+                    } catch (_) {
+                        list = window.recipes || [];
+                    }
+                } else if (window.recipes && Array.isArray(window.recipes)) {
+                    list = window.recipes;
+                }
+
+                const total = list.length;
+                document.getElementById('totalRecipes').textContent = total;
+
+                if (total > 0) {
+                    const avgTime = Math.round(list.reduce((s, r) => s + parseInt(r.time), 0) / total);
+                    const avgKcal = Math.round(list.reduce((s, r) => s + r.kcal, 0) / total);
+                    const veganCount = list.filter(r => r.badge === 'vegan').length;
+                    document.getElementById('avgTime').textContent = avgTime;
+                    document.getElementById('avgKcal').textContent = avgKcal;
+                    document.getElementById('veganCount').textContent = veganCount;
+                } else {
+                    document.getElementById('avgTime').textContent = '—';
+                    document.getElementById('avgKcal').textContent = '—';
+                    document.getElementById('veganCount').textContent = '0';
+                }
+
+                // Favorite count
+                const favCount = document.getElementById('favCount');
+                if (favCount) {
+                    const count = parseInt(favCount.textContent) || 0;
+                    document.getElementById('favoriteCount').textContent = count;
+                }
+            }
+
+            // ---------- Hook into events ----------
+            document.addEventListener('recipesRendered', function() {
+                setTimeout(updateHomeStats, 20);
+            });
+
+            document.addEventListener('favoritesUpdated', function() {
+                setTimeout(updateHomeStats, 20);
+            });
+
+            // ---------- Monkey-patch renderRecipes if possible ----------
+            if (typeof window.renderRecipes === 'function') {
+                const originalRender = window.renderRecipes;
+                window.renderRecipes = function() {
+                    originalRender();
+                    setTimeout(updateHomeStats, 20);
+                };
+            }
+
+            // ---------- Initial update ----------
+            setTimeout(updateHomeStats, 100);
+
+            // Also update when favCount changes (observed via mutation)
+            const favCountEl = document.getElementById('favCount');
+            if (favCountEl) {
+                const observer = new MutationObserver(function() {
+                    document.getElementById('favoriteCount').textContent = favCountEl.textContent || '0';
+                });
+                observer.observe(favCountEl, { childList: true, characterData: true, subtree: true });
+            }
+
+            // Expose for debugging
+            window.updateHomeStats = updateHomeStats;
+
+            // Fallback if script.js fails to load: show a message
+            if (!window.recipes) {
+                document.getElementById('recipeGrid').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Could not load recipes</h3>
+                        <p>Please refresh the page or check your internet connection.</p>
+                    </div>
+                `;
+            }
+        })();
+    </script>
+</body>
+</html>

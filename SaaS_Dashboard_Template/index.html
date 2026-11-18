@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SaaSify · Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <!-- TOP NAV (same for all) -->
+        <header class="top-nav">
+            <div class="logo"><i class="fas fa-rocket"></i> SaaSify</div>
+            <div class="nav-search" id="searchWrapper">
+                <input type="text" id="searchInput" placeholder="Search dashboard, analytics..." />
+                <button class="search-btn" id="searchBtn"><i class="fas fa-search"></i> Search</button>
+                <div class="search-results-indicator" id="searchResults"></div>
+            </div>
+            <div class="nav-right">
+                <button class="icon-btn" id="themeToggle"><i class="fas fa-moon" id="themeIcon"></i></button>
+                <div class="dropdown-wrapper">
+                    <button class="icon-btn" id="notifBtn"><i class="far fa-bell"></i><span class="badge pulse" id="notifBadge">3</span></button>
+                    <div class="dropdown-menu" id="notifDropdown">
+                        <div class="drop-header">🔔 Notifications</div>
+                        <button class="drop-item" data-action="notif1"><i class="fas fa-user-plus"></i> Sarah K. followed you <span class="drop-time">2m</span></button>
+                        <button class="drop-item" data-action="notif2"><i class="fas fa-rocket"></i> Pro plan updated <span class="drop-time">15m</span></button>
+                        <button class="drop-item" data-action="notif3"><i class="fas fa-check-circle"></i> Payment received <span class="drop-time">1h</span></button>
+                        <div class="drop-footer" data-action="markRead">Mark all as read</div>
+                    </div>
+                </div>
+                <div class="dropdown-wrapper">
+                    <button class="icon-btn" id="msgBtn"><i class="far fa-envelope"></i></button>
+                    <div class="dropdown-menu" id="msgDropdown">
+                        <div class="drop-header">✉️ Messages</div>
+                        <button class="drop-item" data-action="msg1"><i class="fas fa-circle" style="color:var(--primary);font-size:0.5rem;"></i> Emily: Can you review... <span class="drop-time">1h</span></button>
+                        <button class="drop-item" data-action="msg2"><i class="fas fa-circle" style="color:var(--primary);font-size:0.5rem;"></i> Michael: Thanks for... <span class="drop-time">3h</span></button>
+                        <button class="drop-item" data-action="msg3"><i class="far fa-circle" style="font-size:0.5rem;color:var(--text-muted);"></i> David: Meeting at 4pm <span class="drop-time">5h</span></button>
+                        <div class="drop-footer" data-action="viewAllMsg">View all messages</div>
+                    </div>
+                </div>
+                <div class="dropdown-wrapper">
+                    <button class="icon-btn" id="settingsBtn"><i class="far fa-cog"></i></button>
+                    <div class="dropdown-menu" id="settingsDropdown">
+                        <div class="drop-header">⚙️ Settings</div>
+                        <button class="drop-item" data-action="settingsProfile"><i class="fas fa-user"></i> Profile</button>
+                        <button class="drop-item" data-action="settingsSecurity"><i class="fas fa-lock"></i> Security</button>
+                        <button class="drop-item" data-action="settingsNotif"><i class="fas fa-bell"></i> Notifications</button>
+                        <button class="drop-item" data-action="settingsAppearance"><i class="fas fa-palette"></i> Appearance</button>
+                        <div class="drop-divider"></div>
+                        <button class="drop-item" data-action="settingsLogout"><i class="fas fa-sign-out-alt" style="color:var(--negative);"></i> <span style="color:var(--negative);">Logout</span></button>
+                    </div>
+                </div>
+                <div class="dropdown-wrapper">
+                    <div class="avatar" id="avatarBtn">JD</div>
+                    <div class="dropdown-menu" id="profileDropdown">
+                        <div class="drop-header">👤 James Davis</div>
+                        <button class="drop-item" data-action="profileMy"><i class="fas fa-user"></i> My Profile</button>
+                        <button class="drop-item" data-action="profileBilling"><i class="fas fa-credit-card"></i> Billing</button>
+                        <button class="drop-item" data-action="profilePrefs"><i class="fas fa-cog"></i> Preferences</button>
+                        <div class="drop-divider"></div>
+                        <button class="drop-item" data-action="profileHelp"><i class="fas fa-question-circle"></i> Help Center</button>
+                        <button class="drop-item" data-action="profileSignout"><i class="fas fa-sign-out-alt" style="color:var(--negative);"></i> <span style="color:var(--negative);">Sign Out</span></button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="dashboard-grid">
+            <!-- SIDEBAR -->
+            <aside class="sidebar">
+                <div class="greeting">👋 Welcome back</div>
+                <div class="user-name">James Davis <i class="fas fa-check-circle"></i></div>
+                <nav class="nav-menu">
+                    <a href="index.html" class="active"><i class="fas fa-th-large"></i> Dashboard</a>
+                    <a href="analytics.html"><i class="fas fa-chart-line"></i> Analytics</a>
+                    <a href="customers.html"><i class="fas fa-users"></i> Customers</a>
+                    <a href="products.html"><i class="fas fa-box"></i> Products</a>
+                    <a href="invoices.html"><i class="fas fa-file-invoice"></i> Invoices</a>
+                    <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+                </nav>
+                <div class="sidebar-credit">
+                    <p>🚀 Plan</p>
+                    <h4>Pro Enterprise</h4>
+                    <button class="btn-outline" id="upgradeBtn"><i class="fas fa-arrow-right"></i> Upgrade</button>
+                </div>
+            </aside>
+
+            <!-- MAIN CONTENT (Dashboard specific) -->
+            <main class="main-content">
+                <div class="stats-row" id="statsRow">
+                    <div class="stat-card"><div class="stat-label">Total Revenue</div><div class="stat-number">$48,295</div><div class="stat-change positive"><i class="fas fa-arrow-up"></i> 12.5%</div></div>
+                    <div class="stat-card"><div class="stat-label">Active Users</div><div class="stat-number">2,847</div><div class="stat-change positive"><i class="fas fa-arrow-up"></i> 8.2%</div></div>
+                    <div class="stat-card"><div class="stat-label">Conversion Rate</div><div class="stat-number">24.6%</div><div class="stat-change positive"><i class="fas fa-arrow-up"></i> 3.1%</div></div>
+                    <div class="stat-card"><div class="stat-label">Churn Rate</div><div class="stat-number">2.4%</div><div class="stat-change negative"><i class="fas fa-arrow-down"></i> 0.8%</div></div>
+                </div>
+                <div class="charts-row">
+                    <div class="chart-card">
+                        <div class="card-header"><h4><i class="fas fa-chart-bar" style="color:var(--primary);"></i> Revenue Overview</h4><span>Last 7 days</span></div>
+                        <div class="chart-container"><canvas id="revenueChart"></canvas></div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="card-header"><h4><i class="fas fa-pie-chart" style="color:var(--primary);"></i> Traffic Sources</h4><span>This month</span></div>
+                        <div class="chart-container"><canvas id="trafficChart"></canvas></div>
+                    </div>
+                </div>
+                <div class="activity-row">
+                    <div class="panel"><h4><i class="fas fa-bolt"></i> Recent Activity</h4><div id="activityList"></div></div>
+                    <div class="panel"><h4><i class="fas fa-crown"></i> Top Products</h4><div id="productList"></div></div>
+                </div>
+            </main>
+        </div>
+
+        <footer class="footer">
+            <span>© 2026 SaaSify · All rights reserved</span>
+            <div class="footer-links">
+                <a id="privacyLink">Privacy</a>
+                <a id="termsLink">Terms</a>
+                <a id="supportLink">Support</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-box">
+            <button class="modal-close" id="modalClose"><i class="fas fa-times"></i></button>
+            <div class="modal-icon" id="modalIcon"><i class="fas fa-shield-alt"></i></div>
+            <h2 id="modalTitle">Title</h2>
+            <div class="modal-sub" id="modalSub"></div>
+            <div id="modalBody"><p>Content</p></div>
+            <button class="modal-action-btn" id="modalActionBtn">Got it</button>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        // Dashboard-specific code (same as previous)
+        (function() {
+            const activities = [
+                { user: "Sarah K.", action: "purchased Pro plan", time: "2 min ago", initials: "SK" },
+                { user: "Michael R.", action: "signed up for trial", time: "15 min ago", initials: "MR" },
+                { user: "Emily W.", action: "upgraded to Enterprise", time: "1h ago", initials: "EW" },
+                { user: "David L.", action: "completed onboarding", time: "2h ago", initials: "DL" },
+                { user: "Anna T.", action: "submitted support ticket", time: "3h ago", initials: "AT" },
+            ];
+            const products = [
+                { name: "Pro Plan", sales: "1,284", color: "#4f6ef7" },
+                { name: "Enterprise", sales: "847", color: "#22a65e" },
+                { name: "Starter", sales: "2,156", color: "#f5a623" },
+                { name: "Lite", sales: "3,421", color: "#7a94fa" },
+            ];
+
+            const activityList = document.getElementById('activityList');
+            const productList = document.getElementById('productList');
+
+            function renderActivity(filter = '') {
+                if (!activityList) return;
+                activityList.innerHTML = '';
+                const term = filter.toLowerCase().trim();
+                let hasVisible = false;
+                activities.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'activity-item';
+                    const text = `${item.user} ${item.action}`;
+                    const match = term === '' || text.toLowerCase().includes(term);
+                    if (!match) div.classList.add('hidden-item');
+                    else hasVisible = true;
+                    const highlightedText = term === '' ? text : text.replace(new RegExp(term, 'gi'), match => `<span class="highlight">${match}</span>`);
+                    div.innerHTML = `<div class="avatar-sm">${item.initials}</div><div class="activity-text">${highlightedText}</div><div class="activity-time">${item.time}</div>`;
+                    activityList.appendChild(div);
+                });
+                if (!hasVisible && term !== '') {
+                    const empty = document.createElement('div');
+                    empty.className = 'activity-item';
+                    empty.style.color = 'var(--text-muted)';
+                    empty.style.fontSize = '0.85rem';
+                    empty.style.padding = '0.8rem 0';
+                    empty.textContent = 'No matching activity';
+                    activityList.appendChild(empty);
+                }
+            }
+
+            function renderProducts(filter = '') {
+                if (!productList) return;
+                productList.innerHTML = '';
+                const term = filter.toLowerCase().trim();
+                let hasVisible = false;
+                products.forEach(p => {
+                    const div = document.createElement('div');
+                    div.className = 'product-item';
+                    const match = term === '' || p.name.toLowerCase().includes(term);
+                    if (!match) div.classList.add('hidden-item');
+                    else hasVisible = true;
+                    const highlightedName = term === '' ? p.name : p.name.replace(new RegExp(term, 'gi'), match => `<span class="highlight">${match}</span>`);
+                    div.innerHTML = `<div class="product-name"><span class="dot" style="background:${p.color};"></span>${highlightedName}</div><div class="product-sales">${p.sales}</div>`;
+                    productList.appendChild(div);
+                });
+                if (!hasVisible && term !== '') {
+                    const empty = document.createElement('div');
+                    empty.className = 'product-item';
+                    empty.style.color = 'var(--text-muted)';
+                    empty.style.fontSize = '0.85rem';
+                    empty.style.padding = '0.8rem 0';
+                    empty.textContent = 'No matching products';
+                    productList.appendChild(empty);
+                }
+            }
+
+            // Search
+            const searchInput = document.getElementById('searchInput');
+            const searchBtn = document.getElementById('searchBtn');
+            const searchResults = document.getElementById('searchResults');
+
+            function performSearch() {
+                const query = searchInput.value.trim();
+                renderActivity(query);
+                renderProducts(query);
+                if (query.length > 0) {
+                    const actCount = activities.filter(a => `${a.user} ${a.action}`.toLowerCase().includes(query.toLowerCase())).length;
+                    const prodCount = products.filter(p => p.name.toLowerCase().includes(query.toLowerCase())).length;
+                    const total = actCount + prodCount;
+                    searchResults.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;"><span><strong>${total}</strong> result${total !== 1 ? 's' : ''} found</span><span style="font-size:0.7rem;color:var(--text-muted);cursor:pointer;" id="clearSearch">✕ clear</span></div><div style="margin-top:0.3rem;font-size:0.75rem;color:var(--text-secondary);">${actCount > 0 ? `📋 ${actCount} activity` : ''} ${actCount > 0 && prodCount > 0 ? '·' : ''} ${prodCount > 0 ? `📦 ${prodCount} product` : ''}</div>`;
+                    searchResults.classList.add('show');
+                    document.getElementById('clearSearch')?.addEventListener('click', () => { searchInput.value = ''; performSearch(); searchResults.classList.remove('show'); });
+                } else {
+                    searchResults.classList.remove('show');
+                }
+            }
+
+            if (searchBtn) searchBtn.addEventListener('click', performSearch);
+            if (searchInput) {
+                searchInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') performSearch(); });
+                searchInput.addEventListener('input', () => { if (searchInput.value.trim() === '') { searchResults.classList.remove('show'); renderActivity(''); renderProducts(''); } });
+            }
+            document.addEventListener('click', (e) => {
+                const wrapper = document.getElementById('searchWrapper');
+                if (wrapper && !wrapper.contains(e.target)) searchResults?.classList.remove('show');
+            });
+
+            // Charts
+            const revenueCtx = document.getElementById('revenueChart');
+            const trafficCtx = document.getElementById('trafficChart');
+            let revenueChart, trafficChart;
+            if (revenueCtx) {
+                revenueChart = new Chart(revenueCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], datasets: [{ label: 'Revenue ($)', data: [3200, 4100, 3800, 5200, 4900, 6100, 5800], backgroundColor: 'rgba(79, 110, 247, 0.7)', borderColor: '#4f6ef7', borderWidth: 2, borderRadius: 6 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: 'var(--chart-grid)' }, ticks: { font: { size: 10 }, color: 'var(--text-secondary)' } }, x: { grid: { display: false }, ticks: { font: { size: 10 }, color: 'var(--text-secondary)' } } } }
+                });
+            }
+            if (trafficCtx) {
+                trafficChart = new Chart(trafficCtx.getContext('2d'), {
+                    type: 'doughnut',
+                    data: { labels: ['Organic', 'Direct', 'Social', 'Referral'], datasets: [{ data: [45, 28, 17, 10], backgroundColor: ['#4f6ef7', '#22a65e', '#f5a623', '#7a94fa'], borderWidth: 0 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, padding: 8, font: { size: 10, weight: '500' }, usePointStyle: true, color: 'var(--text-primary)' } } }, cutout: '70%' }
+                });
+            }
+
+            function updateChartColors() {
+                const isDark = document.body.classList.contains('dark-mode');
+                const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)';
+                const tickColor = isDark ? '#a0b3cc' : '#5a6e8a';
+                if (revenueChart) {
+                    revenueChart.options.scales.y.grid.color = gridColor;
+                    revenueChart.options.scales.y.ticks.color = tickColor;
+                    revenueChart.options.scales.x.ticks.color = tickColor;
+                    revenueChart.update();
+                }
+                if (trafficChart) {
+                    trafficChart.options.plugins.legend.labels.color = isDark ? '#e8edf5' : '#1a2332';
+                    trafficChart.update();
+                }
+            }
+            window.__updateChartColors = updateChartColors;
+            setTimeout(updateChartColors, 100);
+
+            renderActivity('');
+            renderProducts('');
+        })();
+    </script>
+</body>
+</html>

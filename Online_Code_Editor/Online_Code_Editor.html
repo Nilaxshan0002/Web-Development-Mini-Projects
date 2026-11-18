@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CodeForge · Online Code Editor</title>
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <!-- Google Font: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+  <!-- CodeMirror CSS & JS (for syntax highlighting) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, system-ui, sans-serif;
+      background: #0d1117;
+      color: #e6edf3;
+      display: flex;
+      justify-content: center;
+      padding: 1.5rem 1rem;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    .editor-wrapper {
+      max-width: 1440px;
+      width: 100%;
+    }
+
+    /* ===== TOP BAR ===== */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.8rem 1.5rem;
+      background: #161b22;
+      padding: 0.6rem 1.8rem;
+      border-radius: 40px;
+      border: 1px solid #30363d;
+      margin-bottom: 1.8rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+    }
+
+    .logo i {
+      color: #58a6ff;
+      font-size: 1.6rem;
+    }
+
+    .file-tabs {
+      display: flex;
+      gap: 0.2rem;
+      background: #0d1117;
+      padding: 0.2rem;
+      border-radius: 30px;
+      border: 1px solid #21262d;
+    }
+
+    .file-tabs button {
+      background: transparent;
+      border: none;
+      color: #8b949e;
+      padding: 0.3rem 1.2rem;
+      border-radius: 30px;
+      font-weight: 500;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .file-tabs button.active {
+      background: #21262d;
+      color: #f0f6fc;
+    }
+
+    .file-tabs button:hover:not(.active) {
+      color: #e6edf3;
+      background: #1c2128;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 0.6rem;
+    }
+
+    .action-buttons button {
+      background: #21262d;
+      border: 1px solid #30363d;
+      color: #c9d1d9;
+      padding: 0.4rem 1.2rem;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .action-buttons button:hover {
+      background: #30363d;
+      border-color: #58a6ff;
+      color: #fff;
+    }
+
+    .action-buttons .run-btn {
+      background: #238636;
+      border-color: #2ea043;
+      color: #fff;
+    }
+
+    .action-buttons .run-btn:hover {
+      background: #2ea043;
+      border-color: #3fb950;
+    }
+
+    /* ===== MAIN EDITOR LAYOUT ===== */
+    .editor-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+      height: calc(100vh - 220px);
+      min-height: 460px;
+    }
+
+    @media (max-width: 860px) {
+      .editor-grid {
+        grid-template-columns: 1fr;
+        height: auto;
+        gap: 1.5rem;
+      }
+    }
+
+    .editor-panel {
+      background: #161b22;
+      border-radius: 28px;
+      border: 1px solid #30363d;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 1.2rem;
+      background: #0d1117;
+      border-bottom: 1px solid #21262d;
+      font-size: 0.8rem;
+      color: #8b949e;
+      font-weight: 500;
+    }
+
+    .panel-header .lang-badge {
+      background: #21262d;
+      padding: 0.1rem 0.8rem;
+      border-radius: 30px;
+      font-size: 0.7rem;
+      color: #58a6ff;
+    }
+
+    .panel-header i {
+      color: #58a6ff;
+    }
+
+    .editor-container {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .editor-container .CodeMirror {
+      height: 100% !important;
+      font-size: 14px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      background: #0d1117;
+    }
+
+    .CodeMirror-gutters {
+      background: #0d1117 !important;
+      border-right: 1px solid #21262d !important;
+    }
+
+    .CodeMirror-linenumber {
+      color: #484f58 !important;
+    }
+
+    /* preview panel */
+    .preview-panel {
+      background: #161b22;
+      border-radius: 28px;
+      border: 1px solid #30363d;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .preview-frame {
+      flex: 1;
+      background: #ffffff;
+      border: none;
+      width: 100%;
+      height: 100%;
+      min-height: 300px;
+    }
+
+    .preview-placeholder {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #8b949e;
+      background: #0d1117;
+      min-height: 200px;
+    }
+
+    .preview-placeholder i {
+      font-size: 3rem;
+      color: #30363d;
+      margin-bottom: 0.6rem;
+    }
+
+    /* ===== CONSOLE / OUTPUT ===== */
+    .console-bar {
+      margin-top: 1.2rem;
+      background: #161b22;
+      border-radius: 28px;
+      border: 1px solid #30363d;
+      padding: 0.4rem 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+      min-height: 48px;
+    }
+
+    .console-bar .label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #8b949e;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .console-bar .output {
+      color: #8b949e;
+      font-size: 0.9rem;
+      font-family: 'JetBrains Mono', monospace;
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .console-bar .output.success {
+      color: #3fb950;
+    }
+
+    .console-bar .output.error {
+      color: #f85149;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 600px) {
+      .top-bar {
+        padding: 0.6rem 1rem;
+        border-radius: 28px;
+      }
+      .file-tabs button {
+        padding: 0.2rem 0.8rem;
+        font-size: 0.75rem;
+      }
+      .action-buttons button {
+        padding: 0.3rem 0.8rem;
+        font-size: 0.75rem;
+      }
+      .logo {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="editor-wrapper">
+
+  <!-- ===== TOP BAR ===== -->
+  <header class="top-bar">
+    <div class="logo"><i class="fas fa-code"></i> CodeForge</div>
+    <div class="file-tabs">
+      <button class="active" data-file="html">index.html</button>
+      <button data-file="css">style.css</button>
+      <button data-file="js">script.js</button>
+    </div>
+    <div class="action-buttons">
+      <button class="run-btn" id="runBtn"><i class="fas fa-play"></i> Run</button>
+      <button id="resetBtn"><i class="fas fa-undo-alt"></i> Reset</button>
+      <button id="clearBtn"><i class="fas fa-eraser"></i> Clear</button>
+    </div>
+  </header>
+
+  <!-- ===== EDITOR GRID ===== -->
+  <div class="editor-grid">
+    <!-- editor panel -->
+    <div class="editor-panel">
+      <div class="panel-header">
+        <span><i class="fas fa-file-code"></i> Editor</span>
+        <span class="lang-badge" id="langBadge">HTML</span>
+      </div>
+      <div class="editor-container" id="editorContainer">
+        <!-- CodeMirror will be initialized here -->
+      </div>
+    </div>
+
+    <!-- preview panel -->
+    <div class="preview-panel">
+      <div class="panel-header">
+        <span><i class="fas fa-eye"></i> Preview</span>
+        <span style="font-size:0.7rem; color:#58a6ff;"><i class="fas fa-sync-alt"></i> live</span>
+      </div>
+      <div id="previewContainer" style="flex:1; background:#ffffff; overflow:hidden; border-radius:0 0 28px 28px;">
+        <iframe id="previewFrame" class="preview-frame" sandbox="allow-scripts allow-modals allow-same-origin"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CONSOLE BAR ===== -->
+  <div class="console-bar">
+    <span class="label"><i class="fas fa-terminal"></i> Output</span>
+    <span class="output" id="consoleOutput">Ready</span>
+  </div>
+
+</div>
+
+<script>
+  (function() {
+    "use strict";
+
+    // ----- default code snippets -----
+    const defaultCode = {
+      html: `<!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Live Demo</title>
+      <style>
+        body { font-family: system-ui, sans-serif; max-width: 600px; margin: 2rem auto; padding: 1rem; background: #f5f7fb; color: #1a1f2e; }
+        h1 { color: #3b6eff; }
+        .card { background: white; padding: 1.5rem; border-radius: 24px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+        button { background: #3b6eff; border: none; color: white; padding: 0.6rem 1.6rem; border-radius: 40px; font-weight: 600; cursor: pointer; }
+        button:hover { background: #2a56d9; }
+      </style>
+    </head>
+    <body>
+      <div class="card">
+        <h1>✨ CodeForge</h1>
+        <p>Write HTML, CSS & JavaScript in real-time.</p>
+        <button id="clickMe">Click me</button>
+        <p id="message" style="margin-top:0.8rem; font-weight:500;"></p>
+      </div>
+      <script>
+        document.getElementById('clickMe')?.addEventListener('click', function() {
+          document.getElementById('message').textContent = '🎉 Hello from JavaScript!';
+        });
+      <\/script>
+    </body>
+    </html>`,
+      css: `/* style.css */
+    body {
+      background: #0d1117;
+      color: #e6edf3;
+      font-family: system-ui, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .card {
+      background: #161b22;
+      padding: 2rem 3rem;
+      border-radius: 32px;
+      border: 1px solid #30363d;
+      text-align: center;
+    }
+    h1 {
+      color: #58a6ff;
+    }
+    button {
+      background: #238636;
+      border: none;
+      color: white;
+      padding: 0.6rem 2rem;
+      border-radius: 40px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    button:hover {
+      background: #2ea043;
+    }`,
+      js: `// script.js
+    console.log('🚀 CodeForge ready!');
+
+    function greet(name) {
+      return \`Hello, \${name}!\`;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const btn = document.createElement('button');
+      btn.textContent = 'Run JS';
+      btn.style.cssText = 'background:#3b6eff; border:none; color:white; padding:0.6rem 1.6rem; border-radius:40px; font-weight:600; cursor:pointer; margin-top:1rem;';
+      document.body.prepend(btn);
+
+      btn.addEventListener('click', function() {
+        alert(greet('Developer'));
+      });
+    });`
+    };
+
+    // ----- state -----
+    let currentFile = 'html';
+    let editor = null;
+    let currentCode = { ...defaultCode };
+
+    // ----- DOM refs -----
+    const editorContainer = document.getElementById('editorContainer');
+    const previewFrame = document.getElementById('previewFrame');
+    const consoleOutput = document.getElementById('consoleOutput');
+    const langBadge = document.getElementById('langBadge');
+    const runBtn = document.getElementById('runBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const fileTabs = document.querySelectorAll('.file-tabs button');
+
+    // ----- init CodeMirror -----
+    function initEditor() {
+      editor = CodeMirror(editorContainer, {
+        value: currentCode.html,
+        mode: 'htmlmixed',
+        theme: 'dracula',
+        lineNumbers: true,
+        tabSize: 2,
+        indentUnit: 2,
+        lineWrapping: true,
+        extraKeys: {
+          "Ctrl-S": function() { runCode(); },
+          "Cmd-S": function() { runCode(); }
+        }
+      });
+
+      editor.on('change', function() {
+        // auto-run with debounce
+        clearTimeout(window._editorTimeout);
+        window._editorTimeout = setTimeout(() => {
+          runCode();
+        }, 400);
+      });
+
+      // set initial content
+      updateEditorContent('html');
+    }
+
+    // ----- update editor content based on file -----
+    function updateEditorContent(file) {
+      if (!editor) return;
+      currentFile = file;
+      let code = currentCode[file] || '';
+      editor.setValue(code);
+
+      // update mode
+      let mode = 'htmlmixed';
+      let label = 'HTML';
+      if (file === 'css') { mode = 'css'; label = 'CSS'; }
+      else if (file === 'js') { mode = 'javascript'; label = 'JavaScript'; }
+      editor.setOption('mode', mode);
+      langBadge.textContent = label;
+
+      // highlight active tab
+      fileTabs.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.file === file);
+      });
+    }
+
+    // ----- run / preview -----
+    function runCode() {
+      if (!editor) return;
+      // save current content
+      currentCode[currentFile] = editor.getValue();
+
+      // assemble full HTML
+      let fullHtml = currentCode.html;
+
+      // inject CSS if present
+      if (currentCode.css && currentCode.css.trim()) {
+        const cssTag = `<style>${currentCode.css}</style>`;
+        // insert before </head>
+        if (fullHtml.includes('</head>')) {
+          fullHtml = fullHtml.replace('</head>', cssTag + '</head>');
+        } else {
+          // if no head, prepend
+          fullHtml = cssTag + fullHtml;
+        }
+      }
+
+      // inject JS if present
+      if (currentCode.js && currentCode.js.trim()) {
+        const jsTag = `<script>${currentCode.js}<\/script>`;
+        // insert before </body>
+        if (fullHtml.includes('</body>')) {
+          fullHtml = fullHtml.replace('</body>', jsTag + '</body>');
+        } else {
+          fullHtml = fullHtml + jsTag;
+        }
+      }
+
+      // write to iframe
+      try {
+        const doc = previewFrame.contentDocument || previewFrame.contentWindow?.document;
+        if (doc) {
+          doc.open();
+          doc.write(fullHtml);
+          doc.close();
+          consoleOutput.textContent = '✅ Preview updated successfully';
+          consoleOutput.className = 'output success';
+        } else {
+          consoleOutput.textContent = '⚠️ Could not access iframe';
+          consoleOutput.className = 'output error';
+        }
+      } catch (err) {
+        consoleOutput.textContent = '❌ Error: ' + err.message;
+        consoleOutput.className = 'output error';
+      }
+    }
+
+    // ----- reset current file to default -----
+    function resetCurrentFile() {
+      if (!editor) return;
+      const defaultVal = defaultCode[currentFile] || '';
+      currentCode[currentFile] = defaultVal;
+      editor.setValue(defaultVal);
+      runCode();
+      consoleOutput.textContent = `↺ Reset ${currentFile} to default`;
+      consoleOutput.className = 'output';
+    }
+
+    // ----- clear editor content -----
+    function clearEditor() {
+      if (!editor) return;
+      editor.setValue('');
+      currentCode[currentFile] = '';
+      runCode();
+      consoleOutput.textContent = `🧹 Cleared ${currentFile}`;
+      consoleOutput.className = 'output';
+    }
+
+    // ----- file tab switching -----
+    fileTabs.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const file = this.dataset.file;
+        // save current content before switching
+        if (editor) {
+          currentCode[currentFile] = editor.getValue();
+        }
+        updateEditorContent(file);
+        // run preview with new file content
+        runCode();
+      });
+    });
+
+    // ----- event listeners -----
+    runBtn.addEventListener('click', function() {
+      // save current content
+      if (editor) {
+        currentCode[currentFile] = editor.getValue();
+      }
+      runCode();
+      consoleOutput.textContent = '▶️ Running...';
+      setTimeout(() => {
+        consoleOutput.textContent = '✅ Run complete';
+        consoleOutput.className = 'output success';
+      }, 200);
+    });
+
+    resetBtn.addEventListener('click', resetCurrentFile);
+    clearBtn.addEventListener('click', clearEditor);
+
+    // ----- keyboard shortcut: Ctrl+Enter to run -----
+    document.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        runBtn.click();
+      }
+    });
+
+    // ----- init -----
+    initEditor();
+    // initial run after a small delay
+    setTimeout(() => {
+      runCode();
+      consoleOutput.textContent = '🚀 Ready — edit code and see live preview';
+      consoleOutput.className = 'output success';
+    }, 300);
+
+    // handle iframe load errors
+    previewFrame.addEventListener('error', function() {
+      consoleOutput.textContent = '⚠️ Iframe load error';
+      consoleOutput.className = 'output error';
+    });
+
+  })();
+</script>
+</body>
+</html>

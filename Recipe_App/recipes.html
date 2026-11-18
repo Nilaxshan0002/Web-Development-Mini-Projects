@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RecipeVerse · Recipes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        .page-header {
+            padding: 30px 0 10px;
+        }
+        .page-header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            color: #0b182b;
+        }
+        .page-header p {
+            color: #40546b;
+            font-size: 16px;
+            margin-top: 4px;
+        }
+        .recipe-grid-full {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 28px;
+            margin: 20px 0 60px;
+        }
+        .stats-bar {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            background: #fff;
+            padding: 16px 28px;
+            border-radius: 40px;
+            margin: 16px 0 24px;
+            border: 1px solid #f0f3f9;
+            font-size: 14px;
+            color: #40546b;
+        }
+        .stats-bar .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .stats-bar .stat-item i {
+            color: #e85d3a;
+        }
+        .stats-bar .stat-item strong {
+            color: #0b182b;
+        }
+
+        /* ensure recipe cards use proper grid */
+        .recipe-grid-full .recipe-card {
+            background: #ffffff;
+            border-radius: 32px;
+            padding: 20px 20px 28px;
+            transition: 0.25s ease;
+            border: 1px solid #f0f3f9;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.01);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .recipe-grid-full .recipe-card:hover {
+            transform: translateY(-8px);
+            border-color: #dce4f0;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.04), 0 8px 20px rgba(0, 0, 0, 0.02);
+        }
+        .recipe-grid-full .recipe-card .recipe-img {
+            width: 100%;
+            aspect-ratio: 1/1;
+            background: #f2f6fd;
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+            color: #1d304a;
+            margin-bottom: 18px;
+            transition: 0.2s;
+        }
+        .recipe-grid-full .recipe-card:hover .recipe-img {
+            background: #eaf0f9;
+        }
+        .recipe-grid-full .recipe-card .recipe-title {
+            font-weight: 700;
+            font-size: 20px;
+            color: #0b182b;
+            margin-bottom: 4px;
+            letter-spacing: -0.2px;
+        }
+        .recipe-grid-full .recipe-card .recipe-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 13px;
+            color: #5c738d;
+            margin: 8px 0 14px;
+        }
+        .recipe-grid-full .recipe-card .recipe-meta i {
+            margin-right: 4px;
+            color: #e85d3a;
+        }
+        .recipe-grid-full .recipe-card .recipe-desc {
+            font-size: 14px;
+            color: #40546b;
+            line-height: 1.5;
+            margin-bottom: 16px;
+            flex: 1;
+        }
+        .recipe-grid-full .recipe-card .recipe-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 6px;
+        }
+        .recipe-grid-full .recipe-card .btn-view {
+            background: #0b182b;
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.2s;
+            cursor: pointer;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .recipe-grid-full .recipe-card .btn-view:hover {
+            background: #e85d3a;
+            box-shadow: 0 8px 24px rgba(232, 93, 58, 0.15);
+        }
+        .recipe-grid-full .recipe-card .btn-save {
+            background: transparent;
+            border: 1px solid #e3e9f2;
+            border-radius: 60px;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #4d637f;
+            transition: 0.2s;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .recipe-grid-full .recipe-card .btn-save:hover {
+            background: #fef0e8;
+            border-color: #e85d3a;
+            color: #e85d3a;
+        }
+        .recipe-grid-full .recipe-card .btn-save.saved {
+            background: #fef0e8;
+            border-color: #e85d3a;
+            color: #e85d3a;
+        }
+        .recipe-grid-full .recipe-card .btn-save.saved i {
+            font-weight: 900;
+        }
+        .recipe-grid-full .recipe-card .recipe-badge {
+            position: absolute;
+            top: 18px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(4px);
+            color: #0b182b;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 16px;
+            border-radius: 60px;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            z-index: 2;
+        }
+        .recipe-grid-full .recipe-card .recipe-badge.vegan {
+            background: #e6f5e9;
+            color: #1d6b3c;
+        }
+        .recipe-grid-full .recipe-card .recipe-badge.popular {
+            background: #fef0e8;
+            color: #b84a2e;
+        }
+        .recipe-grid-full .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 80px 20px;
+            color: #6b7f99;
+        }
+        .recipe-grid-full .empty-state i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.4;
+        }
+        .recipe-grid-full .empty-state h3 {
+            font-size: 22px;
+            color: #0b182b;
+            margin-bottom: 8px;
+        }
+        .recipe-grid-full .empty-state p {
+            font-size: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .stats-bar {
+                justify-content: center;
+                gap: 16px;
+            }
+        }
+        @media (max-width: 480px) {
+            .stats-bar {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="container nav-wrapper">
+            <div class="logo" onclick="location.href='index.html'">
+                <i class="fas fa-utensils"></i> RecipeVerse
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="recipes.html" class="active">Recipes</a>
+                <a href="chef.html">Chef</a>
+                <a href="collections.html">Collections</a>
+                <a href="community.html">Community</a>
+            </div>
+            <div class="nav-actions">
+                <div class="search-wrap">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search recipes..." id="searchInput" />
+                </div>
+                <button class="btn-outline" id="favoritesBtn">
+                    <i class="far fa-heart"></i> Favorites
+                    <span id="favCount">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h1>All Recipes</h1>
+            <p>Explore our full collection of delicious, hand-crafted recipes from top chefs around the world.</p>
+        </div>
+
+        <div class="stats-bar" id="statsBar">
+            <span class="stat-item"><i class="fas fa-utensils"></i> <strong id="totalRecipes">0</strong> recipes</span>
+            <span class="stat-item"><i class="fas fa-clock"></i> Avg. prep <strong id="avgTime">0</strong> min</span>
+            <span class="stat-item"><i class="fas fa-fire"></i> Avg. <strong id="avgKcal">0</strong> kcal</span>
+            <span class="stat-item"><i class="fas fa-leaf"></i> <strong id="veganCount">0</strong> vegan</span>
+            <span class="stat-item"><i class="fas fa-heart"></i> <strong id="savedCount">0</strong> saved</span>
+        </div>
+
+        <div class="filter-bar">
+            <div class="filter-tabs">
+                <span class="filter-tab active" data-filter="all">All</span>
+                <span class="filter-tab" data-filter="breakfast">Breakfast</span>
+                <span class="filter-tab" data-filter="lunch">Lunch</span>
+                <span class="filter-tab" data-filter="dinner">Dinner</span>
+                <span class="filter-tab" data-filter="vegan">Vegan</span>
+                <span class="filter-tab" data-filter="dessert">Dessert</span>
+            </div>
+            <div class="filter-sort">
+                <select id="sortSelect">
+                    <option value="featured">Featured</option>
+                    <option value="time">Prep time</option>
+                    <option value="name">Name A-Z</option>
+                    <option value="popular">Most popular</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="recipe-grid-full" id="recipeGrid"></div>
+    </main>
+
+    <footer class="container footer">
+        <span>© 2026 RecipeVerse — cook with passion</span>
+        <div class="footer-links">
+            <a href="#" data-footer-filter="healthy"><i class="fas fa-seedling"></i> healthy</a>
+            <span class="footer-divider">·</span>
+            <a href="#" data-footer-filter="quick"><i class="fas fa-clock"></i> quick</a>
+            <span class="footer-divider">·</span>
+            <a href="#" data-footer-filter="delicious"><i class="fas fa-heart"></i> delicious</a>
+        </div>
+    </footer>
+
+    <!-- Recipe Detail Modal (from script.js) -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-panel">
+            <div class="modal-header">
+                <h2 id="modalTitle">Recipe name</h2>
+                <button class="modal-close" id="closeModal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        (function() {
+            "use strict";
+
+            // ---------- Stats update function ----------
+            function updateStats() {
+                let list = [];
+                if (typeof window.getFilteredAndSorted === 'function') {
+                    try {
+                        list = window.getFilteredAndSorted();
+                    } catch (_) {
+                        list = window.recipes || [];
+                    }
+                } else if (window.recipes && Array.isArray(window.recipes)) {
+                    list = window.recipes;
+                }
+
+                const total = list.length;
+                document.getElementById('totalRecipes').textContent = total;
+
+                if (total > 0) {
+                    const avgTime = Math.round(list.reduce((s, r) => s + parseInt(r.time), 0) / total);
+                    const avgKcal = Math.round(list.reduce((s, r) => s + r.kcal, 0) / total);
+                    const veganCount = list.filter(r => r.badge === 'vegan').length;
+                    document.getElementById('avgTime').textContent = avgTime;
+                    document.getElementById('avgKcal').textContent = avgKcal;
+                    document.getElementById('veganCount').textContent = veganCount;
+                } else {
+                    document.getElementById('avgTime').textContent = '—';
+                    document.getElementById('avgKcal').textContent = '—';
+                    document.getElementById('veganCount').textContent = '0';
+                }
+
+                // Saved count
+                const favCountEl = document.getElementById('favCount');
+                if (favCountEl) {
+                    const count = parseInt(favCountEl.textContent) || 0;
+                    document.getElementById('savedCount').textContent = count;
+                }
+            }
+
+            // ---------- Hook into events ----------
+            document.addEventListener('recipesRendered', function() {
+                setTimeout(updateStats, 10);
+            });
+            document.addEventListener('favoritesUpdated', function() {
+                setTimeout(updateStats, 100);
+            });
+
+            // ---------- Patch renderRecipes if possible ----------
+            if (typeof window.renderRecipes === 'function') {
+                const originalRender = window.renderRecipes;
+                window.renderRecipes = function() {
+                    originalRender();
+                    setTimeout(updateStats, 10);
+                };
+                setTimeout(updateStats, 50);
+            } else {
+                let attempts = 0;
+                const interval = setInterval(function() {
+                    attempts++;
+                    if (typeof window.renderRecipes === 'function') {
+                        clearInterval(interval);
+                        const originalRender = window.renderRecipes;
+                        window.renderRecipes = function() {
+                            originalRender();
+                            setTimeout(updateStats, 10);
+                        };
+                        setTimeout(updateStats, 50);
+                    } else if (attempts > 20) {
+                        clearInterval(interval);
+                        if (window.recipes) setTimeout(updateStats, 100);
+                    }
+                }, 200);
+            }
+
+            // Also update when favCount changes (observed via mutation)
+            const favCountEl = document.getElementById('favCount');
+            if (favCountEl) {
+                const observer = new MutationObserver(function() {
+                    document.getElementById('savedCount').textContent = favCountEl.textContent || '0';
+                });
+                observer.observe(favCountEl, { childList: true, characterData: true, subtree: true });
+            }
+
+            // Initial update
+            setTimeout(updateStats, 100);
+
+            // Expose for debugging
+            window.updateStats = updateStats;
+
+        })();
+    </script>
+</body>
+</html>

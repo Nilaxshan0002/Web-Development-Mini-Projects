@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Simple Blog · with Auth</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <!-- animated background orbs -->
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+    <div class="orb orb4"></div>
+    <div class="orb orb5"></div>
+
+    <!-- main app -->
+    <div class="app-wrapper">
+        <header>
+            <h1>📝 Simple Blog</h1>
+            <p class="subhead">create, read, and manage posts</p>
+        </header>
+
+        <!-- ===== LOGIN SECTION ===== -->
+        <div id="loginSection" class="login-section">
+            <div class="form-group">
+                <label for="loginUser">Username</label>
+                <input type="text" id="loginUser" placeholder="Enter username" />
+            </div>
+            <div class="form-group">
+                <label for="loginPass">Password</label>
+                <input type="password" id="loginPass" placeholder="Enter password" />
+                <button type="button" class="password-toggle" id="togglePassword">👁️</button>
+            </div>
+            <button class="btn-primary" id="loginBtn">Sign In</button>
+            <div class="auth-toggle">
+                <span id="toggleText">Don't have an account?</span>
+                <a id="toggleLink">Sign Up</a>
+            </div>
+            <div id="loginError" class="error-msg"></div>
+            <div id="loginSuccess" class="success-msg"></div>
+        </div>
+
+        <!-- ===== BLOG SECTION (hidden until login) ===== -->
+        <div id="blogSection" class="blog-section hidden">
+            <!-- blog header -->
+            <div class="blog-header">
+                <div class="user-info">
+                    👋 Welcome, <span id="displayUser" class="username">User</span>
+                    <span id="adminBadge" class="admin-badge" style="display:none;">Admin</span>
+                </div>
+                <div class="blog-actions">
+                    <button class="logout-btn" id="logoutBtn">🚪 Logout</button>
+                </div>
+            </div>
+
+            <!-- create post (visible to ALL users) -->
+            <div id="createPostSection" class="create-post-section">
+                <h3>✍️ Create New Post</h3>
+                <div class="form-group">
+                    <input type="text" id="postTitle" placeholder="Post title..." />
+                </div>
+                <div class="form-group">
+                    <textarea id="postContent" placeholder="Write your post content here..." rows="4"></textarea>
+                </div>
+                <button class="btn-primary" id="createPostBtn" style="width:auto;">📤 Publish Post</button>
+            </div>
+
+            <!-- posts list -->
+            <div class="posts-header">
+                <h2>📖 All Posts</h2>
+                <span class="post-count" id="postCount">0 posts</span>
+            </div>
+
+            <div id="postsContainer" class="posts-container">
+                <div class="empty-posts">No posts yet — be the first to write!</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

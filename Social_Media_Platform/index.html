@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Social · Platform</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="social-platform">
+
+    <!-- header -->
+    <header class="platform-header">
+        <div class="brand">
+            <i class="fab fa-connectdevelop"></i>
+            <h1>Social</h1>
+        </div>
+        <div class="header-search">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Search posts, people..." />
+            <button id="searchBtn"><i class="fas fa-arrow-right"></i></button>
+        </div>
+        <div class="header-actions">
+            <button class="icon-btn" id="notifBtn">
+                <i class="far fa-bell"></i>
+                <span class="badge">3</span>
+            </button>
+            <button class="icon-btn" id="msgBtn">
+                <i class="far fa-envelope"></i>
+                <span class="badge">2</span>
+            </button>
+            <button class="avatar-btn" id="profileBtn">JD</button>
+        </div>
+    </header>
+
+    <!-- main -->
+    <div class="main-content">
+
+        <!-- left sidebar -->
+        <aside class="left-sidebar">
+            <div class="profile-card">
+                <div class="avatar-large">JD</div>
+                <h3>John Doe</h3>
+                <p>@johndoe · Product Designer</p>
+            </div>
+            <nav class="nav-menu">
+                <button class="nav-item active" data-page="home"><i class="fas fa-home"></i> Home</button>
+                <button class="nav-item" data-page="friends"><i class="fas fa-users"></i> Friends</button>
+                <button class="nav-item" data-page="memories"><i class="fas fa-clock"></i> Memories</button>
+                <button class="nav-item" data-page="saved"><i class="fas fa-bookmark"></i> Saved</button>
+                <button class="nav-item" data-page="settings"><i class="fas fa-cog"></i> Settings</button>
+            </nav>
+        </aside>
+
+        <!-- feed -->
+        <main class="feed" id="feedContainer">
+
+            <!-- create post -->
+            <div class="create-post" id="createPostSection">
+                <div class="post-input">
+                    <div class="avatar-small">JD</div>
+                    <input type="text" id="postInput" placeholder="What's on your mind?" />
+                </div>
+                <div class="post-actions">
+                    <button id="photoBtn"><i class="fas fa-image"></i> Photo</button>
+                    <button id="videoBtn"><i class="fas fa-video"></i> Video</button>
+                    <button id="submitPostBtn" class="post-btn"><i class="fas fa-pen"></i> Post</button>
+                </div>
+            </div>
+
+            <!-- posts will be injected here -->
+            <div id="postsContainer"></div>
+
+        </main>
+
+        <!-- right sidebar -->
+        <aside class="right-sidebar">
+            <div class="widget" id="suggestionsWidget">
+                <h4>Suggested for you</h4>
+                <div class="suggestion">
+                    <div class="sugg-avatar" style="background:#f59e0b;">AK</div>
+                    <div class="sugg-info">
+                        <p>Alex Kim</p>
+                        <span>UX Designer · 12 followers</span>
+                    </div>
+                    <button class="follow-btn" data-id="1">Follow</button>
+                </div>
+                <div class="suggestion">
+                    <div class="sugg-avatar" style="background:#10b981;">SM</div>
+                    <div class="sugg-info">
+                        <p>Sarah Miller</p>
+                        <span>Developer · 8 followers</span>
+                    </div>
+                    <button class="follow-btn" data-id="2">Follow</button>
+                </div>
+                <div class="suggestion">
+                    <div class="sugg-avatar" style="background:#8b5cf6;">TC</div>
+                    <div class="sugg-info">
+                        <p>Tom Chen</p>
+                        <span>Product Manager · 15 followers</span>
+                    </div>
+                    <button class="follow-btn" data-id="3">Follow</button>
+                </div>
+                <div class="suggestion">
+                    <div class="sugg-avatar" style="background:#ec4899;">EM</div>
+                    <div class="sugg-info">
+                        <p>Emma Wilson</p>
+                        <span>Data Scientist · 20 followers</span>
+                    </div>
+                    <button class="follow-btn" data-id="4">Follow</button>
+                </div>
+                <div class="suggestion">
+                    <div class="sugg-avatar" style="background:#3b82f6;">JR</div>
+                    <div class="sugg-info">
+                        <p>James Rodriguez</p>
+                        <span>Full Stack Dev · 18 followers</span>
+                    </div>
+                    <button class="follow-btn" data-id="5">Follow</button>
+                </div>
+            </div>
+
+            <div class="widget" id="trendingWidget">
+                <h4>Trending topics</h4>
+                <div class="trending-item" data-trend="#WebDevelopment">
+                    <p>#WebDevelopment</p>
+                    <span>2.3k posts</span>
+                </div>
+                <div class="trending-item" data-trend="#UXDesign">
+                    <p>#UXDesign</p>
+                    <span>1.8k posts</span>
+                </div>
+                <div class="trending-item" data-trend="#RemoteWork">
+                    <p>#RemoteWork</p>
+                    <span>1.2k posts</span>
+                </div>
+                <div class="trending-item" data-trend="#AI">
+                    <p>#AI</p>
+                    <span>980 posts</span>
+                </div>
+                <div class="trending-item" data-trend="#MachineLearning">
+                    <p>#MachineLearning</p>
+                    <span>756 posts</span>
+                </div>
+                <div class="trending-item" data-trend="#StartupLife">
+                    <p>#StartupLife</p>
+                    <span>634 posts</span>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- toast -->
+    <div class="toast" id="toast"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

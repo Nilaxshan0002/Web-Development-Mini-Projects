@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quote Generator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="quote-card">
+    <!-- header -->
+    <div class="header">
+      <h1>💬 Quote Generator</h1>
+      <div class="badge-group">
+        <span class="badge live">● live</span>
+      </div>
+    </div>
+    <div class="subhead">
+      Discover wisdom, one quote at a time — click the button for a new insight.
+    </div>
+
+    <!-- quote display -->
+    <div class="quote-display" id="quoteDisplay">
+      <div class="quote-icon">❝</div>
+      <p class="quote-text show" id="quoteText">
+        Code is simple when logic is clear.
+      </p>
+      <div class="quote-icon close">❞</div>
+    </div>
+
+    <!-- author -->
+    <div class="author-section">
+      <span class="author-line">—</span>
+      <span class="author-name show" id="authorName">Developer Mindset</span>
+    </div>
+
+    <!-- quote counter -->
+    <div class="quote-counter" id="quoteCounter">
+      Quote <span id="currentQuoteNum">1</span> of <span id="totalQuotes">0</span>
+    </div>
+
+    <!-- actions -->
+    <div class="action-section">
+      <button class="btn-primary" id="newQuoteBtn">
+        <span>✨</span> New Quote
+      </button>
+      <button class="btn-secondary" id="copyBtn">
+        📋 Copy
+      </button>
+      <button class="btn-secondary" id="shareBtn">
+        🔗 Share
+      </button>
+    </div>
+  </div>
+
+  <!-- toast notification -->
+  <div class="toast" id="toast"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

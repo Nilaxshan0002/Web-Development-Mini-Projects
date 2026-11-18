@@ -1,0 +1,1956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SaaSify · Enterprise Dashboard</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <!-- Google Font: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
+    </script>
+    <style>
+        /* ── CSS Variables (Light / Dark) ── */
+        :root {
+            --bg-body: #f4f7fc;
+            --bg-card: #ffffff;
+            --text-primary: #1a2332;
+            --text-secondary: #5a6e8a;
+            --text-muted: #8a9bb8;
+            --border-color: rgba(0, 0, 0, 0.04);
+            --shadow-sm: 0 4px 20px rgba(0, 20, 60, 0.04);
+            --shadow-md: 0 4px 24px rgba(0, 20, 60, 0.04);
+            --shadow-lg: 0 16px 48px rgba(0, 20, 60, 0.12);
+            --search-bg: #f0f4fe;
+            --hover-bg: #f0f4fe;
+            --dropdown-bg: #ffffff;
+            --modal-bg: #ffffff;
+            --modal-text: #1a2332;
+            --modal-sub: #8a9bb8;
+            --modal-body: #3a4a62;
+            --footer-border: rgba(0, 0, 0, 0.04);
+            --stat-bg: #ffffff;
+            --avatar-gradient: linear-gradient(135deg, #4f6ef7, #7a94fa);
+            --chart-grid: rgba(0, 0, 0, 0.04);
+            --badge-bg: #f25a6a;
+            --positive: #22a65e;
+            --negative: #f25a6a;
+            --primary: #4f6ef7;
+            --primary-hover: #3a56d4;
+            --credit-gradient: linear-gradient(135deg, #4f6ef7, #7a94fa);
+            --credit-text: #fff;
+            --modal-overlay: rgba(0, 0, 0, 0.3);
+            --modal-shadow: 0 32px 80px rgba(0, 0, 0, 0.20);
+            --highlight-bg: #ffecb0;
+        }
+
+        body.dark-mode {
+            --bg-body: #0e141e;
+            --bg-card: #1a2332;
+            --text-primary: #e8edf5;
+            --text-secondary: #a0b3cc;
+            --text-muted: #7a8fa8;
+            --border-color: rgba(255, 255, 255, 0.06);
+            --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 24px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.5);
+            --search-bg: #2a3a52;
+            --hover-bg: #2a3a52;
+            --dropdown-bg: #1a2332;
+            --modal-bg: #1a2332;
+            --modal-text: #e8edf5;
+            --modal-sub: #8a9bb8;
+            --modal-body: #b0c4dd;
+            --footer-border: rgba(255, 255, 255, 0.06);
+            --stat-bg: #1a2332;
+            --avatar-gradient: linear-gradient(135deg, #6b8aff, #9ab0ff);
+            --chart-grid: rgba(255, 255, 255, 0.06);
+            --badge-bg: #f25a6a;
+            --positive: #4cde8a;
+            --negative: #f25a6a;
+            --primary: #6b8aff;
+            --primary-hover: #5a7ae8;
+            --credit-gradient: linear-gradient(135deg, #3a56d4, #6b8aff);
+            --credit-text: #fff;
+            --modal-overlay: rgba(0, 0, 0, 0.6);
+            --modal-shadow: 0 32px 80px rgba(0, 0, 0, 0.6);
+            --highlight-bg: #5a4a1a;
+        }
+
+        /* ── RESET & BASE ── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            background: var(--bg-body);
+            color: var(--text-primary);
+            display: flex;
+            justify-content: center;
+            padding: 1.2rem;
+            min-height: 100vh;
+            line-height: 1.5;
+            transition: background 0.3s, color 0.3s;
+        }
+        .dashboard-wrapper {
+            max-width: 1440px;
+            width: 100%;
+        }
+
+        /* ── TOP NAV ── */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.8rem 1.5rem;
+            background: var(--bg-card);
+            padding: 0.6rem 2rem;
+            border-radius: 60px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            position: relative;
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+            color: var(--text-primary);
+        }
+        .logo i {
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+        .nav-search {
+            display: flex;
+            align-items: center;
+            background: var(--search-bg);
+            border-radius: 40px;
+            padding: 0.2rem 0.2rem 0.2rem 1.2rem;
+            flex: 1 1 260px;
+            max-width: 400px;
+            position: relative;
+            transition: background 0.3s;
+        }
+        .nav-search input {
+            border: none;
+            background: transparent;
+            padding: 0.6rem 0.4rem;
+            font-size: 0.9rem;
+            outline: none;
+            width: 100%;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+        }
+        .nav-search input::placeholder {
+            color: var(--text-muted);
+        }
+        .nav-search .search-btn {
+            background: var(--primary);
+            border: none;
+            color: #fff;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .nav-search .search-btn:hover {
+            background: var(--primary-hover);
+        }
+        .search-results-indicator {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            background: var(--dropdown-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            padding: 0.8rem 1.2rem;
+            z-index: 100;
+            display: none;
+            font-size: 0.85rem;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+        .search-results-indicator.show {
+            display: block;
+        }
+        .search-results-indicator .result-item {
+            padding: 0.4rem 0;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+        .search-results-indicator .result-item strong {
+            color: var(--text-primary);
+        }
+        .search-results-indicator .no-results {
+            color: var(--text-muted);
+            padding: 0.4rem 0;
+        }
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .nav-right .icon-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: 0.2s;
+            padding: 0.5rem;
+            border-radius: 40px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+        }
+        .nav-right .icon-btn:hover {
+            color: var(--text-primary);
+            background: var(--hover-bg);
+        }
+        .nav-right .badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: var(--badge-bg);
+            color: #fff;
+            font-size: 0.55rem;
+            font-weight: 700;
+            padding: 0.1rem 0.4rem;
+            border-radius: 30px;
+            min-width: 18px;
+            text-align: center;
+            line-height: 1.4;
+        }
+        .avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--avatar-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border: 2px solid var(--bg-card);
+            box-shadow: 0 2px 8px rgba(79, 110, 247, 0.2);
+            flex-shrink: 0;
+            transition: 0.2s;
+        }
+        .avatar:hover {
+            transform: scale(1.04);
+        }
+
+        /* ── DROPDOWN ── */
+        .dropdown-wrapper {
+            position: relative;
+        }
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            background: var(--dropdown-bg);
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            padding: 0.8rem 0;
+            min-width: 240px;
+            z-index: 200;
+            border: 1px solid var(--border-color);
+            display: none;
+            max-height: 380px;
+            overflow-y: auto;
+            transition: background 0.3s, border-color 0.3s;
+        }
+        .dropdown-menu.open {
+            display: block;
+            animation: dropIn 0.18s ease;
+        }
+        @keyframes dropIn {
+            from {
+                opacity: 0;
+                transform: translateY(-6px) scale(0.97);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        .dropdown-menu .drop-header {
+            padding: 0.2rem 1.2rem 0.6rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .dropdown-menu .drop-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.6rem 1.2rem;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.15s;
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+            font-family: 'Inter', sans-serif;
+        }
+        .dropdown-menu .drop-item:hover {
+            background: var(--hover-bg);
+        }
+        .dropdown-menu .drop-item i {
+            width: 1.4rem;
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+        .dropdown-menu .drop-item .drop-time {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            margin-left: auto;
+        }
+        .dropdown-menu .drop-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 0.3rem 1.2rem;
+        }
+        .dropdown-menu .drop-footer {
+            padding: 0.4rem 1.2rem 0;
+            font-size: 0.75rem;
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+            border-top: 1px solid var(--border-color);
+            padding-top: 0.6rem;
+            margin-top: 0.2rem;
+        }
+        .dropdown-menu .drop-footer:hover {
+            color: var(--primary-hover);
+        }
+
+        .badge.pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.15);
+            }
+        }
+
+        /* ── DASHBOARD GRID ── */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 1.8rem;
+        }
+        @media (max-width: 920px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 1.8rem;
+            }
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            background: var(--bg-card);
+            border-radius: 32px;
+            padding: 1.8rem 1.2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            height: fit-content;
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+        .sidebar .greeting {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            margin-bottom: 0.1rem;
+        }
+        .sidebar .user-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1.8rem;
+            color: var(--text-primary);
+        }
+        .sidebar .user-name i {
+            color: var(--primary);
+            font-size: 0.8rem;
+            margin-left: 6px;
+        }
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.7rem 1rem;
+            border-radius: 40px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .nav-menu a i {
+            width: 1.4rem;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+        .nav-menu a:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+        .nav-menu a.active {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        .nav-menu a.active i {
+            color: var(--primary);
+        }
+        .sidebar-credit {
+            margin-top: 2rem;
+            background: var(--credit-gradient);
+            border-radius: 24px;
+            padding: 1.2rem 1.2rem 1.4rem;
+            color: var(--credit-text);
+            transition: background 0.3s;
+        }
+        .sidebar-credit p {
+            font-size: 0.8rem;
+            opacity: 0.9;
+            margin-bottom: 0.4rem;
+        }
+        .sidebar-credit h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        .sidebar-credit .btn-outline {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 0.8rem;
+            font-family: 'Inter', sans-serif;
+        }
+        .sidebar-credit .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        /* ── MAIN CONTENT ── */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+        }
+
+        /* ── SECTION PAGES ── */
+        .section-page {
+            display: none;
+            flex-direction: column;
+            gap: 1.8rem;
+        }
+        .section-page.active {
+            display: flex;
+        }
+
+        /* stats */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 1.2rem;
+        }
+        .stat-card {
+            background: var(--stat-bg);
+            border-radius: 28px;
+            padding: 1.2rem 1.4rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s, transform 0.2s;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .stat-card .stat-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: var(--text-muted);
+        }
+        .stat-card .stat-number {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.2;
+            margin: 0.2rem 0 0.1rem;
+        }
+        .stat-card .stat-change {
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.2rem;
+        }
+        .stat-card .stat-change.positive {
+            color: var(--positive);
+        }
+        .stat-card .stat-change.negative {
+            color: var(--negative);
+        }
+
+        /* charts */
+        .charts-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.2rem;
+        }
+        @media (max-width: 760px) {
+            .charts-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        .chart-card {
+            background: var(--bg-card);
+            border-radius: 28px;
+            padding: 1.4rem 1.4rem 1rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+        .chart-card .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+        .chart-card .card-header h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .chart-card .card-header span {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            background: var(--search-bg);
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+        }
+        .chart-container {
+            position: relative;
+            height: 200px;
+        }
+
+        /* activity + products */
+        .activity-row {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 1.2rem;
+        }
+        @media (max-width: 680px) {
+            .activity-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        .panel {
+            background: var(--bg-card);
+            border-radius: 28px;
+            padding: 1.4rem 1.6rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+        .panel h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-primary);
+        }
+        .panel h4 i {
+            color: var(--primary);
+        }
+
+        /* ── TABLE STYLES ── */
+        .table-responsive {
+            overflow-x: auto;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        .data-table th {
+            text-align: left;
+            padding: 0.6rem 0.4rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .data-table td {
+            padding: 0.6rem 0.4rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+        .data-table td strong {
+            color: var(--text-primary);
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 0.15rem 0.7rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .status-badge.success {
+            background: var(--positive);
+            color: #fff;
+        }
+        .status-badge.warning {
+            background: #f5a623;
+            color: #fff;
+        }
+        .status-badge.danger {
+            background: var(--negative);
+            color: #fff;
+        }
+        .status-badge.info {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        /* ── SETTINGS FORM ── */
+        .settings-form .form-group {
+            margin-bottom: 1.2rem;
+        }
+        .settings-form label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.2rem;
+        }
+        .settings-form input,
+        .settings-form select {
+            width: 100%;
+            padding: 0.6rem 1rem;
+            border-radius: 40px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-body);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            transition: 0.2s;
+        }
+        .settings-form input:focus,
+        .settings-form select:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        .settings-form .btn-primary {
+            background: var(--primary);
+            border: none;
+            color: #fff;
+            padding: 0.6rem 2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .settings-form .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        /* ── ANALYTICS CARDS ── */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+        }
+        .analytics-card {
+            background: var(--bg-card);
+            border-radius: 28px;
+            padding: 1.2rem 1.4rem;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+        .analytics-card .number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+        .analytics-card .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.2rem;
+        }
+
+        /* ── ACTIVITY / PRODUCT ITEMS ── */
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid var(--border-color);
+            transition: border-color 0.3s;
+        }
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        .activity-item .avatar-sm {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--hover-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.7rem;
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+        .activity-item .activity-text {
+            flex: 1;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .activity-item .activity-text strong {
+            color: var(--text-primary);
+        }
+        .activity-item .activity-time {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+        .activity-item.hidden-item {
+            display: none;
+        }
+
+        .product-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.85rem;
+            transition: border-color 0.3s;
+        }
+        .product-item:last-child {
+            border-bottom: none;
+        }
+        .product-item .product-name {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .product-item .product-name .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .product-item .product-sales {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .product-item.hidden-item {
+            display: none;
+        }
+
+        .highlight {
+            background: var(--highlight-bg);
+            padding: 0 2px;
+            border-radius: 3px;
+            transition: background 0.3s;
+        }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--modal-overlay);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.25s ease;
+        }
+        .modal-overlay.open {
+            display: flex;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .modal-box {
+            background: var(--modal-bg);
+            border-radius: 32px;
+            max-width: 520px;
+            width: 92%;
+            padding: 2rem 2rem 1.8rem;
+            box-shadow: var(--modal-shadow);
+            animation: slideUp 0.3s ease;
+            position: relative;
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.97);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        .modal-box .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1.2rem;
+            background: transparent;
+            border: none;
+            font-size: 1.4rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .modal-box .modal-close:hover {
+            color: var(--text-primary);
+            transform: rotate(90deg);
+        }
+        .modal-box h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+            color: var(--modal-text);
+        }
+        .modal-box .modal-sub {
+            font-size: 0.8rem;
+            color: var(--modal-sub);
+            margin-bottom: 1rem;
+        }
+        .modal-box p {
+            color: var(--modal-body);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 0.6rem;
+        }
+        .modal-box .modal-icon {
+            font-size: 2.4rem;
+            color: var(--primary);
+            margin-bottom: 0.4rem;
+        }
+        .modal-box .modal-action-btn {
+            margin-top: 1.2rem;
+            background: var(--primary);
+            border: none;
+            color: #fff;
+            padding: 0.5rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .modal-box .modal-action-btn:hover {
+            background: var(--primary-hover);
+        }
+        .modal-box .modal-action-btn.danger {
+            background: var(--negative);
+        }
+        .modal-box .modal-action-btn.danger:hover {
+            background: #d94a5a;
+        }
+
+        /* ── FOOTER ── */
+        .footer {
+            margin-top: 2rem;
+            padding-top: 1.2rem;
+            border-top: 1px solid var(--footer-border);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            transition: border-color 0.3s, color 0.3s;
+        }
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .footer a:hover {
+            color: var(--text-primary);
+        }
+        .footer-links {
+            display: flex;
+            gap: 1.6rem;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 480px) {
+            .top-nav {
+                padding: 0.6rem 1rem;
+                border-radius: 32px;
+            }
+            .nav-search {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+            .stat-card {
+                padding: 1rem;
+            }
+            .dropdown-menu {
+                min-width: 200px;
+                right: -10px;
+            }
+            .modal-box {
+                padding: 1.6rem 1.2rem;
+            }
+        }
+
+        .dropdown-menu::-webkit-scrollbar {
+            width: 4px;
+        }
+        .dropdown-menu::-webkit-scrollbar-track {
+            background: var(--search-bg);
+            border-radius: 10px;
+        }
+        .dropdown-menu::-webkit-scrollbar-thumb {
+            background: var(--text-muted);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-wrapper">
+
+        <!-- ===== TOP NAV ===== -->
+        <header class="top-nav">
+            <div class="logo"><i class="fas fa-rocket"></i> SaaSify</div>
+
+            <div class="nav-search" id="searchWrapper">
+                <input type="text" id="searchInput" placeholder="Search dashboard, analytics..." />
+                <button class="search-btn" id="searchBtn"><i class="fas fa-search"></i> Search</button>
+                <div class="search-results-indicator" id="searchResults"></div>
+            </div>
+
+            <div class="nav-right">
+                <button class="icon-btn" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
+
+                <div class="dropdown-wrapper">
+                    <button class="icon-btn" id="notifBtn" aria-label="notifications">
+                        <i class="far fa-bell"></i>
+                        <span class="badge pulse" id="notifBadge">3</span>
+                    </button>
+                    <div class="dropdown-menu" id="notifDropdown">
+                        <div class="drop-header">🔔 Notifications</div>
+                        <button class="drop-item" data-action="notif1"><i class="fas fa-user-plus"></i> Sarah K. followed you <span class="drop-time">2m</span></button>
+                        <button class="drop-item" data-action="notif2"><i class="fas fa-rocket"></i> Pro plan updated <span class="drop-time">15m</span></button>
+                        <button class="drop-item" data-action="notif3"><i class="fas fa-check-circle"></i> Payment received <span class="drop-time">1h</span></button>
+                        <div class="drop-footer" data-action="markRead">Mark all as read</div>
+                    </div>
+                </div>
+
+                <div class="dropdown-wrapper">
+                    <button class="icon-btn" id="msgBtn" aria-label="messages"><i class="far fa-envelope"></i></button>
+                    <div class="dropdown-menu" id="msgDropdown">
+                        <div class="drop-header">✉️ Messages</div>
+                        <button class="drop-item" data-action="msg1"><i class="fas fa-circle" style="color:var(--primary);font-size:0.5rem;"></i> Emily: Can you review... <span class="drop-time">1h</span></button>
+                        <button class="drop-item" data-action="msg2"><i class="fas fa-circle" style="color:var(--primary);font-size:0.5rem;"></i> Michael: Thanks for... <span class="drop-time">3h</span></button>
+                        <button class="drop-item" data-action="msg3"><i class="far fa-circle" style="font-size:0.5rem;color:var(--text-muted);"></i> David: Meeting at 4pm <span class="drop-time">5h</span></button>
+                        <div class="drop-footer" data-action="viewAllMsg">View all messages</div>
+                    </div>
+                </div>
+
+                <div class="dropdown-wrapper">
+                    <button class="icon-btn" id="settingsBtn" aria-label="settings"><i class="far fa-cog"></i></button>
+                    <div class="dropdown-menu" id="settingsDropdown">
+                        <div class="drop-header">⚙️ Settings</div>
+                        <button class="drop-item" data-action="settingsProfile"><i class="fas fa-user"></i> Profile</button>
+                        <button class="drop-item" data-action="settingsSecurity"><i class="fas fa-lock"></i> Security</button>
+                        <button class="drop-item" data-action="settingsNotif"><i class="fas fa-bell"></i> Notifications</button>
+                        <button class="drop-item" data-action="settingsAppearance"><i class="fas fa-palette"></i> Appearance</button>
+                        <div class="drop-divider"></div>
+                        <button class="drop-item" data-action="settingsLogout"><i class="fas fa-sign-out-alt" style="color:var(--negative);"></i> <span style="color:var(--negative);">Logout</span></button>
+                    </div>
+                </div>
+
+                <div class="dropdown-wrapper">
+                    <div class="avatar" id="avatarBtn">JD</div>
+                    <div class="dropdown-menu" id="profileDropdown">
+                        <div class="drop-header">👤 James Davis</div>
+                        <button class="drop-item" data-action="profileMy"><i class="fas fa-user"></i> My Profile</button>
+                        <button class="drop-item" data-action="profileBilling"><i class="fas fa-credit-card"></i> Billing</button>
+                        <button class="drop-item" data-action="profilePrefs"><i class="fas fa-cog"></i> Preferences</button>
+                        <div class="drop-divider"></div>
+                        <button class="drop-item" data-action="profileHelp"><i class="fas fa-question-circle"></i> Help Center</button>
+                        <button class="drop-item" data-action="profileSignout"><i class="fas fa-sign-out-alt" style="color:var(--negative);"></i> <span style="color:var(--negative);">Sign Out</span></button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- ===== DASHBOARD GRID ===== -->
+        <div class="dashboard-grid">
+
+            <!-- SIDEBAR -->
+            <aside class="sidebar">
+                <div class="greeting">👋 Welcome back</div>
+                <div class="user-name">James Davis <i class="fas fa-check-circle"></i></div>
+                <nav class="nav-menu" id="navMenu">
+                    <a data-section="dashboard" class="active"><i class="fas fa-th-large"></i> Dashboard</a>
+                    <a data-section="analytics"><i class="fas fa-chart-line"></i> Analytics</a>
+                    <a data-section="customers"><i class="fas fa-users"></i> Customers</a>
+                    <a data-section="products"><i class="fas fa-box"></i> Products</a>
+                    <a data-section="invoices"><i class="fas fa-file-invoice"></i> Invoices</a>
+                    <a data-section="settings"><i class="fas fa-cog"></i> Settings</a>
+                </nav>
+                <div class="sidebar-credit">
+                    <p>🚀 Plan</p>
+                    <h4>Pro Enterprise</h4>
+                    <button class="btn-outline" id="upgradeBtn"><i class="fas fa-arrow-right"></i> Upgrade</button>
+                </div>
+            </aside>
+
+            <!-- MAIN -->
+            <main class="main-content">
+
+                <!-- ===== SECTION: DASHBOARD ===== -->
+                <div class="section-page active" id="section-dashboard">
+                    <div class="stats-row">
+                        <div class="stat-card"><div class="stat-label">Total Revenue</div><div class="stat-number">$48,295</div><div class="stat-change positive"><i class="fas fa-arrow-up"></i> 12.5%</div></div>
+                        <div class="stat-card"><div class="stat-label">Active Users</div><div class="stat-number">2,847</div><div class="stat-change positive"><i class="fas fa-arrow-up"></i> 8.2%</div></div>
+                        <div class="stat-card"><div class="stat-label">Conversion Rate</div><div class="stat-number">24.6%</div><div class="stat-change positive"><i class="fas fa-arrow-up"></i> 3.1%</div></div>
+                        <div class="stat-card"><div class="stat-label">Churn Rate</div><div class="stat-number">2.4%</div><div class="stat-change negative"><i class="fas fa-arrow-down"></i> 0.8%</div></div>
+                    </div>
+
+                    <div class="charts-row">
+                        <div class="chart-card">
+                            <div class="card-header"><h4><i class="fas fa-chart-bar" style="color:var(--primary);"></i> Revenue Overview</h4><span>Last 7 days</span></div>
+                            <div class="chart-container"><canvas id="revenueChart"></canvas></div>
+                        </div>
+                        <div class="chart-card">
+                            <div class="card-header"><h4><i class="fas fa-pie-chart" style="color:var(--primary);"></i> Traffic Sources</h4><span>This month</span></div>
+                            <div class="chart-container"><canvas id="trafficChart"></canvas></div>
+                        </div>
+                    </div>
+
+                    <div class="activity-row">
+                        <div class="panel"><h4><i class="fas fa-bolt"></i> Recent Activity</h4><div id="activityList"></div></div>
+                        <div class="panel"><h4><i class="fas fa-crown"></i> Top Products</h4><div id="productList"></div></div>
+                    </div>
+                </div>
+
+                <!-- ===== SECTION: ANALYTICS ===== -->
+                <div class="section-page" id="section-analytics">
+                    <div class="stats-row">
+                        <div class="stat-card"><div class="stat-label">Total Visits</div><div class="stat-number">45.2K</div><div class="stat-change positive"><i class="fas fa-arrow-up"></i> 8.1%</div></div>
+                        <div class="stat-card"><div class="stat-label">Bounce Rate</div><div class="stat-number">32.4%</div><div class="stat-change negative"><i class="fas fa-arrow-down"></i> 2.3%</div></div>
+                        <div class="stat-card"><div class="stat-label">Avg. Session</div><div class="stat-number">4m 12s</div><div class="stat-change positive"><i class="fas fa-arrow-up"></i> 6%</div></div>
+                        <div class="stat-card"><div class="stat-label">Conversion</div><div class="stat-number">12.8%</div><div class="stat-change positive"><i class="fas fa-arrow-up"></i> 1.5%</div></div>
+                    </div>
+
+                    <div class="charts-row">
+                        <div class="chart-card">
+                            <div class="card-header"><h4><i class="fas fa-chart-line" style="color:var(--primary);"></i> Traffic Over Time</h4><span>Last 30 days</span></div>
+                            <div class="chart-container"><canvas id="trafficLineChart"></canvas></div>
+                        </div>
+                        <div class="chart-card">
+                            <div class="card-header"><h4><i class="fas fa-pie-chart" style="color:var(--primary);"></i> Device Breakdown</h4><span>This week</span></div>
+                            <div class="chart-container"><canvas id="deviceChart"></canvas></div>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <h4><i class="fas fa-table"></i> Top Pages</h4>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead><tr><th>Page</th><th>Views</th><th>Unique</th><th>Bounce</th></tr></thead>
+                                <tbody>
+                                    <tr><td><strong>/dashboard</strong></td><td>12,430</td><td>8,920</td><td>28%</td></tr>
+                                    <tr><td><strong>/analytics</strong></td><td>8,200</td><td>5,600</td><td>35%</td></tr>
+                                    <tr><td><strong>/customers</strong></td><td>5,710</td><td>4,100</td><td>42%</td></tr>
+                                    <tr><td><strong>/settings</strong></td><td>3,990</td><td>2,880</td><td>51%</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== SECTION: CUSTOMERS ===== -->
+                <div class="section-page" id="section-customers">
+                    <div class="stats-row">
+                        <div class="stat-card"><div class="stat-label">Total Customers</div><div class="stat-number">1,284</div><div class="stat-change positive"><i class="fas fa-arrow-up"></i> 12%</div></div>
+                        <div class="stat-card"><div class="stat-label">New (Last 30d)</div><div class="stat-number">142</div><div class="stat-change positive"><i class="fas fa-arrow-up"></i> 5%</div></div>
+                        <div class="stat-card"><div class="stat-label">Active</div><div class="stat-number">892</div><div class="stat-change positive"><i class="fas fa-arrow-up"></i> 3%</div></div>
+                        <div class="stat-card"><div class="stat-label">Churned</div><div class="stat-number">32</div><div class="stat-change negative"><i class="fas fa-arrow-down"></i> 2%</div></div>
+                    </div>
+
+                    <div class="panel">
+                        <h4><i class="fas fa-list"></i> Customer List</h4>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead><tr><th>Name</th><th>Email</th><th>Plan</th><th>Status</th><th>Joined</th></tr></thead>
+                                <tbody>
+                                    <tr><td><strong>Sarah K.</strong></td><td>sarah@example.com</td><td>Pro</td><td><span class="status-badge success">Active</span></td><td>Jan 12, 2026</td></tr>
+                                    <tr><td><strong>Michael R.</strong></td><td>michael@example.com</td><td>Enterprise</td><td><span class="status-badge success">Active</span></td><td>Feb 5, 2026</td></tr>
+                                    <tr><td><strong>Emily W.</strong></td><td>emily@example.com</td><td>Starter</td><td><span class="status-badge warning">Trial</span></td><td>Mar 20, 2026</td></tr>
+                                    <tr><td><strong>David L.</strong></td><td>david@example.com</td><td>Lite</td><td><span class="status-badge danger">Churned</span></td><td>Dec 1, 2025</td></tr>
+                                    <tr><td><strong>Anna T.</strong></td><td>anna@example.com</td><td>Pro</td><td><span class="status-badge success">Active</span></td><td>Apr 2, 2026</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== SECTION: PRODUCTS ===== -->
+                <div class="section-page" id="section-products">
+                    <div class="stats-row">
+                        <div class="stat-card"><div class="stat-label">Total Products</div><div class="stat-number">12</div><div class="stat-change positive"><i class="fas fa-arrow-up"></i> 2 new</div></div>
+                        <div class="stat-card"><div class="stat-label">Active Products</div><div class="stat-number">9</div><div class="stat-change positive"><i class="fas fa-arrow-up"></i> 75%</div></div>
+                        <div class="stat-card"><div class="stat-label">Best Seller</div><div class="stat-number">Lite</div><div class="stat-change">3,421 sales</div></div>
+                        <div class="stat-card"><div class="stat-label">Revenue (MTD)</div><div class="stat-number">$12,340</div><div class="stat-change positive"><i class="fas fa-arrow-up"></i> 9%</div></div>
+                    </div>
+
+                    <div class="panel">
+                        <h4><i class="fas fa-cube"></i> Product Catalog</h4>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead><tr><th>Product</th><th>Price</th><th>Sales</th><th>Revenue</th><th>Status</th></tr></thead>
+                                <tbody>
+                                    <tr><td><strong>Pro Plan</strong></td><td>$99/mo</td><td>1,284</td><td>$127,116</td><td><span class="status-badge success">Active</span></td></tr>
+                                    <tr><td><strong>Enterprise</strong></td><td>$199/mo</td><td>847</td><td>$168,553</td><td><span class="status-badge success">Active</span></td></tr>
+                                    <tr><td><strong>Starter</strong></td><td>$29/mo</td><td>2,156</td><td>$62,524</td><td><span class="status-badge success">Active</span></td></tr>
+                                    <tr><td><strong>Lite</strong></td><td>$9/mo</td><td>3,421</td><td>$30,789</td><td><span class="status-badge success">Active</span></td></tr>
+                                    <tr><td><strong>Ultimate</strong></td><td>$399/mo</td><td>32</td><td>$12,768</td><td><span class="status-badge warning">Beta</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== SECTION: INVOICES ===== -->
+                <div class="section-page" id="section-invoices">
+                    <div class="stats-row">
+                        <div class="stat-card"><div class="stat-label">Total Invoices</div><div class="stat-number">342</div><div class="stat-change positive"><i class="fas fa-arrow-up"></i> 8%</div></div>
+                        <div class="stat-card"><div class="stat-label">Paid</div><div class="stat-number">289</div><div class="stat-change positive"><i class="fas fa-arrow-up"></i> 84%</div></div>
+                        <div class="stat-card"><div class="stat-label">Pending</div><div class="stat-number">38</div><div class="stat-change negative"><i class="fas fa-arrow-down"></i> 11%</div></div>
+                        <div class="stat-card"><div class="stat-label">Overdue</div><div class="stat-number">15</div><div class="stat-change negative"><i class="fas fa-arrow-down"></i> 4%</div></div>
+                    </div>
+
+                    <div class="panel">
+                        <h4><i class="fas fa-receipt"></i> Recent Invoices</h4>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead><tr><th>Invoice #</th><th>Customer</th><th>Amount</th><th>Date</th><th>Status</th></tr></thead>
+                                <tbody>
+                                    <tr><td><strong>#INV-2026-001</strong></td><td>Sarah K.</td><td>$99.00</td><td>Oct 12, 2026</td><td><span class="status-badge success">Paid</span></td></tr>
+                                    <tr><td><strong>#INV-2026-002</strong></td><td>Michael R.</td><td>$199.00</td><td>Oct 10, 2026</td><td><span class="status-badge success">Paid</span></td></tr>
+                                    <tr><td><strong>#INV-2026-003</strong></td><td>Emily W.</td><td>$29.00</td><td>Oct 8, 2026</td><td><span class="status-badge warning">Pending</span></td></tr>
+                                    <tr><td><strong>#INV-2026-004</strong></td><td>David L.</td><td>$9.00</td><td>Oct 5, 2026</td><td><span class="status-badge danger">Overdue</span></td></tr>
+                                    <tr><td><strong>#INV-2026-005</strong></td><td>Anna T.</td><td>$99.00</td><td>Oct 2, 2026</td><td><span class="status-badge success">Paid</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== SECTION: SETTINGS ===== -->
+                <div class="section-page" id="section-settings">
+                    <div class="panel">
+                        <h4><i class="fas fa-user-cog"></i> General Settings</h4>
+                        <form class="settings-form" id="settingsForm">
+                            <div class="form-group">
+                                <label for="fullName">Full Name</label>
+                                <input type="text" id="fullName" value="James Davis" />
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" value="james.davis@saasify.com" />
+                            </div>
+                            <div class="form-group">
+                                <label for="company">Company</label>
+                                <input type="text" id="company" value="SaaSify Inc." />
+                            </div>
+                            <div class="form-group">
+                                <label for="timezone">Timezone</label>
+                                <select id="timezone">
+                                    <option>America/Los_Angeles</option>
+                                    <option>America/New_York</option>
+                                    <option>Europe/London</option>
+                                    <option>Asia/Tokyo</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="notifPref">Notification Preferences</label>
+                                <select id="notifPref">
+                                    <option>Email & Push</option>
+                                    <option>Email only</option>
+                                    <option>Push only</option>
+                                    <option>None</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn-primary">Save Changes</button>
+                        </form>
+                        <div style="margin-top: 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+                            <h4 style="color: var(--negative);"><i class="fas fa-trash-alt"></i> Danger Zone</h4>
+                            <button class="btn-primary danger" style="background: var(--negative);" onclick="if(confirm('Are you sure? This action cannot be undone.')) alert('Account deleted.')">Delete Account</button>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+
+        <!-- ===== FOOTER ===== -->
+        <footer class="footer">
+            <span>© 2026 SaaSify · All rights reserved</span>
+            <div class="footer-links">
+                <a id="privacyLink">Privacy</a>
+                <a id="termsLink">Terms</a>
+                <a id="supportLink">Support</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ===== MODAL ===== -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-box">
+            <button class="modal-close" id="modalClose"><i class="fas fa-times"></i></button>
+            <div class="modal-icon" id="modalIcon"><i class="fas fa-shield-alt"></i></div>
+            <h2 id="modalTitle">Title</h2>
+            <div class="modal-sub" id="modalSub"></div>
+            <div id="modalBody"><p>Content</p></div>
+            <button class="modal-action-btn" id="modalActionBtn">Got it</button>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            "use strict";
+
+            // ─── DATA ──────────────────────────────────────────────
+            const activities = [
+                { user: "Sarah K.", action: "purchased Pro plan", time: "2 min ago", initials: "SK" },
+                { user: "Michael R.", action: "signed up for trial", time: "15 min ago", initials: "MR" },
+                { user: "Emily W.", action: "upgraded to Enterprise", time: "1h ago", initials: "EW" },
+                { user: "David L.", action: "completed onboarding", time: "2h ago", initials: "DL" },
+                { user: "Anna T.", action: "submitted support ticket", time: "3h ago", initials: "AT" },
+            ];
+
+            const products = [
+                { name: "Pro Plan", sales: "1,284", color: "#4f6ef7" },
+                { name: "Enterprise", sales: "847", color: "#22a65e" },
+                { name: "Starter", sales: "2,156", color: "#f5a623" },
+                { name: "Lite", sales: "3,421", color: "#7a94fa" },
+            ];
+
+            // ─── SECTION NAVIGATION ──────────────────────────────
+            const navLinks = document.querySelectorAll('.nav-menu a[data-section]');
+            const sections = {
+                dashboard: document.getElementById('section-dashboard'),
+                analytics: document.getElementById('section-analytics'),
+                customers: document.getElementById('section-customers'),
+                products: document.getElementById('section-products'),
+                invoices: document.getElementById('section-invoices'),
+                settings: document.getElementById('section-settings'),
+            };
+            let chartInstances = {};
+
+            function switchSection(sectionId) {
+                // Update nav
+                navLinks.forEach(link => {
+                    link.classList.toggle('active', link.dataset.section === sectionId);
+                });
+                // Update sections
+                Object.keys(sections).forEach(key => {
+                    const el = sections[key];
+                    if (key === sectionId) {
+                        el.classList.add('active');
+                    } else {
+                        el.classList.remove('active');
+                    }
+                });
+                // Init charts for the section if needed
+                if (sectionId === 'dashboard') initDashboardCharts();
+                if (sectionId === 'analytics') initAnalyticsCharts();
+                // Close search results
+                document.getElementById('searchResults')?.classList.remove('show');
+                // Update search placeholder
+                const searchInput = document.getElementById('searchInput');
+                const placeholders = {
+                    dashboard: 'Search dashboard, analytics...',
+                    analytics: 'Search analytics...',
+                    customers: 'Search customers...',
+                    products: 'Search products...',
+                    invoices: 'Search invoices...',
+                    settings: 'Search settings...',
+                };
+                searchInput.placeholder = placeholders[sectionId] || 'Search...';
+                // Re-run search for the new section
+                performSearch();
+            }
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const section = this.dataset.section;
+                    if (section) switchSection(section);
+                });
+            });
+
+            // ─── RENDER HELPERS ──────────────────────────────────
+            const activityList = document.getElementById('activityList');
+            const productList = document.getElementById('productList');
+
+            function renderActivity(filter = '') {
+                if (!activityList) return;
+                activityList.innerHTML = '';
+                const term = filter.toLowerCase().trim();
+                let hasVisible = false;
+                activities.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'activity-item';
+                    const text = `${item.user} ${item.action}`;
+                    const match = term === '' || text.toLowerCase().includes(term);
+                    if (!match) {
+                        div.classList.add('hidden-item');
+                    } else {
+                        hasVisible = true;
+                    }
+                    const highlightedText = term === '' ? text : highlightText(text, term);
+                    div.innerHTML = `
+                        <div class="avatar-sm">${item.initials}</div>
+                        <div class="activity-text">${highlightedText}</div>
+                        <div class="activity-time">${item.time}</div>
+                    `;
+                    activityList.appendChild(div);
+                });
+                if (!hasVisible && term !== '') {
+                    const empty = document.createElement('div');
+                    empty.className = 'activity-item';
+                    empty.style.cssText = 'color:var(--text-muted);font-size:0.85rem;padding:0.8rem 0;';
+                    empty.textContent = 'No matching activity';
+                    activityList.appendChild(empty);
+                }
+            }
+
+            function renderProducts(filter = '') {
+                if (!productList) return;
+                productList.innerHTML = '';
+                const term = filter.toLowerCase().trim();
+                let hasVisible = false;
+                products.forEach(p => {
+                    const div = document.createElement('div');
+                    div.className = 'product-item';
+                    const match = term === '' || p.name.toLowerCase().includes(term);
+                    if (!match) {
+                        div.classList.add('hidden-item');
+                    } else {
+                        hasVisible = true;
+                    }
+                    const highlightedName = term === '' ? p.name : highlightText(p.name, term);
+                    div.innerHTML = `
+                        <div class="product-name">
+                            <span class="dot" style="background:${p.color};"></span>
+                            ${highlightedName}
+                        </div>
+                        <div class="product-sales">${p.sales}</div>
+                    `;
+                    productList.appendChild(div);
+                });
+                if (!hasVisible && term !== '') {
+                    const empty = document.createElement('div');
+                    empty.className = 'product-item';
+                    empty.style.cssText = 'color:var(--text-muted);font-size:0.85rem;padding:0.8rem 0;';
+                    empty.textContent = 'No matching products';
+                    productList.appendChild(empty);
+                }
+            }
+
+            function highlightText(text, term) {
+                const idx = text.toLowerCase().indexOf(term);
+                if (idx === -1) return text;
+                const before = text.slice(0, idx);
+                const match = text.slice(idx, idx + term.length);
+                const after = text.slice(idx + term.length);
+                return `${before}<span class="highlight">${match}</span>${after}`;
+            }
+
+            // ─── SEARCH ──────────────────────────────────────────
+            const searchInput = document.getElementById('searchInput');
+            const searchBtn = document.getElementById('searchBtn');
+            const searchResults = document.getElementById('searchResults');
+
+            function getActiveSection() {
+                for (const [key, el] of Object.entries(sections)) {
+                    if (el.classList.contains('active')) return key;
+                }
+                return 'dashboard';
+            }
+
+            function performSearch() {
+                const query = searchInput.value.trim();
+                const section = getActiveSection();
+
+                // Only dashboard has activity and product lists
+                if (section === 'dashboard') {
+                    renderActivity(query);
+                    renderProducts(query);
+                }
+
+                if (query.length > 0 && section === 'dashboard') {
+                    const actCount = activities.filter(a =>
+                        `${a.user} ${a.action}`.toLowerCase().includes(query.toLowerCase())
+                    ).length;
+                    const prodCount = products.filter(p =>
+                        p.name.toLowerCase().includes(query.toLowerCase())
+                    ).length;
+                    const total = actCount + prodCount;
+                    searchResults.innerHTML = `
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <span><strong>${total}</strong> result${total !== 1 ? 's' : ''} found</span>
+                            <span style="font-size:0.7rem;color:var(--text-muted);cursor:pointer;" id="clearSearch">✕ clear</span>
+                        </div>
+                        <div style="margin-top:0.3rem;font-size:0.75rem;color:var(--text-secondary);">
+                            ${actCount > 0 ? `📋 ${actCount} activity` : ''} ${actCount > 0 && prodCount > 0 ? '·' : ''} ${prodCount > 0 ? `📦 ${prodCount} product` : ''}
+                        </div>
+                    `;
+                    searchResults.classList.add('show');
+                    document.getElementById('clearSearch')?.addEventListener('click', () => {
+                        searchInput.value = '';
+                        performSearch();
+                        searchResults.classList.remove('show');
+                    });
+                } else if (query.length > 0 && section !== 'dashboard') {
+                    searchResults.innerHTML = `
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <span>Search in <strong>${section}</strong> section</span>
+                            <span style="font-size:0.7rem;color:var(--text-muted);cursor:pointer;" id="clearSearch">✕ clear</span>
+                        </div>
+                        <div style="margin-top:0.3rem;font-size:0.75rem;color:var(--text-secondary);">
+                            🔍 Type to filter results in this section
+                        </div>
+                    `;
+                    searchResults.classList.add('show');
+                    document.getElementById('clearSearch')?.addEventListener('click', () => {
+                        searchInput.value = '';
+                        performSearch();
+                        searchResults.classList.remove('show');
+                    });
+                } else {
+                    searchResults.classList.remove('show');
+                }
+            }
+
+            searchBtn.addEventListener('click', performSearch);
+            searchInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') performSearch();
+            });
+            searchInput.addEventListener('input', () => {
+                if (searchInput.value.trim() === '') {
+                    searchResults.classList.remove('show');
+                    if (getActiveSection() === 'dashboard') {
+                        renderActivity('');
+                        renderProducts('');
+                    }
+                }
+            });
+            document.addEventListener('click', (e) => {
+                const wrapper = document.getElementById('searchWrapper');
+                if (wrapper && !wrapper.contains(e.target)) {
+                    searchResults?.classList.remove('show');
+                }
+            });
+
+            // ─── DROPDOWNS ──────────────────────────────────────
+            function setupDropdown(btnId, menuId) {
+                const btn = document.getElementById(btnId);
+                const menu = document.getElementById(menuId);
+                if (!btn || !menu) return;
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isOpen = menu.classList.contains('open');
+                    closeAllDropdowns();
+                    if (!isOpen) menu.classList.add('open');
+                });
+            }
+
+            function closeAllDropdowns() {
+                document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('open'));
+            }
+
+            setupDropdown('notifBtn', 'notifDropdown');
+            setupDropdown('msgBtn', 'msgDropdown');
+            setupDropdown('settingsBtn', 'settingsDropdown');
+            setupDropdown('avatarBtn', 'profileDropdown');
+
+            document.addEventListener('click', closeAllDropdowns);
+            document.querySelectorAll('.dropdown-menu').forEach(m => {
+                m.addEventListener('click', (e) => e.stopPropagation());
+            });
+
+            // ─── DARK MODE TOGGLE ──────────────────────────────
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+
+            function setTheme(dark) {
+                if (dark) {
+                    document.body.classList.add('dark-mode');
+                    themeIcon.className = 'fas fa-sun';
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    document.body.classList.remove('dark-mode');
+                    themeIcon.className = 'fas fa-moon';
+                    localStorage.setItem('theme', 'light');
+                }
+                setTimeout(updateAllChartColors, 80);
+            }
+
+            const savedTheme = localStorage.getItem('theme');
+            setTheme(savedTheme === 'dark');
+
+            themeToggle.addEventListener('click', () => {
+                const isDark = document.body.classList.contains('dark-mode');
+                setTheme(!isDark);
+            });
+
+            // ─── MODAL SYSTEM ─────────────────────────────────────
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modalClose = document.getElementById('modalClose');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalSub = document.getElementById('modalSub');
+            const modalBody = document.getElementById('modalBody');
+            const modalIcon = document.getElementById('modalIcon');
+            const modalActionBtn = document.getElementById('modalActionBtn');
+
+            const modalConfigs = {
+                settingsProfile: {
+                    icon: 'fa-user-circle',
+                    title: 'Profile Settings',
+                    sub: 'Manage your personal information',
+                    body: `<p><strong>Name:</strong> James Davis</p><p><strong>Email:</strong> james.davis@saasify.com</p><p><strong>Role:</strong> Enterprise Admin</p><p><strong>Member since:</strong> Jan 2024</p><p style="margin-top:0.8rem;font-size:0.85rem;color:var(--text-muted);">You can update your profile photo, name, and contact details in the full settings panel.</p>`
+                },
+                settingsSecurity: {
+                    icon: 'fa-shield-alt',
+                    title: 'Security',
+                    sub: 'Password & access controls',
+                    body: `<p><strong>Password:</strong> •••••••• <span style="color:var(--primary);cursor:pointer;">Change</span></p><p><strong>Two-factor auth:</strong> <span style="color:var(--positive);">Enabled</span></p><p><strong>Active sessions:</strong> 3 devices</p><p><strong>Last login:</strong> Today, 10:32 AM</p><p style="margin-top:0.8rem;font-size:0.85rem;color:var(--text-muted);">Review your security settings and connected devices.</p>`
+                },
+                settingsNotif: {
+                    icon: 'fa-bell',
+                    title: 'Notification Preferences',
+                    sub: 'Choose what alerts you receive',
+                    body: `<p><i class="fas fa-check-circle" style="color:var(--positive);"></i> <strong>Email notifications</strong> — On</p><p><i class="fas fa-check-circle" style="color:var(--positive);"></i> <strong>Push notifications</strong> — On</p><p><i class="fas fa-times-circle" style="color:var(--negative);"></i> <strong>Marketing updates</strong> — Off</p><p><i class="fas fa-check-circle" style="color:var(--positive);"></i> <strong>System alerts</strong> — On</p><p style="margin-top:0.8rem;font-size:0.85rem;color:var(--text-muted);">Adjust your notification channels and frequency.</p>`
+                },
+                settingsAppearance: {
+                    icon: 'fa-palette',
+                    title: 'Appearance',
+                    sub: 'Theme & display preferences',
+                    body: `<p><strong>Theme:</strong> <span style="display:inline-block;background:#1a2332;color:#fff;padding:0.1rem 0.6rem;border-radius:20px;font-size:0.75rem;">Dark</span> <span style="display:inline-block;background:#f4f7fc;color:#1a2332;padding:0.1rem 0.6rem;border-radius:20px;font-size:0.75rem;border:1px solid #ddd;">Light</span> <span style="display:inline-block;background:linear-gradient(135deg,#1a2332,#f4f7fc);color:#fff;padding:0.1rem 0.6rem;border-radius:20px;font-size:0.75rem;">System</span></p><p><strong>Font size:</strong> Medium</p><p><strong>Sidebar:</strong> Expanded</p><p><strong>Animations:</strong> Enabled</p><p style="margin-top:0.8rem;font-size:0.85rem;color:var(--text-muted);">Customize the look and feel of your dashboard.</p>`
+                },
+                settingsLogout: {
+                    icon: 'fa-sign-out-alt',
+                    title: 'Logout',
+                    sub: 'Are you sure?',
+                    body: `<p>You are about to log out of your SaaSify account. Any unsaved changes will be lost.</p><p style="margin-top:0.4rem;color:var(--negative);">Confirm to continue.</p>`,
+                    actionLabel: 'Yes, Logout',
+                    actionDanger: true
+                },
+                profileMy: {
+                    icon: 'fa-user-circle',
+                    title: 'My Profile',
+                    sub: 'James Davis · Enterprise Admin',
+                    body: `<p><strong>Full name:</strong> James Davis</p><p><strong>Email:</strong> james.davis@saasify.com</p><p><strong>Company:</strong> SaaSify Inc.</p><p><strong>Role:</strong> Enterprise Administrator</p><p><strong>Location:</strong> San Francisco, CA</p><p style="margin-top:0.8rem;font-size:0.85rem;color:var(--text-muted);">View and edit your complete profile information.</p>`
+                },
+                profileBilling: {
+                    icon: 'fa-credit-card',
+                    title: 'Billing & Subscription',
+                    sub: 'Manage your payment methods',
+                    body: `<p><strong>Plan:</strong> Pro Enterprise</p><p><strong>Billing cycle:</strong> Monthly ($99/mo)</p><p><strong>Next invoice:</strong> Oct 15, 2026</p><p><strong>Payment method:</strong> Visa ending in 4242</p><p style="margin-top:0.8rem;font-size:0.85rem;color:var(--text-muted);">Update your billing information and view invoice history.</p>`
+                },
+                profilePrefs: {
+                    icon: 'fa-sliders-h',
+                    title: 'Preferences',
+                    sub: 'Customize your experience',
+                    body: `<p><strong>Language:</strong> English (US)</p><p><strong>Timezone:</strong> America/Los_Angeles</p><p><strong>Date format:</strong> MM/DD/YYYY</p><p><strong>Dashboard layout:</strong> Compact</p><p style="margin-top:0.8rem;font-size:0.85rem;color:var(--text-muted);">Set your personal preferences for the platform.</p>`
+                },
+                profileHelp: {
+                    icon: 'fa-question-circle',
+                    title: 'Help Center',
+                    sub: 'Support & documentation',
+                    body: `<p><strong>📚 Documentation:</strong> <a href="#" style="color:var(--primary);text-decoration:none;">Read the docs</a></p><p><strong>🎥 Video tutorials:</strong> <a href="#" style="color:var(--primary);text-decoration:none;">Watch now</a></p><p><strong>💬 Live chat:</strong> Available 24/7</p><p><strong>📧 Email support:</strong> support@saasify.com</p><p style="margin-top:0.8rem;font-size:0.85rem;color:var(--text-muted);">Get help with any question or issue you encounter.</p>`
+                },
+                profileSignout: {
+                    icon: 'fa-sign-out-alt',
+                    title: 'Sign Out',
+                    sub: 'Are you sure you want to leave?',
+                    body: `<p>You are about to sign out of your account. You'll need to log in again to access your dashboard.</p><p style="margin-top:0.4rem;color:var(--negative);">Confirm to sign out.</p>`,
+                    actionLabel: 'Yes, Sign Out',
+                    actionDanger: true
+                },
+                notif1: { icon: 'fa-user-plus', title: 'New Follower', sub: 'Sarah K. followed you',
+                    body: `<p>Sarah K. started following your activity. You can now see their updates in your feed.</p><p style="font-size:0.8rem;color:var(--text-muted);">2 minutes ago</p>` },
+                notif2: { icon: 'fa-rocket', title: 'Plan Updated', sub: 'Pro plan changes',
+                    body: `<p>Your Pro plan has been updated with new features. Check out the latest improvements in the dashboard.</p><p style="font-size:0.8rem;color:var(--text-muted);">15 minutes ago</p>` },
+                notif3: { icon: 'fa-check-circle', title: 'Payment Received', sub: 'Invoice #INV-2026-0012',
+                    body: `<p>Your payment of $99.00 has been successfully processed. Receipt has been sent to your email.</p><p style="font-size:0.8rem;color:var(--text-muted);">1 hour ago</p>` },
+                msg1: { icon: 'fa-envelope', title: 'Emily Chen', sub: 'Can you review the latest proposal?',
+                    body: `<p>Hi James, the Q4 proposal is ready for your review. Please take a look when you have a moment.</p><p style="font-size:0.8rem;color:var(--text-muted);">1 hour ago</p>` },
+                msg2: { icon: 'fa-envelope', title: 'Michael Rodriguez', sub: 'Thanks for your feedback',
+                    body: `<p>James, thanks for the quick feedback on the design mockups. I've made the adjustments you suggested.</p><p style="font-size:0.8rem;color:var(--text-muted);">3 hours ago</p>` },
+                msg3: { icon: 'fa-envelope', title: 'David Kim', sub: 'Meeting at 4pm today',
+                    body: `<p>Just a reminder that we have the team sync at 4pm in the boardroom. See you there!</p><p style="font-size:0.8rem;color:var(--text-muted);">5 hours ago</p>` },
+                privacy: { icon: 'fa-shield-alt', title: 'Privacy Policy', sub: 'How we protect your data',
+                    body: `<p>We take your privacy seriously. This policy describes how we collect, use, and protect your personal data.</p><p>We never sell your data to third parties. All information is encrypted and stored securely in compliance with GDPR and CCPA.</p><p>You can request to view, edit, or delete your data at any time through your account settings.</p>` },
+                terms: { icon: 'fa-file-contract', title: 'Terms of Service', sub: 'Agreement between you and SaaSify',
+                    body: `<p>By using SaaSify, you agree to our terms of service. These terms govern your use of our platform and services.</p><p>You are responsible for maintaining the security of your account and for all activities that occur under your account.</p><p>We reserve the right to update these terms at any time. Continued use constitutes acceptance of the updated terms.</p>` },
+                support: { icon: 'fa-headset', title: 'Support Center', sub: "We're here to help",
+                    body: `<p>Our support team is here to help you 24/7. Reach out via email, live chat, or phone.</p><p><strong>Email:</strong> support@saasify.com</p><p><strong>Live Chat:</strong> Available on our website</p><p><strong>Phone:</strong> +1 (800) 555-0199</p><p style="margin-top:0.6rem;">Average response time: &lt; 2 hours.</p>` },
+                markRead: { icon: 'fa-check-double', title: 'All Clear!', sub: 'Notifications marked as read',
+                    body: `<p>All notifications have been marked as read. You're all caught up! 🎉</p>` },
+                viewAllMsg: { icon: 'fa-inbox', title: 'Full Inbox', sub: 'All your messages',
+                    body: `<p>You have 12 unread messages across 4 conversations.</p><p><strong>Latest:</strong> Emily Chen, Michael Rodriguez, David Kim, Sarah K.</p><p style="font-size:0.85rem;color:var(--text-muted);margin-top:0.6rem;">Open your full message center to reply and manage conversations.</p>` },
+                upgrade: { icon: 'fa-rocket', title: 'Upgrade Your Plan', sub: 'Choose the best plan for your team',
+                    body: `<p><strong>🚀 Pro Enterprise</strong> — <span style="color:var(--primary);">Current plan</span></p><p style="margin-left:1.2rem;">✓ Advanced analytics & reporting</p><p style="margin-left:1.2rem;">✓ Priority support 24/7</p><p style="margin-left:1.2rem;">✓ Unlimited projects</p><hr style="border-color:var(--border-color);margin:0.8rem 0;"><p><strong>💎 Ultimate</strong> — $199/mo</p><p style="margin-left:1.2rem;">✓ Everything in Pro Enterprise</p><p style="margin-left:1.2rem;">✓ Dedicated account manager</p><p style="margin-left:1.2rem;">✓ Custom integrations</p><p style="margin-top:0.8rem;font-size:0.85rem;color:var(--text-muted);">Contact sales for a custom quote.</p>`,
+                    actionLabel: 'Contact Sales'
+                }
+            };
+
+            function openModal(key) {
+                const config = modalConfigs[key];
+                if (!config) return;
+                modalIcon.innerHTML = `<i class="fas ${config.icon}"></i>`;
+                modalTitle.textContent = config.title;
+                modalSub.textContent = config.sub || '';
+                modalBody.innerHTML = config.body;
+                const label = config.actionLabel || 'Got it';
+                modalActionBtn.textContent = label;
+                modalActionBtn.className = 'modal-action-btn';
+                if (config.actionDanger) modalActionBtn.classList.add('danger');
+                else modalActionBtn.classList.remove('danger');
+                modalActionBtn.dataset.actionKey = key;
+                modalOverlay.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeModal() {
+                modalOverlay.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+
+            modalActionBtn.addEventListener('click', function() {
+                const key = this.dataset.actionKey;
+                if (key === 'settingsLogout' || key === 'profileSignout') {
+                    if (confirm('Are you sure you want to sign out?')) {
+                        alert('You have been signed out.');
+                        closeModal();
+                        closeAllDropdowns();
+                    }
+                    return;
+                }
+                if (key === 'upgrade') {
+                    alert('🚀 Our sales team will contact you shortly with more details.');
+                    closeModal();
+                    closeAllDropdowns();
+                    return;
+                }
+                closeModal();
+                closeAllDropdowns();
+            });
+
+            modalClose.addEventListener('click', closeModal);
+            modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+            // ─── DROPDOWN ITEM CLICK HANDLER ─────────────────────
+            document.querySelectorAll('.drop-item, .drop-footer').forEach(el => {
+                el.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const action = this.dataset.action;
+                    if (action === 'settingsLogout' || action === 'profileSignout') {
+                        closeAllDropdowns();
+                        openModal(action);
+                        return;
+                    }
+                    if (action === 'markRead') {
+                        const badge = document.getElementById('notifBadge');
+                        if (badge) { badge.textContent = '0';
+                            badge.classList.remove('pulse'); }
+                        closeAllDropdowns();
+                        openModal('markRead');
+                        return;
+                    }
+                    if (action === 'viewAllMsg') { closeAllDropdowns();
+                        openModal('viewAllMsg'); return; }
+                    if (action && (action.startsWith('settings') || action.startsWith('profile') || action.startsWith(
+                            'notif') || action.startsWith('msg'))) {
+                        closeAllDropdowns();
+                        openModal(action);
+                        return;
+                    }
+                    const text = this.textContent.trim();
+                    if (text.includes('Profile') && !text.includes('My Profile')) { closeAllDropdowns();
+                        openModal('settingsProfile'); return; }
+                    if (text.includes('My Profile')) { closeAllDropdowns();
+                        openModal('profileMy'); return; }
+                    if (text.includes('Billing')) { closeAllDropdowns();
+                        openModal('profileBilling'); return; }
+                    if (text.includes('Preferences')) { closeAllDropdowns();
+                        openModal('profilePrefs'); return; }
+                    if (text.includes('Help Center')) { closeAllDropdowns();
+                        openModal('profileHelp'); return; }
+                    if (text.includes('Security')) { closeAllDropdowns();
+                        openModal('settingsSecurity'); return; }
+                    if (text.includes('Appearance')) { closeAllDropdowns();
+                        openModal('settingsAppearance'); return; }
+                    closeAllDropdowns();
+                });
+            });
+
+            // ─── UPGRADE BUTTON ────────────────────────────────────
+            document.getElementById('upgradeBtn').addEventListener('click', function(e) {
+                e.stopPropagation();
+                closeAllDropdowns();
+                openModal('upgrade');
+            });
+
+            // ─── FOOTER LINKS ─────────────────────────────────────
+            document.getElementById('privacyLink').addEventListener('click', () => openModal('privacy'));
+            document.getElementById('termsLink').addEventListener('click', () => openModal('terms'));
+            document.getElementById('supportLink').addEventListener('click', () => openModal('support'));
+
+            // ─── CHARTS ──────────────────────────────────────────
+            let revenueChart, trafficChart, trafficLineChart, deviceChart;
+
+            function initDashboardCharts() {
+                if (chartInstances.dashboard) return;
+                const revenueCtx = document.getElementById('revenueChart');
+                const trafficCtx = document.getElementById('trafficChart');
+                if (!revenueCtx || !trafficCtx) return;
+
+                revenueChart = new Chart(revenueCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                        datasets: [{ label: 'Revenue ($)', data: [3200, 4100, 3800, 5200, 4900, 6100, 5800],
+                            backgroundColor: 'rgba(79, 110, 247, 0.7)', borderColor: '#4f6ef7', borderWidth: 2,
+                            borderRadius: 6 }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: 'var(--chart-grid)' },
+                            ticks: { font: { size: 10 }, color: 'var(--text-secondary)' } },
+                            x: { grid: { display: false }, ticks: { font: { size: 10 },
+                                    color: 'var(--text-secondary)' } }
+                        }
+                    }
+                });
+
+                trafficChart = new Chart(trafficCtx.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Organic', 'Direct', 'Social', 'Referral'],
+                        datasets: [{ data: [45, 28, 17, 10], backgroundColor: ['#4f6ef7', '#22a65e', '#f5a623',
+                                '#7a94fa'
+                            ], borderWidth: 0 }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom', labels: { boxWidth: 10, padding: 8,
+                                    font: { size: 10, weight: '500' }, usePointStyle: true,
+                                    color: 'var(--text-primary)' } }
+                        },
+                        cutout: '70%'
+                    }
+                });
+                chartInstances.dashboard = { revenueChart, trafficChart };
+            }
+
+            function initAnalyticsCharts() {
+                if (chartInstances.analytics) return;
+                const lineCtx = document.getElementById('trafficLineChart');
+                const deviceCtx = document.getElementById('deviceChart');
+                if (!lineCtx || !deviceCtx) return;
+
+                trafficLineChart = new Chart(lineCtx.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: ['Jun 1', 'Jun 5', 'Jun 10', 'Jun 15', 'Jun 20', 'Jun 25', 'Jun 30'],
+                        datasets: [{ label: 'Visitors', data: [1200, 1800, 1500, 2200, 2000, 2600, 3000],
+                            borderColor: '#4f6ef7', backgroundColor: 'rgba(79,110,247,0.1)', tension: 0.3,
+                            fill: true }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: 'var(--chart-grid)' },
+                            ticks: { font: { size: 10 }, color: 'var(--text-secondary)' } },
+                            x: { grid: { display: false }, ticks: { font: { size: 10 },
+                                    color: 'var(--text-secondary)' } }
+                        }
+                    }
+                });
+
+                deviceChart = new Chart(deviceCtx.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Desktop', 'Mobile', 'Tablet'],
+                        datasets: [{ data: [55, 32, 13], backgroundColor: ['#4f6ef7', '#22a65e', '#f5a623'],
+                            borderWidth: 0 }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom', labels: { boxWidth: 10, padding: 8,
+                                    font: { size: 10, weight: '500' }, usePointStyle: true,
+                                    color: 'var(--text-primary)' } }
+                        },
+                        cutout: '70%'
+                    }
+                });
+                chartInstances.analytics = { trafficLineChart, deviceChart };
+            }
+
+            function updateAllChartColors() {
+                const isDark = document.body.classList.contains('dark-mode');
+                const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)';
+                const tickColor = isDark ? '#a0b3cc' : '#5a6e8a';
+                const labelColor = isDark ? '#e8edf5' : '#1a2332';
+
+                // Update dashboard charts
+                if (chartInstances.dashboard) {
+                    const { revenueChart, trafficChart } = chartInstances.dashboard;
+                    if (revenueChart) {
+                        revenueChart.options.scales.y.grid.color = gridColor;
+                        revenueChart.options.scales.y.ticks.color = tickColor;
+                        revenueChart.options.scales.x.ticks.color = tickColor;
+                        revenueChart.update();
+                    }
+                    if (trafficChart) {
+                        trafficChart.options.plugins.legend.labels.color = labelColor;
+                        trafficChart.update();
+                    }
+                }
+                // Update analytics charts
+                if (chartInstances.analytics) {
+                    const { trafficLineChart, deviceChart } = chartInstances.analytics;
+                    if (trafficLineChart) {
+                        trafficLineChart.options.scales.y.grid.color = gridColor;
+                        trafficLineChart.options.scales.y.ticks.color = tickColor;
+                        trafficLineChart.options.scales.x.ticks.color = tickColor;
+                        trafficLineChart.update();
+                    }
+                    if (deviceChart) {
+                        deviceChart.options.plugins.legend.labels.color = labelColor;
+                        deviceChart.update();
+                    }
+                }
+            }
+
+            // ─── SETTINGS FORM ─────────────────────────────────────
+            document.getElementById('settingsForm')?.addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Settings saved successfully!');
+            });
+
+            // ─── INIT ────────────────────────────────────────────
+            renderActivity('');
+            renderProducts('');
+
+            // Init dashboard charts by default
+            setTimeout(() => {
+                initDashboardCharts();
+                updateAllChartColors();
+            }, 100);
+
+            // Re-init charts when switching to a section that hasn't been rendered yet
+            const origSwitch = switchSection;
+            switchSection = function(sectionId) {
+                origSwitch(sectionId);
+                if (sectionId === 'dashboard') {
+                    setTimeout(initDashboardCharts, 50);
+                }
+                if (sectionId === 'analytics') {
+                    setTimeout(initAnalyticsCharts, 50);
+                }
+                setTimeout(updateAllChartColors, 100);
+            };
+
+            // Expose for theme toggle
+            window.__updateAllChartColors = updateAllChartColors;
+
+            // ─── CLOSE DROPDOWNS ON SCROLL ──────────────────────
+            window.addEventListener('scroll', closeAllDropdowns);
+
+        })();
+    </script>
+</body>
+</html>

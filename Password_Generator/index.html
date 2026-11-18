@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Password Generator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="generator-card">
+    <!-- header -->
+    <div class="header">
+      <h1>🔐 Password</h1>
+      <div class="badge-group">
+        <span class="badge live">● live</span>
+      </div>
+    </div>
+    <div class="subhead">
+      Generate strong, secure passwords with custom options.
+    </div>
+
+    <!-- password display -->
+    <div class="password-display" id="passwordDisplay">
+      <span class="password-text placeholder" id="passwordText">Click generate to create a password</span>
+      <button class="copy-btn" id="copyBtn">📋 Copy</button>
+      <div class="strength-indicator">
+        <div class="strength-bar" id="strengthBar"></div>
+      </div>
+    </div>
+
+    <!-- options -->
+    <div class="options">
+      <!-- Length -->
+      <div class="option-group">
+        <span class="option-label">Length</span>
+        <div class="length-control">
+          <input type="range" id="lengthSlider" min="4" max="32" value="16" />
+          <span class="length-value" id="lengthValue">16</span>
+        </div>
+      </div>
+
+      <!-- Uppercase -->
+      <div class="option-group">
+        <span class="option-label">Uppercase <span class="hint">(A-Z)</span></span>
+        <label class="checkbox-wrapper">
+          <input type="checkbox" id="uppercase" checked />
+          <span class="checkmark"></span>
+        </label>
+      </div>
+
+      <!-- Lowercase -->
+      <div class="option-group">
+        <span class="option-label">Lowercase <span class="hint">(a-z)</span></span>
+        <label class="checkbox-wrapper">
+          <input type="checkbox" id="lowercase" checked />
+          <span class="checkmark"></span>
+        </label>
+      </div>
+
+      <!-- Numbers -->
+      <div class="option-group">
+        <span class="option-label">Numbers <span class="hint">(0-9)</span></span>
+        <label class="checkbox-wrapper">
+          <input type="checkbox" id="numbers" checked />
+          <span class="checkmark"></span>
+        </label>
+      </div>
+
+      <!-- Symbols -->
+      <div class="option-group">
+        <span class="option-label">Symbols <span class="hint">(!@#$%^&*)</span></span>
+        <label class="checkbox-wrapper">
+          <input type="checkbox" id="symbols" checked />
+          <span class="checkmark"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- generate button -->
+    <button class="generate-btn" id="generateBtn">
+      <span>⚡</span> Generate Password
+    </button>
+  </div>
+
+  <!-- toast -->
+  <div class="toast" id="toast"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

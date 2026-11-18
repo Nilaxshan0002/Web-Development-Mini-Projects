@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Professional StopWatch | Precision Timer</title>
+  <!-- Google Font for clean, modern typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(145deg, #0b0e1a 0%, #1a1f2f 100%);
+      padding: 1.5rem;
+      margin: 0;
+    }
+
+    /* Main card – glassmorphism + premium feel */
+    .stopwatch-card {
+      background: rgba(22, 28, 46, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 3rem;
+      padding: 3rem 2.5rem 2.8rem;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      transition: box-shadow 0.3s ease;
+      text-align: center;
+    }
+
+    .stopwatch-card:hover {
+      box-shadow: 0 40px 80px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+    }
+
+    /* Header / brand */
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      margin-bottom: 1.8rem;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-icon {
+      font-size: 1.8rem;
+      line-height: 1;
+      filter: drop-shadow(0 0 6px rgba(0, 180, 255, 0.3));
+    }
+
+    .brand h1 {
+      font-weight: 600;
+      font-size: 1.6rem;
+      background: linear-gradient(to right, #e0e9ff, #b2cbff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    /* Timer display */
+    .timer-display {
+      background: #0f1322;
+      border-radius: 2.4rem;
+      padding: 1.2rem 0.8rem;
+      margin-bottom: 2.2rem;
+      box-shadow: inset 0 6px 14px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.02);
+    }
+
+    #timer {
+      font-family: 'Inter', monospace;
+      font-weight: 600;
+      font-size: 4.2rem;
+      letter-spacing: 4px;
+      color: #eef5ff;
+      text-shadow: 0 0 12px rgba(70, 150, 255, 0.15);
+      background: transparent;
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 1.6rem;
+      transition: color 0.2s;
+      line-height: 1.3;
+    }
+
+    /* millisecond highlight */
+    .milli {
+      font-size: 2.8rem;
+      font-weight: 500;
+      color: #82b0ff;
+      letter-spacing: 2px;
+      margin-left: 4px;
+    }
+
+    /* control buttons grid */
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 0.6rem;
+      margin-bottom: 2.2rem;
+    }
+
+    .btn {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 1.1rem;
+      padding: 0.9rem 0.4rem;
+      border: none;
+      border-radius: 2.4rem;
+      background: #262e44;
+      color: #d6e2ff;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+      letter-spacing: 0.3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.02);
+    }
+
+    .btn:active {
+      transform: scale(0.94);
+    }
+
+    .btn-primary {
+      background: #3b4b70;
+      color: white;
+      box-shadow: 0 8px 20px rgba(50, 100, 255, 0.2);
+      border: 1px solid rgba(120, 180, 255, 0.15);
+    }
+
+    .btn-primary:hover {
+      background: #4e628f;
+      box-shadow: 0 10px 28px rgba(50, 100, 255, 0.3);
+      border-color: rgba(120, 180, 255, 0.25);
+    }
+
+    .btn-success {
+      background: #1d7a4b;
+      color: white;
+      box-shadow: 0 8px 20px rgba(30, 200, 100, 0.15);
+      border: 1px solid rgba(80, 220, 140, 0.15);
+    }
+
+    .btn-success:hover {
+      background: #279a5e;
+      box-shadow: 0 10px 28px rgba(30, 200, 100, 0.25);
+    }
+
+    .btn-danger {
+      background: #8f3a4a;
+      color: white;
+      box-shadow: 0 8px 20px rgba(220, 70, 70, 0.12);
+      border: 1px solid rgba(255, 100, 100, 0.1);
+    }
+
+    .btn-danger:hover {
+      background: #b14559;
+      box-shadow: 0 10px 28px rgba(220, 70, 70, 0.2);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid #3f4a66;
+      color: #b8cbff;
+      box-shadow: none;
+    }
+
+    .btn-outline:hover {
+      background: #202838;
+      border-color: #6a7fa8;
+    }
+
+    .btn:disabled {
+      opacity: 0.4;
+      pointer-events: none;
+      filter: grayscale(0.3);
+      transform: none;
+    }
+
+    /* Lap section */
+    .lap-section {
+      margin-top: 0.8rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      padding-top: 1.8rem;
+    }
+
+    .lap-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #8fa2cc;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+      padding: 0 0.2rem;
+    }
+
+    .lap-header span:last-child {
+      background: #1a2133;
+      padding: 0.25rem 1rem;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      color: #b0c8ff;
+      border: 1px solid #2f3b58;
+    }
+
+    #lapList {
+      list-style: none;
+      max-height: 200px;
+      overflow-y: auto;
+      padding-right: 0.3rem;
+      margin-bottom: 0.4rem;
+      scrollbar-width: thin;
+      scrollbar-color: #3a486a #111827;
+    }
+
+    #lapList::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    #lapList::-webkit-scrollbar-track {
+      background: #111827;
+      border-radius: 10px;
+    }
+
+    #lapList::-webkit-scrollbar-thumb {
+      background: #3a486a;
+      border-radius: 10px;
+    }
+
+    .lap-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.6rem 0.8rem;
+      margin-bottom: 4px;
+      background: rgba(18, 24, 42, 0.6);
+      border-radius: 2rem;
+      color: #d0defa;
+      font-size: 0.95rem;
+      font-weight: 500;
+      border-left: 2px solid #2f4066;
+      transition: background 0.15s;
+      backdrop-filter: blur(4px);
+    }
+
+    .lap-item:hover {
+      background: rgba(32, 42, 70, 0.7);
+    }
+
+    .lap-item .lap-num {
+      color: #8ba0d4;
+      font-weight: 600;
+      margin-right: 0.8rem;
+    }
+
+    .lap-item .lap-time {
+      font-family: 'Inter', monospace;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    .empty-lap-message {
+      color: #4d5d82;
+      text-align: center;
+      padding: 1.2rem 0;
+      font-size: 0.95rem;
+      font-weight: 400;
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 3rem;
+      border: 1px dashed #2b3652;
+    }
+
+    .clear-lap-btn {
+      background: transparent;
+      border: 1px solid #37415e;
+      color: #879bc9;
+      padding: 0.5rem 1.8rem;
+      border-radius: 3rem;
+      font-weight: 500;
+      font-size: 0.8rem;
+      margin-top: 0.6rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.3px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .clear-lap-btn:hover {
+      background: #232d47;
+      border-color: #5d74a0;
+      color: #d6e4ff;
+    }
+
+    .clear-lap-btn:active {
+      transform: scale(0.94);
+    }
+
+    /* responsive */
+    @media (max-width: 480px) {
+      .stopwatch-card {
+        padding: 2rem 1.2rem 2rem;
+        border-radius: 2rem;
+      }
+
+      #timer {
+        font-size: 3.2rem;
+        letter-spacing: 2px;
+      }
+
+      .milli {
+        font-size: 2.2rem;
+      }
+
+      .controls {
+        gap: 0.6rem;
+      }
+
+      .btn {
+        font-size: 0.9rem;
+        padding: 0.7rem 0.2rem;
+      }
+
+      .brand h1 {
+        font-size: 1.3rem;
+      }
+    }
+
+    @media (max-width: 380px) {
+      #timer {
+        font-size: 2.6rem;
+      }
+
+      .milli {
+        font-size: 1.8rem;
+      }
+
+      .btn {
+        font-size: 0.8rem;
+        padding: 0.6rem 0.1rem;
+      }
+    }
+
+    /* subtle animation for running state */
+    @keyframes pulse-glow {
+      0% { text-shadow: 0 0 8px rgba(80, 160, 255, 0.1); }
+      50% { text-shadow: 0 0 20px rgba(80, 160, 255, 0.3); }
+      100% { text-shadow: 0 0 8px rgba(80, 160, 255, 0.1); }
+    }
+
+    .running #timer {
+      animation: pulse-glow 2s infinite;
+    }
+  </style>
+</head>
+<body>
+
+<div class="stopwatch-card" id="appContainer">
+  <!-- Brand -->
+  <div class="brand">
+    <span class="brand-icon">⏱️</span>
+    <h1>StopWatch</h1>
+  </div>
+
+  <!-- Timer Display -->
+  <div class="timer-display" id="timerDisplay">
+    <span id="timer">
+      <span id="minutes">00</span>:<span id="seconds">00</span>.<span id="milliseconds" class="milli">00</span>
+    </span>
+  </div>
+
+  <!-- Control Buttons -->
+  <div class="controls">
+    <button class="btn btn-success" id="startBtn" aria-label="Start">▶ Start</button>
+    <button class="btn btn-primary" id="pauseBtn" aria-label="Pause" disabled>⏸️ Pause</button>
+    <button class="btn btn-danger" id="resetBtn" aria-label="Reset">⟲ Reset</button>
+  </div>
+
+  <!-- Lap & split area -->
+  <div class="lap-section">
+    <div class="lap-header">
+      <span>📋 Laps</span>
+      <span id="lapCount">0</span>
+    </div>
+
+    <!-- Lap list container -->
+    <div id="lapList">
+      <div class="empty-lap-message">No laps recorded</div>
+    </div>
+
+    <!-- extra actions: lap + clear -->
+    <div style="display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; margin-top: 0.8rem;">
+      <button class="btn btn-outline" id="lapBtn" style="flex: 1; min-width: 100px;">⏺️ Lap</button>
+      <button class="clear-lap-btn" id="clearLapsBtn">🗑️ Clear laps</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    'use strict';
+
+    // ----- DOM refs -----
+    const minutesEl = document.getElementById('minutes');
+    const secondsEl = document.getElementById('seconds');
+    const millisecondsEl = document.getElementById('milliseconds');
+    const startBtn = document.getElementById('startBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const lapBtn = document.getElementById('lapBtn');
+    const lapList = document.getElementById('lapList');
+    const lapCount = document.getElementById('lapCount');
+    const clearLapsBtn = document.getElementById('clearLapsBtn');
+    const appContainer = document.getElementById('appContainer');
+
+    // ----- State -----
+    let startTime = 0;          // timestamp when started / resumed
+    let elapsedTime = 0;       // total ms accumulated (without current running)
+    let timerInterval = null;
+    let isRunning = false;
+    let laps = [];            // store lap times in ms
+
+    // ----- helpers: format time -----
+    function formatTime(ms) {
+      const totalSec = Math.floor(ms / 1000);
+      const minutes = Math.floor(totalSec / 60);
+      const seconds = totalSec % 60;
+      const milliseconds = Math.floor((ms % 1000) / 10); // two digit ms
+      return {
+        minutes: String(minutes).padStart(2, '0'),
+        seconds: String(seconds).padStart(2, '0'),
+        milliseconds: String(milliseconds).padStart(2, '0')
+      };
+    }
+
+    // ----- update display from elapsedTime -----
+    function updateDisplay(ms) {
+      const { minutes, seconds, milliseconds } = formatTime(ms);
+      minutesEl.textContent = minutes;
+      secondsEl.textContent = seconds;
+      millisecondsEl.textContent = milliseconds;
+    }
+
+    // ----- render lap list -----
+    function renderLaps() {
+      // clear list
+      lapList.innerHTML = '';
+
+      if (laps.length === 0) {
+        const emptyMsg = document.createElement('div');
+        emptyMsg.className = 'empty-lap-message';
+        emptyMsg.textContent = 'No laps recorded';
+        lapList.appendChild(emptyMsg);
+        lapCount.textContent = '0';
+        return;
+      }
+
+      // show all laps (latest first for readability)
+      const reversed = [...laps].reverse();
+      for (let i = 0; i < reversed.length; i++) {
+        const lapMs = reversed[i];
+        const { minutes, seconds, milliseconds } = formatTime(lapMs);
+        const li = document.createElement('li');
+        li.className = 'lap-item';
+        const lapNumber = laps.length - i; // lap number from start
+        li.innerHTML = `
+          <span><span class="lap-num">#${lapNumber}</span> <span style="color:#9eb3e8;">Lap</span></span>
+          <span class="lap-time">${minutes}:${seconds}.${milliseconds}</span>
+        `;
+        lapList.appendChild(li);
+      }
+
+      lapCount.textContent = laps.length;
+    }
+
+    // ----- core timer tick -----
+    function tick() {
+      if (!isRunning) return;
+      const now = performance.now();
+      const delta = now - startTime;
+      const total = elapsedTime + delta;
+      updateDisplay(total);
+    }
+
+    // ----- start stopwatch -----
+    function startTimer() {
+      if (isRunning) return;
+      isRunning = true;
+      appContainer.classList.add('running');
+      startTime = performance.now();
+      timerInterval = setInterval(tick, 20); // ~50fps – smooth & precise
+      // update UI
+      startBtn.disabled = true;
+      pauseBtn.disabled = false;
+      // enable lap button
+      lapBtn.disabled = false;
+    }
+
+    // ----- pause stopwatch -----
+    function pauseTimer() {
+      if (!isRunning) return;
+      // accumulate elapsed time
+      const now = performance.now();
+      const delta = now - startTime;
+      elapsedTime += delta;
+      isRunning = false;
+      appContainer.classList.remove('running');
+      clearInterval(timerInterval);
+      timerInterval = null;
+      // update display with exact paused time
+      updateDisplay(elapsedTime);
+
+      startBtn.disabled = false;
+      pauseBtn.disabled = true;
+      // lap button still available if there is any time (even paused we allow lap)
+      // but we keep it enabled if elapsed > 0 or laps exist
+    }
+
+    // ----- reset stopwatch (full) -----
+    function resetTimer() {
+      // stop any running
+      if (isRunning) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        isRunning = false;
+        appContainer.classList.remove('running');
+      }
+      // reset state
+      elapsedTime = 0;
+      startTime = 0;
+      updateDisplay(0);
+      startBtn.disabled = false;
+      pauseBtn.disabled = true;
+      lapBtn.disabled = true;   // no time -> no lap
+      // clear laps?
+      // We keep laps by design, but user can clear separately.
+      // However we also reset laps if requested via "reset" – but that's common?
+      // we do NOT auto clear laps on reset: user expects reset timer but keep laps.
+      // But we re-render just in case.
+      renderLaps();
+    }
+
+    // ----- record lap (based on current elapsed) -----
+    function recordLap() {
+      // if timer is running, use current time, else use elapsedTime
+      let currentMs = 0;
+      if (isRunning) {
+        const now = performance.now();
+        const delta = now - startTime;
+        currentMs = elapsedTime + delta;
+      } else {
+        currentMs = elapsedTime;
+      }
+
+      // only record if there is some time > 0 (avoid 0ms laps)
+      if (currentMs <= 0) return;
+
+      laps.push(currentMs);
+      renderLaps();
+
+      // enable clear laps if needed
+    }
+
+    // ----- clear all laps -----
+    function clearLaps() {
+      laps = [];
+      renderLaps();
+      // if timer not running and elapsedTime = 0, disable lap button
+      if (!isRunning && elapsedTime === 0) {
+        lapBtn.disabled = true;
+      } else {
+        // if running or elapsed >0, lap button stays enabled
+        lapBtn.disabled = false;
+      }
+    }
+
+    // ----- sync lap button state on timer changes -----
+    function updateLapButtonState() {
+      if (isRunning) {
+        lapBtn.disabled = false;
+        return;
+      }
+      // paused or stopped: enable only if elapsedTime > 0
+      lapBtn.disabled = (elapsedTime <= 0);
+    }
+
+    // ----- reset full (timer + clear laps) – but we keep distinct -----
+    function fullReset() {
+      resetTimer();
+      // optionally clear laps? Usually reset means timer reset, but laps may stay.
+      // We'll clear laps too because it's a professional behaviour: reset everything.
+      // But we want to give choice: so we call clearLaps().
+      clearLaps();
+      // after clear, lap button disabled
+      lapBtn.disabled = true;
+      // reset UI
+      updateDisplay(0);
+      startBtn.disabled = false;
+      pauseBtn.disabled = true;
+    }
+
+    // ----- init event listeners -----
+    function init() {
+      // display initial
+      updateDisplay(0);
+      renderLaps();
+      lapBtn.disabled = true;
+      pauseBtn.disabled = true;
+
+      // Start
+      startBtn.addEventListener('click', startTimer);
+
+      // Pause
+      pauseBtn.addEventListener('click', pauseTimer);
+
+      // Reset – full reset (timer + laps clear)
+      resetBtn.addEventListener('click', fullReset);
+
+      // Lap
+      lapBtn.addEventListener('click', recordLap);
+
+      // Clear laps
+      clearLapsBtn.addEventListener('click', clearLaps);
+
+      // Extra: if pause or reset, update lap button state
+      // We'll also hook into start/pause/reset to update lap button.
+      // Override start/pause/reset to include lap state updates
+      // we already have startTimer/pauseTimer/resetTimer, but we need to call updateLapButtonState.
+      // We'll wrap or augment.
+      const originalStart = startTimer;
+      const originalPause = pauseTimer;
+      const originalReset = resetTimer;
+
+      startTimer = function() {
+        originalStart.call(this);
+        updateLapButtonState();
+      };
+
+      pauseTimer = function() {
+        originalPause.call(this);
+        updateLapButtonState();
+        // after pause, if elapsedTime > 0 enable lap
+        if (elapsedTime > 0) lapBtn.disabled = false;
+        else lapBtn.disabled = true;
+      };
+
+      resetTimer = function() {
+        originalReset.call(this);
+        // but resetTimer doesn't clear laps by default, we use fullReset for button.
+        // we keep separate.
+        updateLapButtonState();
+        if (elapsedTime === 0 && !isRunning) lapBtn.disabled = true;
+      };
+
+      // override fullReset
+      fullReset = function() {
+        resetTimer();
+        clearLaps();
+        lapBtn.disabled = true;
+        updateDisplay(0);
+        startBtn.disabled = false;
+        pauseBtn.disabled = true;
+      };
+
+      // rebind
+      resetBtn.removeEventListener('click', fullReset);
+      resetBtn.addEventListener('click', fullReset);
+
+      // also after clear laps, update lap button
+      const originalClearLaps = clearLaps;
+      clearLaps = function() {
+        originalClearLaps.call(this);
+        if (isRunning) {
+          lapBtn.disabled = false;
+        } else {
+          lapBtn.disabled = (elapsedTime <= 0);
+        }
+      };
+      clearLapsBtn.removeEventListener('click', clearLaps);
+      clearLapsBtn.addEventListener('click', clearLaps);
+
+      // re-bind lap
+      lapBtn.removeEventListener('click', recordLap);
+      lapBtn.addEventListener('click', recordLap);
+
+      // re-bind start/pause
+      startBtn.removeEventListener('click', startTimer);
+      startBtn.addEventListener('click', startTimer);
+      pauseBtn.removeEventListener('click', pauseTimer);
+      pauseBtn.addEventListener('click', pauseTimer);
+
+      // Additional: when paused and elapsed>0 lap should be enabled
+      // after any pause we handle in pauseTimer
+    }
+
+    // call init
+    init();
+
+    // extra safety: if window loses focus, timer still works fine (performance.now)
+    // but we keep running.
+  })();
+</script>
+</body>
+</html>

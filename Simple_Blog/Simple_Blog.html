@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Simple Blog · with Auth</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet" />
+    <style>
+        /* ----- reset & base ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            padding: 2rem 1.5rem;
+            background: linear-gradient(145deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            background-attachment: fixed;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ----- animated background orbs ----- */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.6;
+            z-index: 0;
+            animation: floatOrb 20s infinite alternate ease-in-out;
+            pointer-events: none;
+        }
+        .orb1 {
+            width: 400px;
+            height: 400px;
+            background: #ff6bcd;
+            top: -120px;
+            left: -120px;
+            animation-duration: 22s;
+        }
+        .orb2 {
+            width: 450px;
+            height: 450px;
+            background: #00d4ff;
+            bottom: -150px;
+            right: -150px;
+            animation-duration: 25s;
+            animation-delay: -5s;
+        }
+        .orb3 {
+            width: 320px;
+            height: 320px;
+            background: #ffd93d;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-duration: 18s;
+            animation-delay: -10s;
+            opacity: 0.3;
+        }
+        .orb4 {
+            width: 280px;
+            height: 280px;
+            background: #6bcbff;
+            top: 20%;
+            left: 70%;
+            animation-duration: 16s;
+            animation-delay: -3s;
+            opacity: 0.4;
+        }
+        .orb5 {
+            width: 300px;
+            height: 300px;
+            background: #ff9a76;
+            bottom: 30%;
+            left: 10%;
+            animation-duration: 19s;
+            animation-delay: -7s;
+            opacity: 0.3;
+        }
+
+        @keyframes floatOrb {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            25% { transform: translate(80px, -50px) scale(1.2) rotate(10deg); }
+            50% { transform: translate(-60px, 70px) scale(0.9) rotate(-10deg); }
+            75% { transform: translate(50px, 30px) scale(1.1) rotate(5deg); }
+            100% { transform: translate(-30px, -40px) scale(1) rotate(-5deg); }
+        }
+
+        /* ----- main glass container ----- */
+        .app-wrapper {
+            max-width: 850px;
+            width: 100%;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 3rem;
+            padding: 2.5rem 2.5rem 3rem;
+            box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.8), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        /* ----- header ----- */
+        header {
+            text-align: center;
+            margin-bottom: 2.2rem;
+        }
+        header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #f7971e 0%, #ffd200 30%, #f7971e 60%, #ff6bcd 100%);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmerGradient 8s ease infinite;
+        }
+        @keyframes shimmerGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .subhead {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1rem;
+            margin-top: 0.3rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            background: rgba(255, 255, 255, 0.03);
+            display: inline-block;
+            padding: 0.3rem 1.5rem;
+            border-radius: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        /* ----- login form ----- */
+        .login-section {
+            transition: all 0.5s ease;
+            max-width: 420px;
+            margin: 0 auto;
+        }
+        .login-section.hidden {
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+            position: relative;
+        }
+        .form-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 0.4rem;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.9rem 1.4rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1.4rem;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            color: #f0f4fc;
+            transition: 0.3s ease;
+            outline: none;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 110px;
+        }
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.25);
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: rgba(255, 215, 150, 0.4);
+            background: rgba(255, 255, 255, 0.07);
+            box-shadow: 0 0 0 5px rgba(255, 215, 150, 0.05);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 1.2rem;
+            bottom: 0.9rem;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0.2rem 0.4rem;
+            transition: 0.2s ease;
+            z-index: 3;
+        }
+        .password-toggle:hover {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(145deg, #f7971e, #ff6bcd);
+            color: #fff;
+            border: none;
+            border-radius: 2.4rem;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s ease;
+            box-shadow: 0 8px 30px rgba(247, 151, 30, 0.25);
+            letter-spacing: 0.5px;
+            margin-top: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: 0.5s;
+        }
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(247, 151, 30, 0.35);
+        }
+        .btn-primary:active {
+            transform: scale(0.96);
+        }
+
+        .auth-toggle {
+            text-align: center;
+            margin-top: 1.2rem;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.9rem;
+        }
+        .auth-toggle a {
+            color: #ffd93d;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .auth-toggle a:hover {
+            color: #ff6bcd;
+            text-decoration: underline;
+        }
+
+        .error-msg {
+            color: #ff6b6b;
+            font-size: 0.85rem;
+            text-align: center;
+            margin-top: 0.5rem;
+            min-height: 1.5rem;
+        }
+        .success-msg {
+            color: #51cf66;
+            font-size: 0.85rem;
+            text-align: center;
+            margin-top: 0.5rem;
+            min-height: 1.5rem;
+        }
+
+        /* ----- blog section (hidden by default) ----- */
+        .blog-section {
+            transition: all 0.5s ease;
+        }
+        .blog-section.hidden {
+            display: none;
+        }
+
+        .blog-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.8rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .blog-header .user-info {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.95rem;
+        }
+        .blog-header .username {
+            color: #ffd93d;
+            font-weight: 600;
+            background: rgba(255, 217, 61, 0.1);
+            padding: 0.2rem 0.8rem;
+            border-radius: 1rem;
+        }
+        .blog-header .admin-badge {
+            background: linear-gradient(145deg, #f7971e, #ff6bcd);
+            color: #fff;
+            font-size: 0.6rem;
+            padding: 0.2rem 0.8rem;
+            border-radius: 1rem;
+            margin-left: 0.5rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .blog-actions {
+            display: flex;
+            gap: 0.7rem;
+            align-items: center;
+        }
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 0.4rem 1.4rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+        .logout-btn:hover {
+            background: rgba(255, 80, 80, 0.12);
+            border-color: rgba(255, 80, 80, 0.15);
+            color: #ff8a8a;
+        }
+
+        /* ----- create post form (visible to ALL users) ----- */
+        .create-post-section {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 1.8rem;
+            padding: 1.8rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            animation: slideDown 0.4s ease;
+        }
+        @keyframes slideDown {
+            0% { opacity: 0; transform: translateY(-15px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .create-post-section h3 {
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            letter-spacing: 0.5px;
+        }
+        .create-post-section .form-group {
+            margin-bottom: 0.8rem;
+        }
+        .create-post-section .btn-primary {
+            width: auto;
+            padding: 0.7rem 2.5rem;
+            margin-top: 0.3rem;
+        }
+
+        /* ----- posts list ----- */
+        .posts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.2rem;
+        }
+        .posts-header h2 {
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 400;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+        }
+        .posts-header .post-count {
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 0.8rem;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 0.2rem 0.8rem;
+            border-radius: 1rem;
+        }
+
+        .posts-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        /* ----- individual post ----- */
+        .post-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 1.6rem;
+            padding: 1.6rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.15, 0.85, 0.3, 1.1);
+            animation: cardAppear 0.5s ease backwards;
+        }
+        .post-card:nth-child(1) { animation-delay: 0.05s; }
+        .post-card:nth-child(2) { animation-delay: 0.1s; }
+        .post-card:nth-child(3) { animation-delay: 0.15s; }
+        .post-card:nth-child(4) { animation-delay: 0.2s; }
+        .post-card:nth-child(5) { animation-delay: 0.25s; }
+
+        .post-card:hover {
+            transform: translateY(-4px) scale(1.005);
+            border-color: rgba(255, 215, 150, 0.12);
+            background: rgba(255, 255, 255, 0.07);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes cardAppear {
+            0% { opacity: 0; transform: translateY(20px) scale(0.97); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .post-card .post-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #f5f0e8;
+            margin-bottom: 0.3rem;
+        }
+        .post-card .post-meta {
+            color: rgba(255, 255, 255, 0.25);
+            font-size: 0.75rem;
+            margin-bottom: 0.8rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .post-card .post-meta .author {
+            color: rgba(255, 255, 255, 0.4);
+        }
+        .post-card .post-content {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 0.8rem;
+            word-break: break-word;
+        }
+        .post-card .post-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            padding-top: 0.8rem;
+        }
+        .post-card .post-actions button {
+            padding: 0.3rem 1.2rem;
+            border-radius: 2rem;
+            border: none;
+            font-size: 0.7rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+        .post-card .post-actions .edit-post {
+            background: rgba(0, 212, 255, 0.1);
+            color: #6bcbff;
+        }
+        .post-card .post-actions .edit-post:hover {
+            background: rgba(0, 212, 255, 0.2);
+        }
+        .post-card .post-actions .delete-post {
+            background: rgba(255, 80, 80, 0.1);
+            color: #ff8a8a;
+        }
+        .post-card .post-actions .delete-post:hover {
+            background: rgba(255, 80, 80, 0.2);
+        }
+
+        .empty-posts {
+            text-align: center;
+            padding: 4rem 1rem;
+            color: rgba(255, 255, 255, 0.15);
+            font-style: italic;
+            border: 1px dashed rgba(255, 255, 255, 0.04);
+            border-radius: 1.6rem;
+            animation: pulse 4s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+
+        /* ----- responsive ----- */
+        @media (max-width: 550px) {
+            .app-wrapper { padding: 1.2rem; border-radius: 2rem; }
+            header h1 { font-size: 2.2rem; }
+            .blog-header { flex-direction: column; gap: 0.8rem; align-items: flex-start; }
+            .blog-actions { width: 100%; justify-content: space-between; }
+            .create-post-section .btn-primary { width: 100%; }
+            .orb { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- animated background orbs -->
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+    <div class="orb orb4"></div>
+    <div class="orb orb5"></div>
+
+    <!-- main app -->
+    <div class="app-wrapper">
+        <header>
+            <h1>📝 Simple Blog</h1>
+            <p class="subhead">create, read, and manage posts</p>
+        </header>
+
+        <!-- ===== LOGIN SECTION ===== -->
+        <div id="loginSection" class="login-section">
+            <div class="form-group">
+                <label for="loginUser">Username</label>
+                <input type="text" id="loginUser" placeholder="Enter username" />
+            </div>
+            <div class="form-group">
+                <label for="loginPass">Password</label>
+                <input type="password" id="loginPass" placeholder="Enter password" />
+                <button type="button" class="password-toggle" id="togglePassword">👁️</button>
+            </div>
+            <button class="btn-primary" id="loginBtn">Sign In</button>
+            <div class="auth-toggle">
+                <span id="toggleText">Don't have an account?</span>
+                <a id="toggleLink">Sign Up</a>
+            </div>
+            <div id="loginError" class="error-msg"></div>
+            <div id="loginSuccess" class="success-msg"></div>
+        </div>
+
+        <!-- ===== BLOG SECTION (hidden until login) ===== -->
+        <div id="blogSection" class="blog-section hidden">
+            <!-- blog header -->
+            <div class="blog-header">
+                <div class="user-info">
+                    👋 Welcome, <span id="displayUser" class="username">User</span>
+                    <span id="adminBadge" class="admin-badge" style="display:none;">Admin</span>
+                </div>
+                <div class="blog-actions">
+                    <button class="logout-btn" id="logoutBtn">🚪 Logout</button>
+                </div>
+            </div>
+
+            <!-- create post (visible to ALL users) -->
+            <div id="createPostSection" class="create-post-section">
+                <h3>✍️ Create New Post</h3>
+                <div class="form-group">
+                    <input type="text" id="postTitle" placeholder="Post title..." />
+                </div>
+                <div class="form-group">
+                    <textarea id="postContent" placeholder="Write your post content here..." rows="4"></textarea>
+                </div>
+                <button class="btn-primary" id="createPostBtn" style="width:auto;">📤 Publish Post</button>
+            </div>
+
+            <!-- posts list -->
+            <div class="posts-header">
+                <h2>📖 All Posts</h2>
+                <span class="post-count" id="postCount">0 posts</span>
+            </div>
+
+            <div id="postsContainer" class="posts-container">
+                <div class="empty-posts">No posts yet — be the first to write!</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        //  SIMPLE BLOG — full auth, posts, admin dashboard
+        //  EVERYONE can create posts, edit/delete only their own
+        // ============================================================
+
+        // ---------- state ----------
+        let currentUser = null;
+        let isAdmin = false;
+
+        // ---------- DOM refs ----------
+        const loginSection = document.getElementById('loginSection');
+        const blogSection = document.getElementById('blogSection');
+
+        const loginUser = document.getElementById('loginUser');
+        const loginPass = document.getElementById('loginPass');
+        const loginBtn = document.getElementById('loginBtn');
+        const loginError = document.getElementById('loginError');
+        const loginSuccess = document.getElementById('loginSuccess');
+        const toggleLink = document.getElementById('toggleLink');
+        const toggleText = document.getElementById('toggleText');
+        const togglePassword = document.getElementById('togglePassword');
+
+        const displayUser = document.getElementById('displayUser');
+        const adminBadge = document.getElementById('adminBadge');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        const createPostSection = document.getElementById('createPostSection');
+        const postTitle = document.getElementById('postTitle');
+        const postContent = document.getElementById('postContent');
+        const createPostBtn = document.getElementById('createPostBtn');
+
+        const postsContainer = document.getElementById('postsContainer');
+        const postCount = document.getElementById('postCount');
+
+        // ---------- password toggle ----------
+        let passwordVisible = false;
+        togglePassword.addEventListener('click', () => {
+            passwordVisible = !passwordVisible;
+            loginPass.type = passwordVisible ? 'text' : 'password';
+            togglePassword.textContent = passwordVisible ? '🙈' : '👁️';
+        });
+
+        // ---------- helpers ----------
+        function getUsers() {
+            try {
+                return JSON.parse(localStorage.getItem('blog_users')) || {};
+            } catch { return {}; }
+        }
+
+        function saveUsers(users) {
+            localStorage.setItem('blog_users', JSON.stringify(users));
+        }
+
+        function getPosts() {
+            try {
+                return JSON.parse(localStorage.getItem('blog_posts')) || [];
+            } catch { return []; }
+        }
+
+        function savePosts(posts) {
+            localStorage.setItem('blog_posts', JSON.stringify(posts));
+        }
+
+        function getNextId() {
+            const posts = getPosts();
+            if (posts.length === 0) return 1;
+            return Math.max(...posts.map(p => p.id)) + 1;
+        }
+
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // ---------- render posts ----------
+        function renderPosts() {
+            const posts = getPosts();
+            const sorted = [...posts].sort((a, b) => b.createdAt - a.createdAt);
+
+            if (!sorted.length) {
+                postsContainer.innerHTML = '<div class="empty-posts">No posts yet — be the first to write!</div>';
+                postCount.textContent = '0 posts';
+                return;
+            }
+
+            postsContainer.innerHTML = sorted.map(post => {
+                // Show edit/delete ONLY if current user is the author OR admin
+                const canEdit = (currentUser === post.author || isAdmin);
+                const canDelete = (currentUser === post.author || isAdmin);
+                
+                return `
+                <div class="post-card" data-id="${post.id}">
+                    <div class="post-title">${escapeHtml(post.title)}</div>
+                    <div class="post-meta">
+                        <span class="author">✍️ ${escapeHtml(post.author)}</span>
+                        <span>📅 ${formatDate(post.createdAt)}</span>
+                        ${post.edited ? '<span style="color:rgba(255,255,255,0.15);">(edited)</span>' : ''}
+                    </div>
+                    <div class="post-content">${escapeHtml(post.content)}</div>
+                    ${canEdit || canDelete ? `
+                        <div class="post-actions">
+                            ${canEdit ? `<button class="edit-post" onclick="editPost(${post.id})">✎ Edit</button>` : ''}
+                            ${canDelete ? `<button class="delete-post" onclick="deletePost(${post.id})">✕ Delete</button>` : ''}
+                        </div>
+                    ` : ''}
+                </div>
+            `}).join('');
+
+            postCount.textContent = `${sorted.length} post${sorted.length > 1 ? 's' : ''}`;
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return String(text).replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // ---------- create post ----------
+        function createPost() {
+            const title = postTitle.value.trim();
+            const content = postContent.value.trim();
+
+            if (!title || !content) {
+                alert('Please fill in both title and content.');
+                return;
+            }
+
+            const posts = getPosts();
+            const newPost = {
+                id: getNextId(),
+                title: title,
+                content: content,
+                author: currentUser,
+                createdAt: Date.now(),
+                edited: false
+            };
+
+            posts.push(newPost);
+            savePosts(posts);
+            postTitle.value = '';
+            postContent.value = '';
+            renderPosts();
+        }
+
+        // ---------- delete post ----------
+        function deletePost(id) {
+            if (!confirm('Are you sure you want to delete this post?')) return;
+            const posts = getPosts();
+            const post = posts.find(p => p.id === id);
+            
+            // Only allow if user is author or admin
+            if (!post || (post.author !== currentUser && !isAdmin)) {
+                alert('You do not have permission to delete this post.');
+                return;
+            }
+            
+            const filtered = posts.filter(p => p.id !== id);
+            savePosts(filtered);
+            renderPosts();
+        }
+
+        // ---------- edit post ----------
+        function editPost(id) {
+            const posts = getPosts();
+            const post = posts.find(p => p.id === id);
+            
+            // Only allow if user is author
+            if (!post || post.author !== currentUser) {
+                alert('You can only edit your own posts.');
+                return;
+            }
+
+            const newTitle = prompt('Edit title:', post.title);
+            if (newTitle === null) return;
+
+            const newContent = prompt('Edit content:', post.content);
+            if (newContent === null) return;
+
+            if (!newTitle.trim() || !newContent.trim()) {
+                alert('Title and content cannot be empty.');
+                return;
+            }
+
+            post.title = newTitle.trim();
+            post.content = newContent.trim();
+            post.edited = true;
+            savePosts(posts);
+            renderPosts();
+        }
+
+        // ---------- login / signup ----------
+        let isLoginMode = true;
+
+        function toggleAuthMode() {
+            isLoginMode = !isLoginMode;
+            loginBtn.textContent = isLoginMode ? 'Sign In' : 'Create Account';
+            toggleText.textContent = isLoginMode ? "Don't have an account?" : "Already have an account?";
+            toggleLink.textContent = isLoginMode ? 'Sign Up' : 'Sign In';
+            loginError.textContent = '';
+            loginSuccess.textContent = '';
+        }
+
+        function handleAuth() {
+            const user = loginUser.value.trim();
+            const pass = loginPass.value.trim();
+
+            loginError.textContent = '';
+            loginSuccess.textContent = '';
+
+            if (!user || !pass) {
+                loginError.textContent = 'Please fill in all fields.';
+                return;
+            }
+
+            const users = getUsers();
+
+            if (isLoginMode) {
+                // LOGIN
+                if (users[user] && users[user] === pass) {
+                    loginSuccess.textContent = '✅ Login successful!';
+                    setTimeout(() => {
+                        currentUser = user;
+                        isAdmin = (user === 'admin');
+                        showBlog();
+                    }, 500);
+                } else {
+                    loginError.textContent = '❌ Invalid username or password.';
+                }
+            } else {
+                // SIGNUP
+                if (users[user]) {
+                    loginError.textContent = '❌ Username already exists.';
+                    return;
+                }
+                users[user] = pass;
+                saveUsers(users);
+                loginSuccess.textContent = '✅ Account created successfully! Please sign in.';
+                loginUser.value = '';
+                loginPass.value = '';
+                setTimeout(() => {
+                    if (!isLoginMode) toggleAuthMode();
+                }, 1000);
+            }
+        }
+
+        function showBlog() {
+            loginSection.classList.add('hidden');
+            blogSection.classList.remove('hidden');
+            displayUser.textContent = currentUser;
+
+            if (isAdmin) {
+                adminBadge.style.display = 'inline';
+            } else {
+                adminBadge.style.display = 'none';
+            }
+
+            // Create post section is ALWAYS visible to all users
+            createPostSection.style.display = 'block';
+
+            renderPosts();
+        }
+
+        function logout() {
+            currentUser = null;
+            isAdmin = false;
+            blogSection.classList.add('hidden');
+            loginSection.classList.remove('hidden');
+            loginUser.value = '';
+            loginPass.value = '';
+            loginError.textContent = '';
+            loginSuccess.textContent = '';
+            postsContainer.innerHTML = '<div class="empty-posts">No posts yet — be the first to write!</div>';
+            postCount.textContent = '0 posts';
+        }
+
+        // ---------- event listeners ----------
+        loginBtn.addEventListener('click', handleAuth);
+
+        toggleLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            toggleAuthMode();
+        });
+
+        loginUser.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleAuth(); });
+        loginPass.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleAuth(); });
+
+        logoutBtn.addEventListener('click', logout);
+
+        createPostBtn.addEventListener('click', createPost);
+
+        // ---------- init ----------
+        const existingPosts = getPosts();
+        if (existingPosts.length === 0) {
+            const samplePosts = [{
+                id: 1,
+                title: 'Welcome to the Simple Blog!',
+                content: 'This is a sample post to get you started. You can create new posts, edit them, and delete them. The admin user has full control!',
+                author: 'admin',
+                createdAt: Date.now() - 86400000,
+                edited: false
+            }];
+            savePosts(samplePosts);
+        }
+
+        console.log('📝 Simple Blog ready — login to start.');
+    </script>
+
+</body>
+</html>

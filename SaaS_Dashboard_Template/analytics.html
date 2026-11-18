@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SaaSify · Analytics</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <!-- TOP NAV (same) -->
+        <header class="top-nav">
+            <div class="logo"><i class="fas fa-rocket"></i> SaaSify</div>
+            <div class="nav-search"><input type="text" placeholder="Search analytics..." /><button class="search-btn"><i class="fas fa-search"></i> Search</button></div>
+            <div class="nav-right">
+                <button class="icon-btn" id="themeToggle"><i class="fas fa-moon" id="themeIcon"></i></button>
+                <div class="dropdown-wrapper"><button class="icon-btn" id="notifBtn"><i class="far fa-bell"></i><span class="badge pulse" id="notifBadge">3</span></button><div class="dropdown-menu" id="notifDropdown"><div class="drop-header">🔔 Notifications</div><button class="drop-item" data-action="notif1"><i class="fas fa-user-plus"></i> Sarah K. followed you <span class="drop-time">2m</span></button><button class="drop-item" data-action="notif2"><i class="fas fa-rocket"></i> Pro plan updated <span class="drop-time">15m</span></button><button class="drop-item" data-action="notif3"><i class="fas fa-check-circle"></i> Payment received <span class="drop-time">1h</span></button><div class="drop-footer" data-action="markRead">Mark all as read</div></div></div>
+                <div class="dropdown-wrapper"><button class="icon-btn" id="msgBtn"><i class="far fa-envelope"></i></button><div class="dropdown-menu" id="msgDropdown"><div class="drop-header">✉️ Messages</div><button class="drop-item" data-action="msg1"><i class="fas fa-circle" style="color:var(--primary);font-size:0.5rem;"></i> Emily: Can you review... <span class="drop-time">1h</span></button><button class="drop-item" data-action="msg2"><i class="fas fa-circle" style="color:var(--primary);font-size:0.5rem;"></i> Michael: Thanks for... <span class="drop-time">3h</span></button><button class="drop-item" data-action="msg3"><i class="far fa-circle" style="font-size:0.5rem;color:var(--text-muted);"></i> David: Meeting at 4pm <span class="drop-time">5h</span></button><div class="drop-footer" data-action="viewAllMsg">View all messages</div></div></div>
+                <div class="dropdown-wrapper"><button class="icon-btn" id="settingsBtn"><i class="far fa-cog"></i></button><div class="dropdown-menu" id="settingsDropdown"><div class="drop-header">⚙️ Settings</div><button class="drop-item" data-action="settingsProfile"><i class="fas fa-user"></i> Profile</button><button class="drop-item" data-action="settingsSecurity"><i class="fas fa-lock"></i> Security</button><button class="drop-item" data-action="settingsNotif"><i class="fas fa-bell"></i> Notifications</button><button class="drop-item" data-action="settingsAppearance"><i class="fas fa-palette"></i> Appearance</button><div class="drop-divider"></div><button class="drop-item" data-action="settingsLogout"><i class="fas fa-sign-out-alt" style="color:var(--negative);"></i> <span style="color:var(--negative);">Logout</span></button></div></div>
+                <div class="dropdown-wrapper"><div class="avatar" id="avatarBtn">JD</div><div class="dropdown-menu" id="profileDropdown"><div class="drop-header">👤 James Davis</div><button class="drop-item" data-action="profileMy"><i class="fas fa-user"></i> My Profile</button><button class="drop-item" data-action="profileBilling"><i class="fas fa-credit-card"></i> Billing</button><button class="drop-item" data-action="profilePrefs"><i class="fas fa-cog"></i> Preferences</button><div class="drop-divider"></div><button class="drop-item" data-action="profileHelp"><i class="fas fa-question-circle"></i> Help Center</button><button class="drop-item" data-action="profileSignout"><i class="fas fa-sign-out-alt" style="color:var(--negative);"></i> <span style="color:var(--negative);">Sign Out</span></button></div></div>
+            </div>
+        </header>
+
+        <div class="dashboard-grid">
+            <!-- SIDEBAR -->
+            <aside class="sidebar">
+                <div class="greeting">📊 Analytics</div>
+                <div class="user-name">James Davis <i class="fas fa-check-circle"></i></div>
+                <nav class="nav-menu">
+                    <a href="index.html"><i class="fas fa-th-large"></i> Dashboard</a>
+                    <a href="analytics.html" class="active"><i class="fas fa-chart-line"></i> Analytics</a>
+                    <a href="customers.html"><i class="fas fa-users"></i> Customers</a>
+                    <a href="products.html"><i class="fas fa-box"></i> Products</a>
+                    <a href="invoices.html"><i class="fas fa-file-invoice"></i> Invoices</a>
+                    <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+                </nav>
+                <div class="sidebar-credit"><p>🚀 Plan</p><h4>Pro Enterprise</h4><button class="btn-outline" id="upgradeBtn"><i class="fas fa-arrow-right"></i> Upgrade</button></div>
+            </aside>
+
+            <!-- MAIN -->
+            <main class="main-content">
+                <div class="stats-row">
+                    <div class="stat-card"><div class="stat-label">Total Visits</div><div class="stat-number">45.2K</div><div class="stat-change positive"><i class="fas fa-arrow-up"></i> 8.1%</div></div>
+                    <div class="stat-card"><div class="stat-label">Bounce Rate</div><div class="stat-number">32.4%</div><div class="stat-change negative"><i class="fas fa-arrow-down"></i> 2.3%</div></div>
+                    <div class="stat-card"><div class="stat-label">Avg. Session</div><div class="stat-number">4m 12s</div><div class="stat-change positive"><i class="fas fa-arrow-up"></i> 6%</div></div>
+                    <div class="stat-card"><div class="stat-label">Conversion</div><div class="stat-number">12.8%</div><div class="stat-change positive"><i class="fas fa-arrow-up"></i> 1.5%</div></div>
+                </div>
+
+                <div class="charts-row">
+                    <div class="chart-card"><div class="card-header"><h4><i class="fas fa-chart-line" style="color:var(--primary);"></i> Traffic Over Time</h4><span>Last 30 days</span></div><div class="chart-container"><canvas id="trafficLineChart"></canvas></div></div>
+                    <div class="chart-card"><div class="card-header"><h4><i class="fas fa-pie-chart" style="color:var(--primary);"></i> Device Breakdown</h4><span>This week</span></div><div class="chart-container"><canvas id="deviceChart"></canvas></div></div>
+                </div>
+
+                <div class="panel">
+                    <h4><i class="fas fa-table"></i> Top Pages</h4>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead><tr><th>Page</th><th>Views</th><th>Unique</th><th>Bounce</th></tr></thead>
+                            <tbody>
+                                <tr><td><strong>/dashboard</strong></td><td>12,430</td><td>8,920</td><td>28%</td></tr>
+                                <tr><td><strong>/analytics</strong></td><td>8,200</td><td>5,600</td><td>35%</td></tr>
+                                <tr><td><strong>/customers</strong></td><td>5,710</td><td>4,100</td><td>42%</td></tr>
+                                <tr><td><strong>/settings</strong></td><td>3,990</td><td>2,880</td><td>51%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <footer class="footer">
+            <span>© 2026 SaaSify · All rights reserved</span>
+            <div class="footer-links"><a id="privacyLink">Privacy</a><a id="termsLink">Terms</a><a id="supportLink">Support</a></div>
+        </footer>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modalOverlay"><div class="modal-box"><button class="modal-close" id="modalClose"><i class="fas fa-times"></i></button><div class="modal-icon" id="modalIcon"><i class="fas fa-shield-alt"></i></div><h2 id="modalTitle">Title</h2><div class="modal-sub" id="modalSub"></div><div id="modalBody"><p>Content</p></div><button class="modal-action-btn" id="modalActionBtn">Got it</button></div></div>
+
+    <script src="js/app.js"></script>
+    <script>
+        (function() {
+            // Line chart
+            const ctx = document.getElementById('trafficLineChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jun 1', 'Jun 5', 'Jun 10', 'Jun 15', 'Jun 20', 'Jun 25', 'Jun 30'],
+                    datasets: [{
+                        label: 'Visitors',
+                        data: [1200, 1800, 1500, 2200, 2000, 2600, 3000],
+                        borderColor: '#4f6ef7',
+                        backgroundColor: 'rgba(79,110,247,0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'var(--chart-grid)' }, ticks: { font: { size: 10 }, color: 'var(--text-secondary)' } },
+                        x: { grid: { display: false }, ticks: { font: { size: 10 }, color: 'var(--text-secondary)' } }
+                    }
+                }
+            });
+
+            // Doughnut for devices
+            const ctx2 = document.getElementById('deviceChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Desktop', 'Mobile', 'Tablet'],
+                    datasets: [{ data: [55, 32, 13], backgroundColor: ['#4f6ef7', '#22a65e', '#f5a623'], borderWidth: 0 }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 10, padding: 8, font: { size: 10, weight: '500' }, usePointStyle: true, color: 'var(--text-primary)' } }
+                    },
+                    cutout: '70%'
+                }
+            });
+
+            function updateChartColors() {
+                const isDark = document.body.classList.contains('dark-mode');
+                const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)';
+                const tickColor = isDark ? '#a0b3cc' : '#5a6e8a';
+                document.querySelectorAll('canvas').forEach(canvas => {
+                    const chart = Chart.getChart(canvas);
+                    if (chart && chart.options.scales) {
+                        if (chart.options.scales.y) {
+                            chart.options.scales.y.grid.color = gridColor;
+                            chart.options.scales.y.ticks.color = tickColor;
+                        }
+                        if (chart.options.scales.x) {
+                            chart.options.scales.x.ticks.color = tickColor;
+                        }
+                        chart.update();
+                    }
+                    if (chart && chart.options.plugins && chart.options.plugins.legend) {
+                        chart.options.plugins.legend.labels.color = isDark ? '#e8edf5' : '#1a2332';
+                        chart.update();
+                    }
+                });
+            }
+            window.__updateChartColors = updateChartColors;
+            setTimeout(updateChartColors, 100);
+        })();
+    </script>
+</body>
+</html>

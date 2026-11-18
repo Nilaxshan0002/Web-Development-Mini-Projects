@@ -1,0 +1,362 @@
+/* ===== style.css ===== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(145deg, #0b0e1a 0%, #1a1f2f 100%);
+    padding: 1.5rem;
+    margin: 0;
+}
+
+/* Main card – glassmorphism + premium feel */
+.stopwatch-card {
+    background: rgba(22, 28, 46, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 3rem;
+    padding: 3rem 2.5rem 2.8rem;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    transition: box-shadow 0.3s ease;
+    text-align: center;
+}
+
+.stopwatch-card:hover {
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+}
+
+/* Header / brand */
+.brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-bottom: 1.8rem;
+    letter-spacing: 0.02em;
+}
+
+.brand-icon {
+    font-size: 1.8rem;
+    line-height: 1;
+    filter: drop-shadow(0 0 6px rgba(0, 180, 255, 0.3));
+}
+
+.brand h1 {
+    font-weight: 600;
+    font-size: 1.6rem;
+    background: linear-gradient(to right, #e0e9ff, #b2cbff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: -0.5px;
+}
+
+/* Timer display */
+.timer-display {
+    background: #0f1322;
+    border-radius: 2.4rem;
+    padding: 1.2rem 0.8rem;
+    margin-bottom: 2.2rem;
+    box-shadow: inset 0 6px 14px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+#timer {
+    font-family: 'Inter', monospace;
+    font-weight: 600;
+    font-size: 4.2rem;
+    letter-spacing: 4px;
+    color: #eef5ff;
+    text-shadow: 0 0 12px rgba(70, 150, 255, 0.15);
+    background: transparent;
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 1.6rem;
+    transition: color 0.2s;
+    line-height: 1.3;
+}
+
+/* millisecond highlight */
+.milli {
+    font-size: 2.8rem;
+    font-weight: 500;
+    color: #82b0ff;
+    letter-spacing: 2px;
+    margin-left: 4px;
+}
+
+/* control buttons grid */
+.controls {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 0.6rem;
+    margin-bottom: 2.2rem;
+}
+
+.btn {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 0.9rem 0.4rem;
+    border: none;
+    border-radius: 2.4rem;
+    background: #262e44;
+    color: #d6e2ff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+.btn:active {
+    transform: scale(0.94);
+}
+
+.btn-primary {
+    background: #3b4b70;
+    color: white;
+    box-shadow: 0 8px 20px rgba(50, 100, 255, 0.2);
+    border: 1px solid rgba(120, 180, 255, 0.15);
+}
+
+.btn-primary:hover {
+    background: #4e628f;
+    box-shadow: 0 10px 28px rgba(50, 100, 255, 0.3);
+    border-color: rgba(120, 180, 255, 0.25);
+}
+
+.btn-success {
+    background: #1d7a4b;
+    color: white;
+    box-shadow: 0 8px 20px rgba(30, 200, 100, 0.15);
+    border: 1px solid rgba(80, 220, 140, 0.15);
+}
+
+.btn-success:hover {
+    background: #279a5e;
+    box-shadow: 0 10px 28px rgba(30, 200, 100, 0.25);
+}
+
+.btn-danger {
+    background: #8f3a4a;
+    color: white;
+    box-shadow: 0 8px 20px rgba(220, 70, 70, 0.12);
+    border: 1px solid rgba(255, 100, 100, 0.1);
+}
+
+.btn-danger:hover {
+    background: #b14559;
+    box-shadow: 0 10px 28px rgba(220, 70, 70, 0.2);
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid #3f4a66;
+    color: #b8cbff;
+    box-shadow: none;
+}
+
+.btn-outline:hover {
+    background: #202838;
+    border-color: #6a7fa8;
+}
+
+.btn:disabled {
+    opacity: 0.4;
+    pointer-events: none;
+    filter: grayscale(0.3);
+    transform: none;
+}
+
+/* Lap section */
+.lap-section {
+    margin-top: 0.8rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    padding-top: 1.8rem;
+}
+
+.lap-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #8fa2cc;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+    padding: 0 0.2rem;
+}
+
+.lap-header span:last-child {
+    background: #1a2133;
+    padding: 0.25rem 1rem;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    color: #b0c8ff;
+    border: 1px solid #2f3b58;
+}
+
+#lapList {
+    list-style: none;
+    max-height: 200px;
+    overflow-y: auto;
+    padding-right: 0.3rem;
+    margin-bottom: 0.4rem;
+    scrollbar-width: thin;
+    scrollbar-color: #3a486a #111827;
+}
+
+#lapList::-webkit-scrollbar {
+    width: 5px;
+}
+
+#lapList::-webkit-scrollbar-track {
+    background: #111827;
+    border-radius: 10px;
+}
+
+#lapList::-webkit-scrollbar-thumb {
+    background: #3a486a;
+    border-radius: 10px;
+}
+
+.lap-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.6rem 0.8rem;
+    margin-bottom: 4px;
+    background: rgba(18, 24, 42, 0.6);
+    border-radius: 2rem;
+    color: #d0defa;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border-left: 2px solid #2f4066;
+    transition: background 0.15s;
+    backdrop-filter: blur(4px);
+}
+
+.lap-item:hover {
+    background: rgba(32, 42, 70, 0.7);
+}
+
+.lap-item .lap-num {
+    color: #8ba0d4;
+    font-weight: 600;
+    margin-right: 0.8rem;
+}
+
+.lap-item .lap-time {
+    font-family: 'Inter', monospace;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.empty-lap-message {
+    color: #4d5d82;
+    text-align: center;
+    padding: 1.2rem 0;
+    font-size: 0.95rem;
+    font-weight: 400;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 3rem;
+    border: 1px dashed #2b3652;
+}
+
+.clear-lap-btn {
+    background: transparent;
+    border: 1px solid #37415e;
+    color: #879bc9;
+    padding: 0.5rem 1.8rem;
+    border-radius: 3rem;
+    font-weight: 500;
+    font-size: 0.8rem;
+    margin-top: 0.6rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+    font-family: 'Inter', sans-serif;
+}
+
+.clear-lap-btn:hover {
+    background: #232d47;
+    border-color: #5d74a0;
+    color: #d6e4ff;
+}
+
+.clear-lap-btn:active {
+    transform: scale(0.94);
+}
+
+/* responsive */
+@media (max-width: 480px) {
+    .stopwatch-card {
+        padding: 2rem 1.2rem 2rem;
+        border-radius: 2rem;
+    }
+
+    #timer {
+        font-size: 3.2rem;
+        letter-spacing: 2px;
+    }
+
+    .milli {
+        font-size: 2.2rem;
+    }
+
+    .controls {
+        gap: 0.6rem;
+    }
+
+    .btn {
+        font-size: 0.9rem;
+        padding: 0.7rem 0.2rem;
+    }
+
+    .brand h1 {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 380px) {
+    #timer {
+        font-size: 2.6rem;
+    }
+
+    .milli {
+        font-size: 1.8rem;
+    }
+
+    .btn {
+        font-size: 0.8rem;
+        padding: 0.6rem 0.1rem;
+    }
+}
+
+/* subtle animation for running state */
+@keyframes pulse-glow {
+    0% { text-shadow: 0 0 8px rgba(80, 160, 255, 0.1); }
+    50% { text-shadow: 0 0 20px rgba(80, 160, 255, 0.3); }
+    100% { text-shadow: 0 0 8px rgba(80, 160, 255, 0.1); }
+}
+
+.running #timer {
+    animation: pulse-glow 2s infinite;
+}
